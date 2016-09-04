@@ -1,13 +1,13 @@
 package chessgame.board;
 
-public enum TwoDimensionalDirection implements Direction {
+public enum SquareDirection implements Direction {
 
     NORTH(0,1), NORTHEAST(1,1), EAST(1,0), SOUTHEAST(1,-1),
     SOUTH(0,-1), SOUTHWEST(-1,-1), WEST(-1,0), NORTHWEST(-1,1);
 
-    public final static TwoDimensionalDirection[] VALUES = values();
-    public final static TwoDimensionalDirection[] DIAGONALS = {NORTHEAST, SOUTHEAST, SOUTHWEST, NORTHWEST};
-    public final static TwoDimensionalDirection[] ORTHOGONALS = {NORTH, EAST, SOUTH, WEST};
+    public final static SquareDirection[] VALUES = values();
+    public final static SquareDirection[] DIAGONALS = {NORTHEAST, SOUTHEAST, SOUTHWEST, NORTHWEST};
+    public final static SquareDirection[] ORTHOGONALS = {NORTH, EAST, SOUTH, WEST};
 
     private final int x, y;
 
@@ -19,7 +19,7 @@ public enum TwoDimensionalDirection implements Direction {
         return y;
     }
 
-    TwoDimensionalDirection(int x, int y) {
+    SquareDirection(int x, int y) {
         this.x = x;
         this.y = y;
     }

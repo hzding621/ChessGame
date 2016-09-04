@@ -1,29 +1,31 @@
 package chessgame.board;
 
 import chessgame.piece.Piece;
+import chessgame.piece.PieceType;
+import chessgame.player.Player;
 
 import java.util.Collection;
 import java.util.Optional;
 
-public interface Board<C extends Cell> {
+public interface Board<C extends Cell, A extends PieceType, P extends Piece<A>> {
 
     /**
      * @return empty if there is no piece located at this board;
      * or non-null value that represents the piece located at this board
      */
-    Optional<Piece> getPiece(C cell);
+    Optional<P> getPiece(C cell);
 
     /**
-     * @param pieceType The pieceType to set at this board, cannot be null
+     * @param piece The pieceType to set at this board, cannot be null
      * @return the previous pieceType at this board
      */
-    Optional<Piece> setPiece(C cell, Piece pieceType);
+    Optional<P> setPiece(C cell, P piece);
 
     /**
      * Remove the piece at this position
      * @return the previous piece at this position
      */
-    Optional<Piece> clearPiece(C cell);
+    Optional<P> clearPiece(C cell);
 
     /*
      * Move the piece from source to target
@@ -32,12 +34,14 @@ public interface Board<C extends Cell> {
     void movePiece(C source, C target);
 
     /**
-     * @return all directions a piece can potentially move that are supported by this board implementation
+     * @return all pieces on the board of one type belonging to a certain player
      */
-    Collection<Direction> getAllDirections();
+    Collection<PieceLocator<C>> getPiecesForPlayer(PieceType type, Player player);
 
     /**
-     * @return all cells that are attacking `attacked`
+     * @return all pieces on the board of belonging to a certain player
      */
-    Collection<C> getAttackers(C attacked);
+    Collection<PieceLocator<C>> getAllPiecesForPlayer(PieceType type, Player player);
+
+    void initializeBoard();
 }

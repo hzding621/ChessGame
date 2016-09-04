@@ -1,6 +1,8 @@
 package chessgame.board;
 
 import chessgame.move.MovePath;
+import chessgame.piece.Piece;
+import chessgame.piece.PieceType;
 import chessgame.player.Player;
 
 import java.util.Collection;
@@ -9,7 +11,13 @@ import java.util.Optional;
 /**
  * A GridBoard is a Board that supports the notion of orthogonal and diagonal directions.
  */
-public interface GridBoard<C extends Cell, D extends Direction> extends Board<C> {
+public interface GridBoard<C extends Cell, D extends Direction, A extends PieceType, P extends Piece<A>>
+        extends Board<C, A, P> {
+
+    /**
+     * @return all directions a piece can potentially move that are supported by this board implementation
+     */
+    Collection<D> getAllDirections();
 
     /**
      * @return all orthogonal directions supported by this board
@@ -40,4 +48,10 @@ public interface GridBoard<C extends Cell, D extends Direction> extends Board<C>
      */
     Optional<C> moveOnce(C startCell, D direction);
 
+    /**
+     * @return the direction from startCell to endCell
+     */
+    D findDirection(C startCell, C endCell);
+
+    GridCellFactory<C, D> getGridCellFactory();
 }

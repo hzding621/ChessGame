@@ -1,27 +1,42 @@
 package chessgame.board;
 
 import chessgame.piece.Piece;
+import chessgame.piece.PieceSet;
+import chessgame.piece.PieceType;
+import chessgame.player.Player;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
-public abstract class AbstractBoard<C extends Cell> implements Board<C> {
+public abstract class AbstractBoard<C extends Cell, A extends PieceType, P extends Piece<A>>
+        implements Board<C, A, P> {
 
-    private final Map<C, Piece> occupants = new HashMap<>();
-    private final Map<C, Collection<C>> attackers = new HashMap<>();
+    protected final Map<C, P> occupants = new HashMap<>();
+    protected final BoardInformation<C, A, P> boardInformation = new Information();
 
-    public Optional<Piece> getPiece(C cell) {
+    private final PieceSet<C, A, P> pieceSet;
+
+    protected AbstractBoard(PieceSet<C, A, P> pieceSet) {
+        this.pieceSet = pieceSet;
+    }
+
+    @Override
+    public void initializeBoard() {
+    }
+
+    public Optional<P> getPiece(C cell) {
         if (!occupants.containsKey(cell)) {
             return Optional.empty();
         }
         return Optional.of(occupants.get(cell));
     }
 
-    public Optional<Piece> setPiece(C cell, Piece pieceType) {
-        if (pieceType == null) {
+    public Optional<P> setPiece(C cell, P piece) {
+        if (piece == null) {
             throw new IllegalStateException("Cannot set board to a null pieceType");
         }
-        Optional<Piece> previousPiece = getPiece(cell);
-        occupants.put(cell, pieceType);
+        Optional<P> previousPiece = getPiece(cell);
+        occupants.put(cell, piece);
         return previousPiece;
     }
 
@@ -34,29 +49,48 @@ public abstract class AbstractBoard<C extends Cell> implements Board<C> {
         }
         occupants.put(target, occupants.get(source));
         occupants.remove(source);
-
-        // Update attackers
-
     }
 
     @Override
-    public Optional<Piece> clearPiece(C cell) {
-        Optional<Piece> previousPiece = getPiece(cell);
+    public Optional<P> clearPiece(C cell) {
+        Optional<P> previousPiece = getPiece(cell);
         occupants.remove(cell);
 
 
         return previousPiece;
     }
 
+
     @Override
-    public Collection<C> getAttackers(C attacked) {
-        if (!attackers.containsKey(attacked)) {
-            return Collections.emptyList();
-        } else {
-            return attackers.get(attacked);
-        }
+    public Collection<PieceLocator<C>> getPiecesForPlayer(PieceType type, Player player) {
+        return occupants.entrySet()
+                        .stream()
+                        .filter(e -> e.getValue().getPieceClass().equals(type)
+                                && e.getValue().getPlayer().equals(player))
+                        .map(e -> new PieceLocator<C>(e.getKey(), e.getValue()))
+                        .collect(Collectors.toList());
     }
 
+    @Override
+    public Collection<PieceLocator<C>> getAllPiecesForPlayer(PieceType type, Player player) {
+        return occupants.entrySet()
+                        .stream()
+                        .map(e -> new PieceLocator<C>(e.getKey(), e.getValue()))
+                        .collect(Collectors.toList());
+    }
 
+    private class Information implements BoardInformation<C, A, P> {
+
+        private final Map<C, Collection<C>> attackers = new HashMap<>();
+
+        @Override
+        public Collection<C> getAttackers(C attacked) {
+            if (!attackers.containsKey(attacked)) {
+                return Collections.emptyList();
+            } else {
+                return attackers.get(attacked);
+            }
+        }
+    }
 
 }
