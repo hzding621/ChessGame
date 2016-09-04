@@ -27,11 +27,12 @@ public final class Bishop<C extends Cell, A extends PieceType> extends AbstractP
                 ", id=" + getId() +
                 '}';
     }
-    public final class BishopRule<D extends Direction, P extends Piece<A>>
-            implements PieceRule<C, A, P, GridBoard<C, D, A, P>> {
+
+    public static final class BishopRule<C extends Cell, A extends PieceType, D extends Direction, P extends Piece<A>,
+            B extends GridBoard<C, D, A, P>> implements PieceRule<C, A, P, B> {
 
         @Override
-        public Collection<C> getNormalMoves(GridBoard<C, D, A, P> board, C position, Player player) {
+        public Collection<C> getNormalMoves(B board, C position, Player player) {
             List<C> moveTos = new ArrayList<>();
             board.getDiagonalDirections().forEach(direction ->
                     board.furthestReachWithCapture(direction, position, player).getPath().forEach(moveTos::add));
@@ -39,7 +40,7 @@ public final class Bishop<C extends Cell, A extends PieceType> extends AbstractP
         }
 
         @Override
-        public Collection<C> getBlockingPositionsWhenAttacking(GridBoard<C, D, A, P> board,
+        public Collection<C> getBlockingPositionsWhenAttacking(B board,
                                                                C sourcePosition,
                                                                C targetPosition,
                                                                Player player) {

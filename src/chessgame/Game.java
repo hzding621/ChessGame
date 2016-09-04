@@ -1,22 +1,30 @@
 package chessgame;
 
 import chessgame.board.Board;
+import chessgame.board.Cell;
 import chessgame.move.Move;
-import chessgame.rule.Rule;
+import chessgame.piece.Piece;
+import chessgame.piece.PieceType;
+import chessgame.rule.BoardInformation;
+import chessgame.rule.Rules;
 import chessgame.player.Player;
 
 import java.util.Collection;
 
 /**
- * Created by haozhending on 9/3/16.
+ * Interface for a variant of chess game
  */
-interface Game {
+interface Game<C extends Cell, A extends PieceType, P extends Piece<A>, B extends Board<C, A, P>> {
 
-    Board getBoard();
+    B getBoard();
 
-    Rule getRule();
+    BoardInformation<C, A, P> getBoardInformation();
+
+    Rules<C, A, P, B> getRule();
 
     Collection<Player> getPlayers();
 
-    void makeMove(Move move);
+    Collection<C> allMoves(Player player);
+
+    void makeMove(Move<C, A, P, B> move);
 }

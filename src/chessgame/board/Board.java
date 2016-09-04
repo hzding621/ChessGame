@@ -36,12 +36,12 @@ public interface Board<C extends Cell, A extends PieceType, P extends Piece<A>> 
     /**
      * @return all pieces on the board of one type belonging to a certain player
      */
-    Collection<PieceLocator<C>> getPiecesForPlayer(PieceType type, Player player);
+    Collection<PieceLocator<C, A, P>> getPiecesForPlayer(PieceType type, Player player);
 
     /**
      * @return all pieces on the board of belonging to a certain player
      */
-    Collection<PieceLocator<C>> getAllPiecesForPlayer(PieceType type, Player player);
+    Collection<PieceLocator<C, A, P>> getAllPiecesForPlayer(Player player);
 
     void initializeBoard();
 }

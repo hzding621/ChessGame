@@ -4,6 +4,7 @@ import chessgame.piece.Piece;
 import chessgame.piece.PieceSet;
 import chessgame.piece.PieceType;
 import chessgame.player.Player;
+import chessgame.rule.BoardInformation;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,8 +13,6 @@ public abstract class AbstractBoard<C extends Cell, A extends PieceType, P exten
         implements Board<C, A, P> {
 
     protected final Map<C, P> occupants = new HashMap<>();
-    protected final BoardInformation<C, A, P> boardInformation = new Information();
-
     private final PieceSet<C, A, P> pieceSet;
 
     protected AbstractBoard(PieceSet<C, A, P> pieceSet) {
@@ -62,35 +61,20 @@ public abstract class AbstractBoard<C extends Cell, A extends PieceType, P exten
 
 
     @Override
-    public Collection<PieceLocator<C>> getPiecesForPlayer(PieceType type, Player player) {
+    public Collection<PieceLocator<C, A, P>> getPiecesForPlayer(PieceType type, Player player) {
         return occupants.entrySet()
                         .stream()
                         .filter(e -> e.getValue().getPieceClass().equals(type)
                                 && e.getValue().getPlayer().equals(player))
-                        .map(e -> new PieceLocator<C>(e.getKey(), e.getValue()))
+                        .map(e -> new PieceLocator<>(e.getKey(), e.getValue()))
                         .collect(Collectors.toList());
     }
 
     @Override
-    public Collection<PieceLocator<C>> getAllPiecesForPlayer(PieceType type, Player player) {
+    public Collection<PieceLocator<C, A, P>> getAllPiecesForPlayer(Player player) {
         return occupants.entrySet()
                         .stream()
-                        .map(e -> new PieceLocator<C>(e.getKey(), e.getValue()))
+                        .map(e -> new PieceLocator<>(e.getKey(), e.getValue()))
                         .collect(Collectors.toList());
     }
-
-    private class Information implements BoardInformation<C, A, P> {
-
-        private final Map<C, Collection<C>> attackers = new HashMap<>();
-
-        @Override
-        public Collection<C> getAttackers(C attacked) {
-            if (!attackers.containsKey(attacked)) {
-                return Collections.emptyList();
-            } else {
-                return attackers.get(attacked);
-            }
-        }
-    }
-
 }

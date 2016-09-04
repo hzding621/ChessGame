@@ -20,7 +20,7 @@ public abstract class RectangularBoard<A extends PieceType, P extends Piece<A>>
     }
 
     @Override
-    public Collection<Direction> getAllDirections() {
+    public Collection<SquareDirection> getAllDirections() {
         return Arrays.asList(SquareDirection.VALUES);
     }
 
@@ -41,7 +41,7 @@ public abstract class RectangularBoard<A extends PieceType, P extends Piece<A>>
     }
 
     @Override
-    public Direction findDirection(SquareCell startCell, SquareCell endCell) {
+    public SquareDirection findDirection(SquareCell startCell, SquareCell endCell) {
         return SquareCell.findDirection(startCell, endCell);
     }
 

@@ -13,4 +13,10 @@ public enum ChessPieceType implements PieceType {
     public Collection<PieceType> getAllTypes() {
         return Arrays.asList(ChessPieceType.values());
     }
+
+    @Override
+    public boolean isKing() {
+        return this == KING;
+    };
+
 }

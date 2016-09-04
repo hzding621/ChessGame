@@ -1,21 +1,22 @@
 package chessgame.board;
 
 import chessgame.piece.Piece;
+import chessgame.piece.PieceType;
 
 /**
  * Created by haozhending on 9/4/16.
  */
-public final class PieceLocator<C extends Cell> {
+public final class PieceLocator<C extends Cell, A extends PieceType, P extends Piece<A>> {
 
     private final C cell;
-    private final Piece piece;
+    private final P piece;
 
-    public PieceLocator(C cell, Piece piece) {
+    public PieceLocator(C cell, P piece) {
         this.piece = piece;
         this.cell = cell;
     }
 
-    public Piece getPiece() {
+    public P getPiece() {
         return piece;
     }
 

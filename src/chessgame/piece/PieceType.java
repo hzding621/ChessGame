@@ -8,4 +8,6 @@ import java.util.Collection;
 public interface PieceType {
 
     Collection<PieceType> getAllTypes();
+
+    boolean isKing();
 }
