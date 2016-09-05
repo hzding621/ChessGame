@@ -12,13 +12,13 @@ import java.util.Map;
  */
 public final class RuleBindings<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardView<C, A, P>> {
 
-    private final Map<A, PieceRule<C, A, P, B>> ruleBindings = new HashMap<>();
+    private final Map<A, PieceRule<C, A, P, B>> bindings = new HashMap<>();
 
     public boolean addRule(A pieceType, PieceRule<C, A, P, B> rule) {
-        return ruleBindings.putIfAbsent(pieceType, rule) == null;
+        return bindings.putIfAbsent(pieceType, rule) == null;
     }
 
     public PieceRule<C, A, P, B> getRule(A pieceType) {
-        return ruleBindings.get(pieceType);
+        return bindings.get(pieceType);
     }
 }

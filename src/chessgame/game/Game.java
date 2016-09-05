@@ -29,8 +29,8 @@ interface Game<C extends Cell, A extends PieceType, P extends Piece<A>, B extend
     Map<C, Set<C>> getAllMoves();
 
     default Set<C> getMoves(C c) {
-        return getAllMoves().getOrDefault(c, Collections.EMPTY_SET);
+        return getAllMoves().getOrDefault(c, Collections.emptySet());
     }
 
-    void makeMove(C source, C target);
+    void move(C source, C target);
 }

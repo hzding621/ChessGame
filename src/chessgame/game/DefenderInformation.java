@@ -19,22 +19,39 @@ public final class DefenderInformation<C extends Cell, A extends PieceType, P ex
     private final Collection<PieceLocator<C, A, P>> checkers = new HashSet<>();
     private final Map<C, Collection<PinnedSet<C>>> kingDefenders = new HashMap<>();
 
+    /**
+     * @return the set of positions that are currently under attacked by the defending side
+     */
     public Set<C> getIsAttacked() {
         return isAttacked;
     }
 
+    /**
+     * @return whether the given position is currently under attacked by the defending side
+     */
     public boolean isAttacked(C cell) {
         return isAttacked.contains(cell);
     }
 
+    /**
+     * @return the set of defending side pieces that are currently checking actor side king
+     */
     public Collection<PieceLocator<C, A, P>> getCheckers() {
         return checkers;
     }
 
+    /**
+     * @return mapping from actor side pieces to pinning situation
+     */
     public Map<C, Collection<PinnedSet<C>>> getKingDefenders() {
         return kingDefenders;
     }
 
+    /**
+     * This method recompute the entire defender information, which includes what pieces are currently under attack
+     * which pieces are king-defenders (cannot move unless the move invalidates the pinning), and opponent pieces that
+     * are checking the current king. This method runs after every move is made
+     */
     public void refresh(B board, Rules<C, A, P, B> rules, PlayerInformation boardInformation, C actorKing) {
         isAttacked.clear();
         checkers.clear();
@@ -43,9 +60,9 @@ public final class DefenderInformation<C extends Cell, A extends PieceType, P ex
         // Iterate through all the pieces of the current defenders
         board.getAllPiecesForPlayer(boardInformation.getDefender())
             .parallelStream()
-            .forEach(defenderPiece -> {
+            .forEach(defenderLocator -> {
                 // Get the positions a defending piece are attacking
-                rules.attacking(board, defenderPiece.getCell(), boardInformation.getDefender())
+                rules.attacking(board, defenderLocator.getCell(), boardInformation.getDefender())
                     .parallelStream()
                     .forEach(targetCell -> {
                         // Mark the position as being under attacked
@@ -53,12 +70,12 @@ public final class DefenderInformation<C extends Cell, A extends PieceType, P ex
 
                         // If any of the position is the current actor's king, mark the attackers as checker
                         if (actorKing.equals(targetCell)) {
-                            checkers.add(defenderPiece);
+                            checkers.add(defenderLocator);
                         }
                     });
 
                 // Get the positions a defending piece is pinning
-                rules.pinning(board, defenderPiece.getCell(), boardInformation.getDefender())
+                rules.pinning(board, defenderLocator.getCell(), boardInformation.getDefender())
                     .parallelStream()
                     .forEach(pinnedSet -> {
                         if (pinnedSet.getHided().equals(actorKing)) {

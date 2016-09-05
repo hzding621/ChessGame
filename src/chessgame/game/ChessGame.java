@@ -74,7 +74,7 @@ public class ChessGame implements Game<SquareCell, ChessPieceType, Piece<ChessPi
     }
 
     @Override
-    public void makeMove(SquareCell source, SquareCell target) {
+    public void move(SquareCell source, SquareCell target) {
         if (!boardInformation.getAvailableMoves().get(source).contains(target)) {
             throw new IllegalStateException("Invalid move from " + source + " to " + target);
         }

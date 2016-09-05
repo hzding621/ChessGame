@@ -4,7 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by haozhending on 9/4/16.
+ * Simple players that include only BLACK and WHITE
+ * TODO: create Player interface
  */
 public enum Player {
     WHITE, BLACK;

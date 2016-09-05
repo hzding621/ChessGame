@@ -8,8 +8,7 @@ import chessgame.player.Player;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public abstract class AbstractBoard<C extends Cell, A extends PieceType, P extends Piece<A>>
-        implements Board<C, A, P> {
+public abstract class AbstractBoard<C extends Cell, A extends PieceType, P extends Piece<A>> implements Board<C, A, P> {
 
     protected final Map<C, P> occupants = new HashMap<>();
     private final PieceSet<C, A, P> pieceSet;
