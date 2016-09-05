@@ -36,7 +36,6 @@ public final class Coordinate implements Comparable<Coordinate> {
             }
             return Optional.of(new Coordinate(index));
         }
-
     }
     @Override
     public boolean equals(Object o) {
