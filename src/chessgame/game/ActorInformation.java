@@ -1,6 +1,6 @@
 package chessgame.game;
 
-import chessgame.board.Board;
+import chessgame.board.BoardView;
 import chessgame.board.Cell;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceType;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 /**
  * Contains information computed from actor's pieces
  */
-public class ActorInformation<C extends Cell, A extends PieceType, P extends Piece<A>, B extends Board<C, A, P>> {
+public class ActorInformation<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardView<C, A, P>> {
     private final Map<C, Set<C>> availableMoves = new HashMap<>();
 
     public void refresh(B board, Rules<C, A, P, B> rules,

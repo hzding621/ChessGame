@@ -1,9 +1,8 @@
 package chessgame.rule;
 
-import chessgame.board.Board;
 import chessgame.board.Cell;
 import chessgame.board.Direction;
-import chessgame.board.GridBoard;
+import chessgame.board.GridView;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceType;
 import chessgame.player.Player;
@@ -14,10 +13,10 @@ import java.util.List;
 
 /**
  * This type of piece attack in symmetric directions, such as Rook, Bishop, Queen
- * Such pieces must be associated with GridBoard
+ * Such pieces must be associated with GridView
  */
 public interface DirectionalAttackingPieceRule<C extends Cell, D extends Direction, A extends PieceType, P extends Piece<A>,
-        B extends GridBoard<C, D, A, P>> extends PinningPieceRule<C, A, P, B> {
+        B extends GridView<C, D, A, P>> extends PinningPieceRule<C, A, P, B> {
 
     Collection<D> getAttackingDirections(B board);
 

@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * A GridBoard is a Board that supports the notion of orthogonal and diagonal directions.
+ * A GridView is a BoardView that supports the notion of orthogonal and diagonal directions.
  */
-public interface GridBoard<C extends Cell, D extends Direction, A extends PieceType, P extends Piece<A>>
-        extends Board<C, A, P> {
+public interface GridView<C extends Cell, D extends Direction, A extends PieceType, P extends Piece<A>>
+        extends BoardView<C, A, P> {
 
     /**
      * @return all directions a piece can potentially move that are supported by this board implementation

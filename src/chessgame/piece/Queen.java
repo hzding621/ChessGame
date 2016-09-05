@@ -2,7 +2,7 @@ package chessgame.piece;
 
 import chessgame.board.Cell;
 import chessgame.board.Direction;
-import chessgame.board.GridBoard;
+import chessgame.board.GridView;
 import chessgame.player.Player;
 import chessgame.rule.DirectionalAttackingPieceRule;
 
@@ -25,7 +25,7 @@ public final class Queen<C extends Cell, A extends PieceType> extends AbstractPi
                 '}';
     }
     public static final class QueenRule<C extends Cell, A extends PieceType, D extends Direction, P extends Piece<A>,
-            B extends GridBoard<C, D, A, P>> implements DirectionalAttackingPieceRule<C, D, A, P, B> {
+            B extends GridView<C, D, A, P>> implements DirectionalAttackingPieceRule<C, D, A, P, B> {
         @Override
         public Collection<D> getAttackingDirections(B board) {
             return board.getAllDirections();

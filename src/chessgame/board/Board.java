@@ -2,18 +2,13 @@ package chessgame.board;
 
 import chessgame.piece.Piece;
 import chessgame.piece.PieceType;
-import chessgame.player.Player;
 
-import java.util.Collection;
 import java.util.Optional;
 
-public interface Board<C extends Cell, A extends PieceType, P extends Piece<A>> {
-
-    /**
-     * @return empty if there is no piece located at this board;
-     * or non-null value that represents the piece located at this board
-     */
-    Optional<P> getPiece(C cell);
+/**
+ * Represents a board in a chess game, which can be quried as well as updated
+ */
+public interface Board<C extends Cell, A extends PieceType, P extends Piece<A>> extends BoardView<C, A, P> {
 
     /**
      * Remove the piece at this position
@@ -29,22 +24,4 @@ public interface Board<C extends Cell, A extends PieceType, P extends Piece<A>> 
      * @return The moved piece
      */
     P movePiece(C source, C target);
-
-    /**
-     * @return all pieces on the board of one type belonging to a certain player
-     */
-    Collection<PieceLocator<C, A, P>> getPiecesForPlayer(PieceType type, Player player);
-
-    /**
-     * @return all pieces on the board of belonging to a certain player
-     */
-    Collection<PieceLocator<C, A, P>> getAllPiecesForPlayer(Player player);
-
-    Collection<PieceLocator<C, A, P>> getAllPieces();
-
-    boolean isOccupied(C cell);
-
-    boolean isEnemy(C cell, Player player);
-
-    void initializeBoard();
 }

@@ -18,7 +18,6 @@ public abstract class AbstractBoard<C extends Cell, A extends PieceType, P exten
         this.pieceSet = pieceSet;
     }
 
-    @Override
     public void initializeBoard() {
         // TODO
     }
@@ -75,14 +74,6 @@ public abstract class AbstractBoard<C extends Cell, A extends PieceType, P exten
         return occupants.entrySet()
                         .stream()
                         .filter(e -> e.getValue().getPlayer().equals(player))
-                        .map(e -> new PieceLocator<>(e.getKey(), e.getValue()))
-                        .collect(Collectors.toList());
-    }
-
-    @Override
-    public Collection<PieceLocator<C, A, P>> getAllPieces() {
-        return occupants.entrySet()
-                        .stream()
                         .map(e -> new PieceLocator<>(e.getKey(), e.getValue()))
                         .collect(Collectors.toList());
     }

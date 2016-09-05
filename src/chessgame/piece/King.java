@@ -2,9 +2,8 @@ package chessgame.piece;
 
 import chessgame.board.Cell;
 import chessgame.board.Direction;
-import chessgame.board.GridBoard;
+import chessgame.board.GridView;
 import chessgame.player.Player;
-import chessgame.rule.DirectionalAttackingPieceRule;
 import chessgame.rule.PieceRule;
 
 import java.util.*;
@@ -26,7 +25,7 @@ public final class King<C extends Cell, A extends PieceType> extends AbstractPie
                 '}';
     }
     public static final class KingRule<C extends Cell, A extends PieceType, D extends Direction, P extends Piece<A>,
-            B extends GridBoard<C, D, A, P>> implements PieceRule<C, A, P, B> {
+            B extends GridView<C, D, A, P>> implements PieceRule<C, A, P, B> {
 
         @Override
         public Collection<C> attacking(B board, C position, Player player) {

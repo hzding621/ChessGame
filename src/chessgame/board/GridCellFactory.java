@@ -3,7 +3,7 @@ package chessgame.board;
 import java.util.Optional;
 
 /**
- * Created by haozhending on 9/4/16.
+ * Factory interface for constructing cells used for grid
  */
 public interface GridCellFactory<C extends Cell, D extends Direction> {
 

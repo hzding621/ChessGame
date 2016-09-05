@@ -13,7 +13,7 @@ import java.util.*;
  * Represents an abstract rectangular board
  */
 public abstract class RectangularBoard<A extends PieceType, P extends Piece<A>>
-        extends AbstractBoard<SquareCell, A, P> implements GridBoard<SquareCell, SquareDirection, A, P> {
+        extends AbstractBoard<SquareCell, A, P> implements GridView<SquareCell, SquareDirection, A, P> {
 
     protected RectangularBoard(PieceSet<SquareCell, A, P> pieceSet) {
         super(pieceSet);

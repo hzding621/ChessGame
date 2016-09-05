@@ -4,7 +4,7 @@ package chessgame.rule;
  * Interface for moving rule for a certain type of piece
  */
 
-import chessgame.board.Board;
+import chessgame.board.BoardView;
 import chessgame.board.Cell;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceType;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * Abstraction of moving rule for the piece class,
  * handles piece moving logic by passing in board information.
  */
-public interface PieceRule<C extends Cell, A extends PieceType, P extends Piece<A>, B extends Board<C, A, P>> {
+public interface PieceRule<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardView<C, A, P>> {
 
     /**
      * Find all position on the board the piece is attacking, including position occupied by my own piece

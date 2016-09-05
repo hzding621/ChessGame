@@ -1,6 +1,6 @@
 package chessgame.game;
 
-import chessgame.board.Board;
+import chessgame.board.BoardView;
 import chessgame.board.Cell;
 import chessgame.board.PieceLocator;
 import chessgame.piece.Piece;
@@ -13,7 +13,7 @@ import java.util.*;
 /**
  * Contains information computed from opponent pieces
  */
-public final class DefenderInformation<C extends Cell, A extends PieceType, P extends Piece<A>, B extends Board<C, A, P>> {
+public final class DefenderInformation<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardView<C, A, P>> {
 
     private final Set<C> isAttacked = new HashSet<>();
     private final Collection<PieceLocator<C, A, P>> checkers = new HashSet<>();
@@ -75,6 +75,6 @@ public final class DefenderInformation<C extends Cell, A extends PieceType, P ex
      * @return all pinning situation wherein the input piece is the protecting piece
      */
     public Collection<PinnedSet<C>> isKingDefender(C actorCell) {
-        return kingDefenders.getOrDefault(actorCell, Collections.EMPTY_LIST);
+        return kingDefenders.getOrDefault(actorCell, Collections.emptyList());
     }
 }

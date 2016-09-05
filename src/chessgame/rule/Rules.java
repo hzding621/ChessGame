@@ -1,6 +1,6 @@
 package chessgame.rule;
 
-import chessgame.board.Board;
+import chessgame.board.BoardView;
 import chessgame.board.Cell;
 import chessgame.board.PieceLocator;
 import chessgame.game.DefenderInformation;
@@ -14,7 +14,7 @@ import java.util.Collections;
 /**
  * Represents a set of rules associated with an instance of game
  */
-public class Rules<C extends Cell, A extends PieceType, P extends Piece<A>, B extends Board<C, A, P>> {
+public class Rules<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardView<C, A, P>> {
 
     private final RuleBindings<C, A, P, B> ruleBindings;
 

@@ -1,8 +1,6 @@
 package chessgame.piece;
 
-import chessgame.board.Board;
 import chessgame.board.Cell;
-import chessgame.board.SquareCell;
 import chessgame.player.Player;
 
 import java.util.Collection;

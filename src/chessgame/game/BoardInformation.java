@@ -1,6 +1,6 @@
 package chessgame.game;
 
-import chessgame.board.Board;
+import chessgame.board.BoardView;
 import chessgame.board.Cell;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceSet;
@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * Stores information about the board at runtime. Is NOT responsible for computing the information.
  */
-public final class BoardInformation<C extends Cell, A extends PieceType, P extends Piece<A>, B extends Board<C, A, P>> {
+public final class BoardInformation<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardView<C, A, P>> {
 
     private final DefenderInformation<C, A, P, B> defenderInformation = new DefenderInformation<>();
     private final ActorInformation<C, A, P, B> actorInformation = new ActorInformation<>();

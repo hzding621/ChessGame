@@ -1,6 +1,6 @@
 package chessgame.move;
 
-import chessgame.board.Board;
+import chessgame.board.BoardView;
 import chessgame.board.Cell;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceType;
@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * Represents a simple move
  */
-public class SimpleMove<C extends Cell, A extends PieceType, P extends Piece<A>, B extends Board<C, A, P>>
+public class SimpleMove<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardView<C, A, P>>
         implements Move<C, A, P, B> {
 
     private final B board;

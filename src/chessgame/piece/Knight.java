@@ -6,7 +6,7 @@ package chessgame.piece;
 
 import chessgame.board.Cell;
 import chessgame.board.Direction;
-import chessgame.board.GridBoard;
+import chessgame.board.GridView;
 import chessgame.player.Player;
 import chessgame.rule.PieceRule;
 
@@ -30,7 +30,7 @@ public final class Knight<C extends Cell, A extends PieceType> extends AbstractP
     }
 
     public static final class KnightRule<C extends Cell, A extends PieceType, D extends Direction, P extends Piece<A>,
-            B extends GridBoard<C, D, A, P>> implements PieceRule<C, A, P, B> {
+            B extends GridView<C, D, A, P>> implements PieceRule<C, A, P, B> {
 
         private Optional<C> knightStyle(B board, C startPosition, D direction, boolean closeWise) {
             Optional<C> middlePosition = board.moveOnce(startPosition, direction);

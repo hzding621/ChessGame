@@ -1,6 +1,6 @@
 package chessgame.rule;
 
-import chessgame.board.Board;
+import chessgame.board.BoardView;
 import chessgame.board.Cell;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceType;
@@ -11,7 +11,7 @@ import java.util.Collection;
 /**
  * PinningPieceRule exposes additional rule associated with pieces capable of making pinning/discovered attacks
  */
-public interface PinningPieceRule<C extends Cell, A extends PieceType, P extends Piece<A>, B extends Board<C, A, P>>
+public interface PinningPieceRule<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardView<C, A, P>>
         extends PieceRule<C, A, P, B> {
 
     /**

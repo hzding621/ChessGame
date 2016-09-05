@@ -1,13 +1,12 @@
 package chessgame.game;
 
-import chessgame.board.Board;
+import chessgame.board.BoardView;
 import chessgame.board.Cell;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceType;
 import chessgame.rule.Rules;
 import chessgame.player.Player;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -15,7 +14,7 @@ import java.util.Set;
 /**
  * Interface for a variant of chess game
  */
-interface Game<C extends Cell, A extends PieceType, P extends Piece<A>, B extends Board<C, A, P>> {
+interface Game<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardView<C, A, P>> {
 
     B getBoard();
 
