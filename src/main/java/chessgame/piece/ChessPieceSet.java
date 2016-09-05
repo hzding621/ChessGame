@@ -6,7 +6,6 @@ import chessgame.board.SquareCell;
 import chessgame.player.Player;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Represents a standard 8x8 chess piece set

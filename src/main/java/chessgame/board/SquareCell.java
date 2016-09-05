@@ -67,9 +67,9 @@ public class SquareCell implements Cell {
         private final Coordinate.Factory rankFactory;
         private final Coordinate.Factory fileFactory;
 
-        public Factory(Coordinate.Factory rankFactory, Coordinate.Factory fileFactory) {
-            this.rankFactory = rankFactory;
+        public Factory(Coordinate.Factory fileFactory, Coordinate.Factory rankFactory) {
             this.fileFactory = fileFactory;
+            this.rankFactory = rankFactory;
         }
 
         @Override

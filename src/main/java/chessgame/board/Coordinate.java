@@ -4,8 +4,6 @@ import utility.LoggerFactory;
 
 import java.util.Optional;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * Represents a coordinate in an abstract chess board and provides utility class to mutate the coordinate with boundary checks

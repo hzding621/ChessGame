@@ -1,6 +1,5 @@
 package chessgame.rule;
 
-import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
 import chessgame.game.PieceInformation;
 import chessgame.piece.Piece;

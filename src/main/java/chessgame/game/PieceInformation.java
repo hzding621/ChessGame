@@ -2,7 +2,6 @@ package chessgame.game;
 
 import chessgame.board.Cell;
 import chessgame.piece.Piece;
-import chessgame.piece.PieceSet;
 import chessgame.piece.PieceType;
 import chessgame.player.Player;
 
