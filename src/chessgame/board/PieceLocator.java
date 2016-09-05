@@ -4,7 +4,7 @@ import chessgame.piece.Piece;
 import chessgame.piece.PieceType;
 
 /**
- * Created by haozhending on 9/4/16.
+ * A value type that represents a pair of cell and piece
  */
 public final class PieceLocator<C extends Cell, A extends PieceType, P extends Piece<A>> {
 

@@ -1,11 +1,12 @@
 package chessgame.board;
 
-import chessgame.move.MovePath;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceType;
 import chessgame.player.Player;
+import chessgame.rule.PinnedSet;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -30,23 +31,28 @@ public interface GridBoard<C extends Cell, D extends Direction, A extends PieceT
     Collection<D> getDiagonalDirections();
 
     /**
-     * Returns a MovePath that represents a series of cell movement that
-     * starts at a cell, goes at a certain direction, and either stops at first occupant or at the edge of board
-     *
-     * @param direction the direction the movement goes at
-     * @param startCell the cell the movement starts at
-     * @param player
-     * @return the list of movement
-     */
-    MovePath<C> furthestReachWithCapture(D direction, C startCell, Player player);
-
-    /**
      * Move the startCell at direction for one step
      * @param startCell starting cell
      * @param direction the direction to move
      * @return non-empty value if the cell is not at the edge of the board, empty otherwise
      */
     Optional<C> moveOnce(C startCell, D direction);
+
+    /**
+     * Returns a series of cell movement that
+     * starts at a cell, goes at a certain direction, and either stops at first occupant or at the edge of board
+     *
+     * @param startCell the cell the movement starts at
+     * @param direction the direction the movement goes at
+     * @return the list of movement
+     */
+    List<C> furthestReach(C startCell, D direction);
+
+    Optional<PinnedSet<C>> findPinnedSet(C startCell, D direction, Player player);
+
+    Optional<C> moveForward(C startCell, Player player);
+
+    Collection<C> attackPawnStyle(C startCell, Player player);
 
     /**
      * @return the direction from startCell to endCell

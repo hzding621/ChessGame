@@ -8,4 +8,8 @@ import java.util.List;
  */
 public enum Player {
     WHITE, BLACK;
+
+    public Player next() {
+        return this == WHITE ? BLACK : WHITE;
+    }
 }

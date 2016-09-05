@@ -3,9 +3,10 @@ package chessgame.piece;
 import chessgame.board.Cell;
 import chessgame.board.Direction;
 import chessgame.board.GridBoard;
-import chessgame.move.MovePath;
 import chessgame.player.Player;
-import chessgame.rule.PieceRule;
+import chessgame.rule.DirectionalAttackingPieceRule;
+import chessgame.rule.PinnedSet;
+import chessgame.rule.PinningPieceRule;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,27 +26,10 @@ public final class Queen<C extends Cell, A extends PieceType> extends AbstractPi
                 '}';
     }
     public static final class QueenRule<C extends Cell, A extends PieceType, D extends Direction, P extends Piece<A>,
-            B extends GridBoard<C, D, A, P>> implements PieceRule<C, A, P, B> {
-
+            B extends GridBoard<C, D, A, P>> implements DirectionalAttackingPieceRule<C, D, A, P, B> {
         @Override
-        public Collection<C> getNormalMoves(B board, C position, Player player) {
-            List<C> moveTos = new ArrayList<>();
-            board.getAllDirections().forEach(direction ->
-                    board.furthestReachWithCapture(direction, position, player).getPath().forEach(moveTos::add));
-            return moveTos;
-        }
-
-        @Override
-        public Collection<C> getBlockingPositionsWhenAttacking(B board,
-                                                               C sourcePosition,
-                                                               C targetPosition,
-                                                               Player player) {
-            if (!canNormallyMoveTo(board, sourcePosition, targetPosition, player)) {
-                throw new IllegalArgumentException(sourcePosition + " cannot attack " + targetPosition + " !");
-            }
-            D direction = board.findDirection(sourcePosition, targetPosition);
-            MovePath<C> movePath = board.furthestReachWithCapture(direction, sourcePosition, player);
-            return movePath.getPath();
+        public Collection<D> getAttackingDirections(B board) {
+            return board.getAllDirections();
         }
     }
 }

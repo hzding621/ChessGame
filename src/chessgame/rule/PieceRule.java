@@ -1,7 +1,7 @@
 package chessgame.rule;
 
 /**
- * Created by haozhending on 9/4/16.
+ * Interface for moving rule for a certain type of piece
  */
 
 import chessgame.board.Board;
@@ -19,25 +19,23 @@ import java.util.stream.Collectors;
  */
 public interface PieceRule<C extends Cell, A extends PieceType, P extends Piece<A>, B extends Board<C, A, P>> {
 
-    default Collection<C> getPossibleCaptures(B board, C position, Player player) {
-        return getNormalMoves(board, position, player)
-                .stream()
-                .filter(c -> board.getPiece(c).isPresent())
-                .collect(Collectors.toList());
-    }
-
+    /**
+     * Find all position on the board the piece is attacking, including position occupied by my own piece
+     * @param board the board to analyze on
+     * @param position the position of player's piece
+     * @return all attacking positions
+     */
+    Collection<C> attacking(B board, C position, Player player);
 
     /**
      * Check whether the given piece can move to or capture the target piece, but does not consider check-escapes
      * @param board the board to analyze on
-     * @param position the position of the piece
+     * @param position the position of player's piece
      * @param target the target position
      * @param player the player the piece belongs to
      */
     default boolean canNormallyMoveTo(B board, C position, C target, Player player) {
-        return getNormalMoves(board, position, player)
-                    .stream()
-                    .anyMatch(c -> c.equals(target));
+        return basicMoves(board, position, player).contains(target);
     }
 
     /**
@@ -47,8 +45,12 @@ public interface PieceRule<C extends Cell, A extends PieceType, P extends Piece<
      * @param player the player the piece belongs to
      * @return all possible moves
      */
-    Collection<C> getNormalMoves(B board, C position, Player player);
-
+    default Collection<C> basicMoves(B board, C position, Player player) {
+        return attacking(board, position, player)
+                .stream()
+                .filter(c -> !board.getPiece(c).isPresent() || !board.getPiece(c).get().getPlayer().equals(player))
+                .collect(Collectors.toList());
+    }
 
     /**
      * Finds all positions the opponent can move to to block the attacking

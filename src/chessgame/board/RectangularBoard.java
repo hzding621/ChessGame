@@ -1,11 +1,11 @@
 package chessgame.board;
 
-import chessgame.move.MovePath;
-import chessgame.piece.ChessPieceType;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceSet;
 import chessgame.piece.PieceType;
 import chessgame.player.Player;
+import chessgame.rule.PinnedSet;
+import utility.CollectionUtils;
 
 import java.util.*;
 
@@ -36,19 +36,17 @@ public abstract class RectangularBoard<A extends PieceType, P extends Piece<A>>
 
 
     @Override
-    public Optional<SquareCell> moveOnce(SquareCell startCell, SquareDirection direction) {
-        return getGridCellFactory().moveOnce(startCell, direction);
-    }
-
-    @Override
     public SquareDirection findDirection(SquareCell startCell, SquareCell endCell) {
         return SquareCell.findDirection(startCell, endCell);
     }
 
     @Override
-    public MovePath<SquareCell> furthestReachWithCapture(SquareDirection direction,
-                                             SquareCell startCell,
-                                             Player player) {
+    public Optional<SquareCell> moveOnce(SquareCell startCell, SquareDirection direction) {
+        return getGridCellFactory().moveOnce(startCell, direction);
+    }
+
+    @Override
+    public List<SquareCell> furthestReach(SquareCell startCell, SquareDirection direction) {
         List<SquareCell> cellList = new ArrayList<>();
         Optional<SquareCell> nextCell = moveOnce(startCell, direction);
         while (nextCell.isPresent()) {
@@ -56,15 +54,50 @@ public abstract class RectangularBoard<A extends PieceType, P extends Piece<A>>
             Optional<P> piece = getPiece(nextCell.get());
             if (piece.isPresent()) {
                 // nextCell has an occupant
-
-                if (piece.get().getPlayer().equals(player)) {
-                    // do not include pieces of same player
-                    cellList.remove(cellList.size() - 1);
-                }
                 break;
             }
             nextCell = moveOnce(nextCell.get(), direction);
         }
-        return MovePath.of(cellList);
+        return cellList;
+    }
+
+    private Optional<SquareCell> firstOccupant(SquareCell startCell, SquareDirection direction) {
+        return CollectionUtils.last(furthestReach(startCell, direction))
+                .filter(c -> getPiece(c).isPresent());
+    }
+
+    @Override
+    public Optional<PinnedSet<SquareCell>> findPinnedSet(SquareCell startCell, SquareDirection direction, Player player) {
+
+        Optional<SquareCell> firstMeet = firstOccupant(startCell, direction);
+        if (!firstMeet.isPresent() || !isEnemy(firstMeet.get(), player)) return Optional.empty();
+        Optional<SquareCell> secondMeet = firstOccupant(firstMeet.get(), direction);
+        if (!secondMeet.isPresent() || !isEnemy(secondMeet.get(), player)) return Optional.empty();
+        return Optional.of(new PinnedSet<>(startCell, firstMeet.get(), secondMeet.get()));
+    }
+
+    @Override
+    public Optional<SquareCell> moveForward(SquareCell startCell, Player player) {
+        if (player == Player.WHITE) {
+            return getGridCellFactory().moveOnce(startCell, SquareDirection.NORTH);
+        } else {
+            return getGridCellFactory().moveOnce(startCell, SquareDirection.SOUTH);
+        }
+    }
+
+    @Override
+    public Collection<SquareCell> attackPawnStyle(SquareCell startCell, Player player) {
+        final List<SquareCell> list = new ArrayList<>();
+        SquareDirection[] dirs = player == Player.WHITE
+                ? new SquareDirection[]{SquareDirection.NORTHWEST, SquareDirection.NORTHEAST}
+                : new SquareDirection[]{SquareDirection.SOUTHWEST, SquareDirection.SOUTHEAST};
+        for (SquareDirection dir: dirs) {
+            getGridCellFactory().moveOnce(startCell, dir).ifPresent(cell -> {
+                if (isOccupied(cell)) {
+                    list.add(cell);
+                }
+            });
+        }
+        return list;
     }
 }

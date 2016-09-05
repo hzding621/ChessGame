@@ -2,10 +2,9 @@ package chessgame.rule;
 
 import chessgame.board.Board;
 import chessgame.board.Cell;
-import chessgame.board.ChessBoard;
-import chessgame.board.SquareCell;
-import chessgame.move.Move;
-import chessgame.piece.ChessPieceType;
+import chessgame.board.PieceLocator;
+import chessgame.game.BoardInformation;
+import chessgame.game.DefenderInformation;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceType;
 import chessgame.player.Player;
@@ -20,25 +19,10 @@ public class Rules<C extends Cell, A extends PieceType, P extends Piece<A>, B ex
 
     private final PieceRulesBindings<C, A, P, B> pieceRulesBindings;
 
-    private final CheckRules<C, A, P, B> checkRules;
-
-    public Rules(PieceRulesBindings<C, A, P, B> pieceRulesBindings, CheckRules<C, A, P, B> checkRules) {
+    public Rules(PieceRulesBindings<C, A, P, B> pieceRulesBindings) {
         this.pieceRulesBindings = pieceRulesBindings;
-        this.checkRules = checkRules;
     }
 
-
-
-//    public boolean canMoveTo(B board, C source, C target, Player player) {
-//        if (!canMoveByPlayer(board, source, player)) {
-//            return false;
-//        }
-//        P piece = board.getPiece(source).get();
-//        return pieceRulesBindings.getRule(piece.getPieceClass())
-//                        .getNormalMoves(board, source, player)
-//                        .stream().anyMatch(c -> c.equals(target));
-//    }
-//
     private boolean canMoveByPlayer(B board, C position, Player player) {
         if (!board.getPiece(position).isPresent()) {
             return false;
@@ -46,22 +30,55 @@ public class Rules<C extends Cell, A extends PieceType, P extends Piece<A>, B ex
         P piece = board.getPiece(position).get();
         return  piece.getPlayer().equals(player);
     }
-//
-    public Collection<C> getPossibleMoves(B board, C source, Player player) {
-        if (!canMoveByPlayer(board, source, player)) {
-            return Collections.EMPTY_LIST;
+
+    public Collection<PinnedSet<C>> pinning(B board, C source, Player pinner) {
+        if (!board.getPiece(source).isPresent()) {
+            throw new IllegalStateException("Get pinning set of non-existing piece at " + source);
+        }
+        if (!canMoveByPlayer(board, source, pinner)) {
+            throw new IllegalStateException("Player " + pinner + " cannot move " + source);
+        }
+        P piece = board.getPiece(source).get();
+        PieceRule<C, A, P, B> rule = pieceRulesBindings.getRule(piece.getPieceClass());
+        if (!(rule instanceof PinningPieceRule)) {
+            return Collections.emptyList();
+        }
+        PinningPieceRule<C, A, P, B> pinningRule = (PinningPieceRule<C, A, P, B>) rule;
+        return pinningRule.pinningAttack(board, source, pinner);
+    }
+
+    public Collection<C> attacking(B board, C source, Player actor) {
+        if (!board.getPiece(source).isPresent()) {
+            throw new IllegalStateException("Get attacking set of non-existing piece at " + source);
+        }
+        P piece = board.getPiece(source).get();
+        return pieceRulesBindings.getRule(piece.getPieceClass())
+                .attacking(board, source, actor);
+    }
+
+    public Collection<C> basicMoves(B board, C source, Player actor) {
+        if (!canMoveByPlayer(board, source, actor)) {
+            throw new IllegalStateException("Player " + actor + " cannot move " + source);
         }
 
         P piece = board.getPiece(source).get();
         return pieceRulesBindings.getRule(piece.getPieceClass())
-                .getNormalMoves(board, source, player);
+                .basicMoves(board, source, actor);
     }
 
-    public CheckRules<C, A, P, B> getCheckRules() {
-        return checkRules;
-    }
+    public boolean canRemoveCheckThreats(C movedToPosition, B board, Player actor, C actorKing,
+                                         DefenderInformation<C, A, P, B> information) {
 
-    public boolean moveRemovesCheck(C target, B board, Player player, BoardInformation<C, A, P> boardInformation) {
-        return getCheckRules().movesRemovesCheck(target, board, player, boardInformation, pieceRulesBindings);
+        int remainingCheckers = information.getCheckers().size();
+        for (PieceLocator<C, A, P> checker: information.getCheckers()) {
+            if (pieceRulesBindings.getRule(checker.getPiece().getPieceClass())
+                    .getBlockingPositionsWhenAttacking(board, checker.getCell(),
+                            actorKing, actor)
+                    .stream()
+                    .anyMatch(c -> c.equals(movedToPosition))) {
+                remainingCheckers--;
+            }
+        }
+        return remainingCheckers == 0;
     }
 }

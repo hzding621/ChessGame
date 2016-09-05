@@ -27,11 +27,14 @@ public interface Board<C extends Cell, A extends PieceType, P extends Piece<A>> 
      */
     Optional<P> clearPiece(C cell);
 
-    /*
+    /**
      * Move the piece from source to target
      * Throws IllegalStateException if source is empty or target is not empty
+     * @param source cell to move from
+     * @param target cell to move to
+     * @return The moved piece
      */
-    void movePiece(C source, C target);
+    P movePiece(C source, C target);
 
     /**
      * @return all pieces on the board of one type belonging to a certain player
@@ -42,6 +45,12 @@ public interface Board<C extends Cell, A extends PieceType, P extends Piece<A>> 
      * @return all pieces on the board of belonging to a certain player
      */
     Collection<PieceLocator<C, A, P>> getAllPiecesForPlayer(Player player);
+
+    Collection<PieceLocator<C, A, P>> getAllPieces();
+
+    boolean isOccupied(C cell);
+
+    boolean isEnemy(C cell, Player player);
 
     void initializeBoard();
 }

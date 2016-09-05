@@ -4,7 +4,6 @@ import chessgame.piece.Piece;
 import chessgame.piece.PieceSet;
 import chessgame.piece.PieceType;
 import chessgame.player.Player;
-import chessgame.rule.BoardInformation;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -23,6 +22,16 @@ public abstract class AbstractBoard<C extends Cell, A extends PieceType, P exten
     public void initializeBoard() {
     }
 
+    @Override
+    public boolean isOccupied(C cell) {
+        return occupants.get(cell) != null;
+    }
+
+    @Override
+    public boolean isEnemy(C cell, Player player) {
+        return occupants.get(cell) != null && !occupants.get(cell).getPlayer().equals(player);
+    }
+
     public Optional<P> getPiece(C cell) {
         if (!occupants.containsKey(cell)) {
             return Optional.empty();
@@ -39,7 +48,7 @@ public abstract class AbstractBoard<C extends Cell, A extends PieceType, P exten
         return previousPiece;
     }
 
-    public void movePiece(C source, C target) {
+    public P movePiece(C source, C target) {
         if (!occupants.containsKey(source)) {
             throw new IllegalStateException("Source position is empty!");
         }
@@ -47,18 +56,15 @@ public abstract class AbstractBoard<C extends Cell, A extends PieceType, P exten
             throw new IllegalStateException("Target position is not empty!");
         }
         occupants.put(target, occupants.get(source));
-        occupants.remove(source);
+        return occupants.remove(source);
     }
 
     @Override
     public Optional<P> clearPiece(C cell) {
         Optional<P> previousPiece = getPiece(cell);
         occupants.remove(cell);
-
-
         return previousPiece;
     }
-
 
     @Override
     public Collection<PieceLocator<C, A, P>> getPiecesForPlayer(PieceType type, Player player) {
@@ -72,6 +78,15 @@ public abstract class AbstractBoard<C extends Cell, A extends PieceType, P exten
 
     @Override
     public Collection<PieceLocator<C, A, P>> getAllPiecesForPlayer(Player player) {
+        return occupants.entrySet()
+                        .stream()
+                        .filter(e -> e.getValue().getPlayer().equals(player))
+                        .map(e -> new PieceLocator<>(e.getKey(), e.getValue()))
+                        .collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<PieceLocator<C, A, P>> getAllPieces() {
         return occupants.entrySet()
                         .stream()
                         .map(e -> new PieceLocator<>(e.getKey(), e.getValue()))

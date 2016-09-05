@@ -9,4 +9,8 @@ import chessgame.piece.PieceType;
  * Created by haozhending on 9/4/16.
  */
 public interface Move<C extends Cell, A extends PieceType, P extends Piece<A>, B extends Board<C, A, P>> {
+
+    C getSource();
+
+    C getTarget();
 }

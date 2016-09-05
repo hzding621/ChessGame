@@ -5,22 +5,22 @@ import chessgame.board.Cell;
 /**
  * Represents a set of pieces that form a king-pinning relationship
  */
-public final class KingPinning<C extends Cell> {
-    private final C pinner;
+public final class PinnedSet<C extends Cell> {
+    private final C attacker;
     private final C protector;
-    private final C kingPosition;
+    private final C hided;
 
-    public KingPinning(C pinner, C protector, C kingPosition) {
-        this.pinner = pinner;
+    public PinnedSet(C attacker, C protector, C hided) {
+        this.attacker = attacker;
         this.protector = protector;
-        this.kingPosition = kingPosition;
+        this.hided = hided;
     }
 
     /**
-     * @return The pinner. The pinner is the piece that is making the pinning attack
+     * @return The attacker. The attacker is the piece that is making the pinning attack
      */
-    public C getPinner() {
-        return pinner;
+    public C getAttacker() {
+        return attacker;
     }
 
     /**
@@ -33,7 +33,7 @@ public final class KingPinning<C extends Cell> {
     /**
      * @return The King's Position
      */
-    public C getKingPosition() {
-        return kingPosition;
+    public C getHided() {
+        return hided;
     }
 }
