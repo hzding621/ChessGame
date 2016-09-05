@@ -1,8 +1,5 @@
 package chessgame.piece;
 
-import java.util.Arrays;
-import java.util.Collection;
-
 /**
  * Represent a standard Chess piece set of 32 pieces
  */
@@ -13,5 +10,4 @@ public enum ChessPieceType implements PieceType {
     public boolean isKing() {
         return this == KING;
     };
-
 }

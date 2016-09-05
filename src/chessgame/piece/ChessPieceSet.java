@@ -1,10 +1,12 @@
 package chessgame.piece;
 
 import chessgame.board.Coordinate;
+import chessgame.board.PieceLocator;
 import chessgame.board.SquareCell;
 import chessgame.player.Player;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Represents a standard 8x8 chess piece set
@@ -68,35 +70,51 @@ public final class ChessPieceSet implements PieceSet<SquareCell, ChessPieceType,
     }
 
     @Override
+    public Collection<ChessPieceType> getSupportedTypes() {
+        return configuration.get(Player.WHITE).keySet();
+    }
+
+    @Override
+    public Collection<PieceLocator<SquareCell, ChessPieceType, Piece<ChessPieceType>>> constructPiecesOfTypeAndPlayer(ChessPieceType type, Player player) {
+        List<SquareCell> startingPositions = configuration.get(player).get(type);
+        List<PieceLocator<SquareCell, ChessPieceType, Piece<ChessPieceType>>> output = new ArrayList<>();
+        for (int i = 0; i < startingPositions.size(); i++) {
+            output.add(PieceLocator.of(startingPositions.get(i), createPiece(type, player, i)));
+        }
+        return output;
+    }
+
+    private static Piece<ChessPieceType> createPiece(ChessPieceType type, Player player, int id) {
+        switch (type) {
+            case PAWN:
+                return new Pawn<>(type, player, id);
+            case KNIGHT:
+                return new Knight<>(type, player, id);
+            case BISHOP:
+                return new Bishop<>(type, player, id);
+            case ROOK:
+                return new Rook<>(type, player, id);
+            case QUEEN:
+                return new Queen<>(type, player, id);
+            case KING:
+                return new King<>(type, player, id);
+        }
+        throw new IllegalStateException("Reach unexpected value " + type);
+    }
+
+    @Override
     public Map<Player, SquareCell> getKingStartingPositions() {
         return kingStartingPositions;
     }
 
     @Override
-    public boolean doesIncludePiece(ChessPieceType type) {
-
-        // By definition the chess piece set include all types of chess pieces
-        return true;
-    }
-
-    @Override
-    public Collection<ChessPieceType> getAllTypes() {
-        return configuration.get(Player.WHITE).keySet();
-    }
-
-    @Override
-    public int getPieceCountForOnePlayer(ChessPieceType type) {
-        return configuration.get(Player.WHITE).get(type).size();
-    }
-
-    @Override
-    public Collection<SquareCell> getStartingPositions(ChessPieceType type, Player player) {
-        return configuration.get(player).get(type);
+    public Collection<Player> getPlayers() {
+        return Arrays.asList(Player.WHITE, Player.BLACK);
     }
 
     private void populatePieces(Player player,
-                                       ChessPieceType type,
-                                       SquareCell.Factory factory, int[][] indices) {
+                                ChessPieceType type,
+                                SquareCell.Factory factory, int[][] indices) {
         for (int[] position: indices) {
             configuration.get(player).putIfAbsent(type, new ArrayList<>());
             try {

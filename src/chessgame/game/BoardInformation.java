@@ -1,6 +1,6 @@
 package chessgame.game;
 
-import chessgame.board.BoardView;
+import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceSet;
@@ -12,18 +12,18 @@ import java.util.*;
 /**
  * Stores information about the board at runtime. Is NOT responsible for computing the information.
  */
-public final class BoardInformation<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardView<C, A, P>> {
+public final class BoardInformation<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardViewer<C, A, P>> {
 
+    private final PieceInformation<C, A, P> pieceInformation;
     private final DefenderInformation<C, A, P, B> defenderInformation = new DefenderInformation<>();
     private final ActorInformation<C, A, P, B> actorInformation = new ActorInformation<>();
-
-    private final Map<Player, C> kingPosition;
     private final PlayerInformation playerInformation;
+
     private boolean checkmated;
 
     public BoardInformation(PieceSet<C, A, P> pieceSet) {
         playerInformation = new PlayerInformation(Player.WHITE, Player.BLACK);
-        kingPosition = new HashMap<>(pieceSet.getKingStartingPositions());
+        pieceInformation = new PieceInformation<>(pieceSet.getKingStartingPositions());
         checkmated = false;
     }
 
@@ -34,16 +34,20 @@ public final class BoardInformation<C extends Cell, A extends PieceType, P exten
         return defenderInformation.getIsAttacked().contains(cell);
     }
 
-    public Map<Player, C> getKingPosition() {
-        return kingPosition;
-    }
-
     public boolean isCheckmated() {
         return checkmated;
     }
 
-    public C getKingPosition(Player player) {
-        return kingPosition.get(player);
+    public PieceInformation<C, A, P> getPieceInformation() {
+        return pieceInformation;
+    }
+
+    public C locateKing(Player player) {
+        return pieceInformation.locateKing(player);
+    }
+
+    public void moveKing(Player player, C cell) {
+        pieceInformation.updateKingPosition(player, cell);
     }
 
     public Player getActor() {

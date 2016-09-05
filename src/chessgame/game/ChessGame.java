@@ -1,10 +1,13 @@
 package chessgame.game;
 
 import chessgame.board.ChessBoard;
+import chessgame.board.GridCellFactory;
 import chessgame.board.SquareCell;
+import chessgame.board.SquareDirection;
+import chessgame.move.Move;
 import chessgame.piece.*;
 import chessgame.player.Player;
-import chessgame.rule.RuleBindings;
+import chessgame.rule.ChessRuleBindings;
 import chessgame.rule.Rules;
 
 import java.util.*;
@@ -23,24 +26,16 @@ public class ChessGame implements Game<SquareCell, ChessPieceType, Piece<ChessPi
         this.chessBoard = chessBoard;
         this.chessRules = chessRules;
         this.boardInformation = boardInformation;
+        refreshInformation();
     }
 
     public static ChessGame constructGame() {
-        PieceSet<SquareCell, ChessPieceType, Piece<ChessPieceType>> pieceSet = new ChessPieceSet();
-        ChessBoard chessBoard = new ChessBoard(pieceSet);
-        chessBoard.initializeBoard();
-
-        RuleBindings<SquareCell, ChessPieceType, Piece<ChessPieceType>, ChessBoard> ruleBindings = new RuleBindings<>();
-
-        ruleBindings.addRule(ChessPieceType.PAWN, new Pawn.PawnRule<>());
-        ruleBindings.addRule(ChessPieceType.KNIGHT, new Knight.KnightRule<>());
-        ruleBindings.addRule(ChessPieceType.BISHOP, new Bishop.BishopRule<>());
-        ruleBindings.addRule(ChessPieceType.ROOK, new Rook.RookRule<>());
-        ruleBindings.addRule(ChessPieceType.QUEEN, new Queen.QueenRule<>());
-        ruleBindings.addRule(ChessPieceType.KING, new King.KingRule<>());
-
-        return new ChessGame(chessBoard, new Rules<>(ruleBindings),
-                new BoardInformation<>(pieceSet));
+        ChessPieceSet pieceSet = new ChessPieceSet();
+        BoardInformation<SquareCell, ChessPieceType, Piece<ChessPieceType>, ChessBoard> boardInformation =
+                new BoardInformation<>(pieceSet);
+        ChessBoard board = new ChessBoard(pieceSet);
+        ChessRuleBindings ruleBindings = new ChessRuleBindings(board, boardInformation.getPieceInformation());
+        return new ChessGame(board, new Rules<>(ruleBindings), boardInformation);
     }
 
     @Override
@@ -69,30 +64,39 @@ public class ChessGame implements Game<SquareCell, ChessPieceType, Piece<ChessPi
     }
 
     @Override
-    public Map<SquareCell, Set<SquareCell>> getAllMoves() {
+    public Map<SquareCell, Set<SquareCell>> allPotentialMovesBySource() {
         return boardInformation.getAvailableMoves();
+    }
+
+    private void refreshInformation() {
+        // Defender information is used to compute actor information so must be computed earlier
+        boardInformation.getDefenderInformation().refresh(chessBoard, chessRules,
+                boardInformation.getPlayerInformation(), boardInformation.locateKing(boardInformation.getActor()));
+        boardInformation.getActorInformation().refresh(chessBoard, chessRules, boardInformation.getDefenderInformation(),
+                boardInformation.getPlayerInformation(), boardInformation.locateKing(boardInformation.getActor()));
     }
 
     @Override
     public void move(SquareCell source, SquareCell target) {
-        if (!boardInformation.getAvailableMoves().get(source).contains(target)) {
+        if (!boardInformation.getAvailableMoves().getOrDefault(source, Collections.emptySet()).contains(target)) {
             throw new IllegalStateException("Invalid move from " + source + " to " + target);
         }
+        chessBoard.getPiece(target).ifPresent(p -> {
+            if (p.getPieceClass().isKing()) {
+                throw new IllegalStateException("Can never directly capture a King!");
+            }
+        });
         chessBoard.clearPiece(target);
         chessBoard.movePiece(source, target);
 
         // Update King's position
-        if (source.equals(boardInformation.getKingPosition().get(boardInformation.getActor()))) {
-            boardInformation.getKingPosition().put(boardInformation.getActor(), target);
+        if (source.equals(boardInformation.locateKing(boardInformation.getActor()))) {
+            boardInformation.moveKing(boardInformation.getActor(), target);
         }
 
         boardInformation.getPlayerInformation().nextRound();
 
-        // Defender information is used to compute actor information so must be computed earlier
-        boardInformation.getDefenderInformation().refresh(chessBoard, chessRules,
-                boardInformation.getPlayerInformation(), boardInformation.getKingPosition(boardInformation.getActor()));
-        boardInformation.getActorInformation().refresh(chessBoard, chessRules, boardInformation.getDefenderInformation(),
-                boardInformation.getPlayerInformation(), boardInformation.getKingPosition(boardInformation.getActor()));
+        refreshInformation();
 
         if (boardInformation.getAvailableMoves().isEmpty()) {
             boardInformation.endGame();
@@ -101,5 +105,34 @@ public class ChessGame implements Game<SquareCell, ChessPieceType, Piece<ChessPi
 
     public static void main(String[] args) {
         ChessGame game = ChessGame.constructGame();
+
+        GridCellFactory<SquareCell, SquareDirection> factory = game.getBoard().getGridCellFactory();
+        String[][] moves = new String[][] {
+                {"D", "2", "D", "4"},
+                {"D", "7", "D", "5"},
+                {"E", "2", "E", "4"},
+                {"D", "5", "E", "4"},
+                {"F", "1", "B", "5"},
+                {"C", "7", "C", "6"},
+                {"B", "5", "C", "6"},
+        };
+
+        Collection<Move<SquareCell>> allMoves = null;
+        for (String[] move: moves) {
+            allMoves = game.allPotentialMoves();
+            game.move(factory.of(move[0], move[1]).get(), factory.of(move[2], move[3]).get());
+        }
+        allMoves = game.allPotentialMoves();
+
+        System.out.println("Game Over!");
     }
+
+    private static final String[][][] testCases = {
+            {
+                    {"F", "2", "F", "3"},
+                    {"E", "7", "E", "5"},
+                    {"G", "2", "G", "4"},
+                    {"D", "8", "H", "4"},
+            },
+    };
 }

@@ -3,7 +3,7 @@ package chessgame.board;
 /**
  * Wrapper class of coordinate that represents a file in standard chess game with toString() override
  */
-public final class File {
+public final class File implements Comparable<File> {
 
     private final Coordinate delegate;
 
@@ -37,5 +37,11 @@ public final class File {
 
     public Coordinate getCoordinate() {
         return delegate;
+    }
+
+    @Override
+    public int compareTo(File o) {
+        if (this == o) return 0;
+        return delegate.compareTo(o.delegate);
     }
 }

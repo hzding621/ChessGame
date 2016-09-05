@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * A GridView is a BoardView that supports the notion of orthogonal and diagonal directions.
+ * A GridViewer is a BoardViewer that supports the notion of orthogonal and diagonal directions.
  */
-public interface GridView<C extends Cell, D extends Direction, A extends PieceType, P extends Piece<A>>
-        extends BoardView<C, A, P> {
+public interface GridViewer<C extends Cell, D extends Direction, A extends PieceType, P extends Piece<A>>
+        extends BoardViewer<C, A, P> {
 
     /**
      * @return all directions a piece can potentially move that are supported by this board implementation
@@ -50,8 +50,21 @@ public interface GridView<C extends Cell, D extends Direction, A extends PieceTy
 
     Optional<PinnedSet<C>> findPinnedSet(C startCell, D direction, Player player);
 
+    /**
+     * return the position where the piece starts at startCell and move toward the enemy's side by one step
+     * @return empty if the startCell is at an edge
+     */
     Optional<C> moveForward(C startCell, Player player);
 
+    /**
+     * same as moveForward except cannot land on a cell that is occupied
+     * @return empty if the startCell is at an edge or the forward position is occupied
+     */
+    Optional<C> moveForwardNoOverlap(C startCell, Player player);
+
+    /**
+     * @return the positions where the startCell is attacking in the pawn-style
+     */
     Collection<C> attackPawnStyle(C startCell, Player player);
 
     /**
@@ -59,5 +72,9 @@ public interface GridView<C extends Cell, D extends Direction, A extends PieceTy
      */
     D findDirection(C startCell, C endCell);
 
+    /**
+     * Return the cell factory of this grid. Can be used to construct cell for querying the grid.
+     * @return The cell factory of this grid
+     */
     GridCellFactory<C, D> getGridCellFactory();
 }

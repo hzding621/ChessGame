@@ -7,5 +7,9 @@ import java.util.Optional;
  */
 public interface GridCellFactory<C extends Cell, D extends Direction> {
 
-    Optional<SquareCell> moveOnce(C cell, D direction);
+    Optional<C> of(String file, String rank);
+
+    Optional<C> of(int fileIndex, int rankIndex);
+
+    Optional<C> moveOnce(C cell, D direction);
 }

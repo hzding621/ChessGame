@@ -12,7 +12,8 @@ public abstract class AbstractPiece<C extends Cell, A extends PieceType>
     private final A pieceClass;
     private final Player player;
     private final int id;
-    protected AbstractPiece(A pieceClass, Player player, int id) {
+
+    public AbstractPiece(A pieceClass, Player player, int id) {
         this.pieceClass = pieceClass;
         this.player = player;
         this.id = id;

@@ -8,9 +8,10 @@ import java.util.Collection;
 import java.util.Optional;
 
 /**
- * Represents an immutable Board that can be queried
+ * Represents an immutable Board that can be queried.
+ * Reference to classes that implements this interface should be valid through the entire lifetime of a game
  */
-public interface BoardView<C extends Cell, A extends PieceType, P extends Piece<A>> {
+public interface BoardViewer<C extends Cell, A extends PieceType, P extends Piece<A>> {
 
     /**
      * @return empty if there is no piece located at this board;

@@ -6,9 +6,8 @@ package chessgame.piece;
 
 import chessgame.board.Cell;
 import chessgame.board.Direction;
-import chessgame.board.GridView;
+import chessgame.board.GridViewer;
 import chessgame.player.Player;
-import chessgame.rule.PieceRule;
 
 import java.util.*;
 
@@ -30,7 +29,11 @@ public final class Knight<C extends Cell, A extends PieceType> extends AbstractP
     }
 
     public static final class KnightRule<C extends Cell, A extends PieceType, D extends Direction, P extends Piece<A>,
-            B extends GridView<C, D, A, P>> implements PieceRule<C, A, P, B> {
+            B extends GridViewer<C, D, A, P>> extends AbstractPieceRule<C, A, P, B> {
+
+        public KnightRule(B gridViewer) {
+            super(gridViewer);
+        }
 
         private Optional<C> knightStyle(B board, C startPosition, D direction, boolean closeWise) {
             Optional<C> middlePosition = board.moveOnce(startPosition, direction);
@@ -41,22 +44,21 @@ public final class Knight<C extends Cell, A extends PieceType> extends AbstractP
         }
 
         @Override
-        public Collection<C> attacking(B board, C position, Player player) {
+        public Collection<C> attacking(C position, Player player) {
             final List<C> targets = new ArrayList<>();
-            board.getOrthogonalDirections().stream()
+            boardViewer.getOrthogonalDirections().stream()
                 .forEach(direction ->{
-                        knightStyle(board, position, direction, true).ifPresent(targets::add);
-                        knightStyle(board, position, direction, false).ifPresent(targets::add);
+                        knightStyle(boardViewer, position, direction, true).ifPresent(targets::add);
+                        knightStyle(boardViewer, position, direction, false).ifPresent(targets::add);
                 });
             return targets;
         }
 
         @Override
-        public Collection<C> getBlockingPositionsWhenAttacking(B board,
-                                                               C sourcePosition,
+        public Collection<C> getBlockingPositionsWhenAttacking(C sourcePosition,
                                                                C targetPosition,
                                                                Player player) {
-            if (!attacking(board, sourcePosition, player).contains(targetPosition)) {
+            if (!attacking(sourcePosition, player).contains(targetPosition)) {
                 throw new IllegalArgumentException(sourcePosition + " cannot attack " + targetPosition + " !");
             }
 

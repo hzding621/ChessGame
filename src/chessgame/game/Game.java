@@ -1,20 +1,22 @@
 package chessgame.game;
 
-import chessgame.board.BoardView;
+import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
+import chessgame.move.Move;
+import chessgame.move.SimpleMove;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceType;
 import chessgame.rule.Rules;
 import chessgame.player.Player;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Interface for a variant of chess game
  */
-interface Game<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardView<C, A, P>> {
+interface Game<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardViewer<C, A, P>> {
 
     B getBoard();
 
@@ -26,10 +28,20 @@ interface Game<C extends Cell, A extends PieceType, P extends Piece<A>, B extend
 
     Player getDefender();
 
-    Map<C, Set<C>> getAllMoves();
+    Map<C, Set<C>> allPotentialMovesBySource();
+
+    default Collection<Move<C>> allPotentialMoves() {
+        return allPotentialMovesBySource().entrySet()
+                .stream()
+                .map(e -> e.getValue()
+                        .stream()
+                        .map(target -> SimpleMove.of(e.getKey(), target)))
+                .flatMap(Function.identity())
+                .collect(Collectors.toCollection(TreeSet::new));
+    }
 
     default Set<C> getMoves(C c) {
-        return getAllMoves().getOrDefault(c, Collections.emptySet());
+        return allPotentialMovesBySource().getOrDefault(c, Collections.emptySet());
     }
 
     void move(C source, C target);

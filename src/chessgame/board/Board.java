@@ -8,7 +8,7 @@ import java.util.Optional;
 /**
  * Represents a board in a chess game, which can be quried as well as updated
  */
-public interface Board<C extends Cell, A extends PieceType, P extends Piece<A>> extends BoardView<C, A, P> {
+public interface Board<C extends Cell, A extends PieceType, P extends Piece<A>> extends BoardViewer<C, A, P> {
 
     /**
      * Remove the piece at this position

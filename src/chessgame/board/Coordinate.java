@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
  * Represents a coordinate in an abstract chess board and provides utility class to mutate the coordinate with boundary checks
  */
 
-public final class Coordinate {
+public final class Coordinate implements Comparable<Coordinate> {
 
     private static final Logger log = LoggerFactory.getInstance(Coordinate.class);
 
@@ -26,21 +26,20 @@ public final class Coordinate {
     }
 
     public static class Factory {
-        private final int length;
 
+        private final int length;
         public Factory(int length) {
             this.length = length;
         }
 
         public Optional<Coordinate> of(int index) {
             if (index < 0 || index >= length) {
-                log.warning("Coordinate index in this setting must be between 0 and " + (length-1));
                 return Optional.empty();
             }
             return Optional.of(new Coordinate(index));
         }
-    }
 
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -53,5 +52,11 @@ public final class Coordinate {
     @Override
     public int hashCode() {
         return index;
+    }
+
+    @Override
+    public int compareTo(Coordinate o) {
+        if (this == o) return 0;
+        return this.index - o.index;
     }
 }

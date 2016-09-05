@@ -51,6 +51,18 @@ public class SquareCell implements Cell {
         return file.toString() + rank.toString();
     }
 
+    @Override
+    public int compareTo(Cell o) {
+        if (!(o instanceof SquareCell)) {
+            throw new IllegalStateException("Cannot compare SquareCell to a cell of different type: "
+                    + o.getClass() + "! ");
+        }
+        SquareCell that = (SquareCell) o;
+        int fileDiff = this.file.compareTo(that.file);
+        if (fileDiff != 0) return fileDiff;
+        return this.rank.compareTo(that.rank);
+    }
+
     public static final class Factory implements GridCellFactory<SquareCell, SquareDirection> {
         private final Coordinate.Factory rankFactory;
         private final Coordinate.Factory fileFactory;
@@ -60,6 +72,20 @@ public class SquareCell implements Cell {
             this.fileFactory = fileFactory;
         }
 
+        @Override
+        public Optional<SquareCell> of(String file, String rank) {
+            if (file.length() != 1) {
+                throw new IllegalArgumentException("Grid cell factory does not support encoding of files larger than 26!");
+            }
+            if (file.charAt(0) > 'Z' || file.charAt(0) < 'A') {
+                throw new IllegalArgumentException("Grid cell factory only support uppercase english encoding for files!");
+            }
+            int fileIndex = file.charAt(0) - 'A';
+            int rankIndex = Integer.parseInt(rank) - 1;
+            return of(fileIndex, rankIndex);
+        }
+
+        @Override
         public Optional<SquareCell> of(int fileIndex, int rankIndex) {
             Optional<Coordinate> fileCoordinate = fileFactory.of(fileIndex);
             Optional<Coordinate> rankCoordinate = rankFactory.of(rankIndex);
@@ -70,6 +96,7 @@ public class SquareCell implements Cell {
             return Optional.of(new SquareCell(File.of(fileCoordinate.get()), Rank.of(rankCoordinate.get())));
         }
 
+        @Override
         public Optional<SquareCell> moveOnce(SquareCell cell, SquareDirection direction) {
             int xDelta = direction.getX(), yDelta = direction.getY();
             int fileIndex = cell.file.getCoordinate().getIndex() + xDelta;
@@ -95,4 +122,6 @@ public class SquareCell implements Cell {
         result = 31 * result + file.hashCode();
         return result;
     }
+
+
 }

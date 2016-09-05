@@ -4,7 +4,7 @@ package chessgame.board;
  * Wrapper class of coordinate that represents a rank in standard chess game with toString() override
  */
 
-public final class Rank {
+public final class Rank implements Comparable<Rank> {
     private final Coordinate delegate;
 
     private Rank(Coordinate coordinate) {
@@ -38,5 +38,11 @@ public final class Rank {
     @Override
     public String toString() {
         return String.valueOf(delegate.getIndex() + 1);
+    }
+
+    @Override
+    public int compareTo(Rank o) {
+        if (this == o) return 0;
+        return delegate.compareTo(o.delegate);
     }
 }

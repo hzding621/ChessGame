@@ -1,6 +1,6 @@
 package chessgame.game;
 
-import chessgame.board.BoardView;
+import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceType;
@@ -8,17 +8,14 @@ import chessgame.player.Player;
 import chessgame.rule.PinnedSet;
 import chessgame.rule.Rules;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * Contains information computed from actor's pieces
  */
-public class ActorInformation<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardView<C, A, P>> {
-    private final Map<C, Set<C>> availableMoves = new HashMap<>();
+public class ActorInformation<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardViewer<C, A, P>> {
+    private final Map<C, Set<C>> availableMoves = new TreeMap<>();
 
     /**
      * This method recompute the entire actor information, which includes all available for the actor.
@@ -30,10 +27,11 @@ public class ActorInformation<C extends Cell, A extends PieceType, P extends Pie
                         PlayerInformation playerInformation,
                         C actorKing) {
         Player actor = playerInformation.getActor();
+        Player defender = playerInformation.getDefender();
         availableMoves.clear();
 
         board.getAllPiecesForPlayer(actor)
-            .parallelStream()
+            .stream()
             .forEach(actorLocator -> {
 
                 // Get the king-pinners of the actor piece
@@ -41,13 +39,14 @@ public class ActorInformation<C extends Cell, A extends PieceType, P extends Pie
 
                 // Get all potential moves for the actor piece
                 Set<C> moves = rules.basicMoves(board, actorLocator.getCell(), actor)
-                    .parallelStream()
+                    .stream()
                     .filter(targetCell ->
                         /* Either the piece is King and it is moving to a non-attacked position (can always do that)
                          * Or the move removes all poses check (but might expose the King, will be filtered below)
                          */
-                        actorLocator.getPiece().getPieceClass().isKing() && !defenderInformation.isAttacked(targetCell)
-                        || rules.canRemoveCheckThreats(targetCell, board, actor, actorKing, defenderInformation)
+                        actorLocator.getPiece().getPieceClass().isKing()
+                                ? !defenderInformation.isAttacked(targetCell)
+                                : rules.canRemoveCheckThreats(targetCell, defender, actorKing, defenderInformation)
                     )
 
                     /*
@@ -59,9 +58,12 @@ public class ActorInformation<C extends Cell, A extends PieceType, P extends Pie
                     .filter(targetCell -> !kingDefendings.parallelStream()
                             .anyMatch(pin -> !pin.getAttacker().equals(targetCell))
                     )
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toCollection(TreeSet::new));
 
-                availableMoves.put(actorLocator.getCell(), moves);
+                // Register filtered result
+                if (!moves.isEmpty()) {
+                    availableMoves.put(actorLocator.getCell(), moves);
+                }
             });
     }
 

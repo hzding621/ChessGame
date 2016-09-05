@@ -13,7 +13,7 @@ import java.util.*;
  * Represents an abstract rectangular board
  */
 public abstract class RectangularBoard<A extends PieceType, P extends Piece<A>>
-        extends AbstractBoard<SquareCell, A, P> implements GridView<SquareCell, SquareDirection, A, P> {
+        extends AbstractBoard<SquareCell, A, P> implements GridViewer<SquareCell, SquareDirection, A, P> {
 
     protected RectangularBoard(PieceSet<SquareCell, A, P> pieceSet) {
         super(pieceSet);
@@ -83,6 +83,12 @@ public abstract class RectangularBoard<A extends PieceType, P extends Piece<A>>
         } else {
             return getGridCellFactory().moveOnce(startCell, SquareDirection.SOUTH);
         }
+    }
+
+    @Override
+    public Optional<SquareCell> moveForwardNoOverlap(SquareCell startCell, Player player) {
+        return moveForward(startCell, player)
+                .flatMap(c -> isOccupied(c) ? Optional.empty() : Optional.of(c));
     }
 
     @Override

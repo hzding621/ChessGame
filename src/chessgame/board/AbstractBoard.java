@@ -10,15 +10,13 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractBoard<C extends Cell, A extends PieceType, P extends Piece<A>> implements Board<C, A, P> {
 
-    protected final Map<C, P> occupants = new HashMap<>();
-    private final PieceSet<C, A, P> pieceSet;
+    protected final Map<C, P> occupants;
 
     protected AbstractBoard(PieceSet<C, A, P> pieceSet) {
-        this.pieceSet = pieceSet;
-    }
-
-    public void initializeBoard() {
-        // TODO
+        this.occupants = new TreeMap<>(
+                pieceSet.constructAllPieces()
+                        .stream()
+                        .collect(Collectors.toMap(PieceLocator::getCell, PieceLocator::getPiece)));
     }
 
     @Override
@@ -28,7 +26,7 @@ public abstract class AbstractBoard<C extends Cell, A extends PieceType, P exten
 
     @Override
     public boolean isEnemy(C cell, Player player) {
-        return occupants.get(cell) != null && !occupants.get(cell).getPlayer().equals(player);
+        return occupants.containsKey(cell) && !occupants.get(cell).getPlayer().equals(player);
     }
 
     @Override
@@ -64,7 +62,7 @@ public abstract class AbstractBoard<C extends Cell, A extends PieceType, P exten
                         .stream()
                         .filter(e -> e.getValue().getPieceClass().equals(type)
                                 && e.getValue().getPlayer().equals(player))
-                        .map(e -> new PieceLocator<>(e.getKey(), e.getValue()))
+                        .map(e -> PieceLocator.of(e.getKey(), e.getValue()))
                         .collect(Collectors.toList());
     }
 
@@ -73,7 +71,7 @@ public abstract class AbstractBoard<C extends Cell, A extends PieceType, P exten
         return occupants.entrySet()
                         .stream()
                         .filter(e -> e.getValue().getPlayer().equals(player))
-                        .map(e -> new PieceLocator<>(e.getKey(), e.getValue()))
+                        .map(e -> PieceLocator.of(e.getKey(), e.getValue()))
                         .collect(Collectors.toList());
     }
 }

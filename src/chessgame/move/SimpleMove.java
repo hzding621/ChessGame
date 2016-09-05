@@ -1,49 +1,44 @@
 package chessgame.move;
 
-import chessgame.board.BoardView;
 import chessgame.board.Cell;
-import chessgame.piece.Piece;
-import chessgame.piece.PieceType;
-
-import java.util.Optional;
 
 /**
- * Represents a move wherein a piece moves from A to B. Contains details about the pieces
+ * Represents a possible move current player can make
  */
-public class SimpleMove<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardView<C, A, P>>
-        implements Move<C, A, P, B> {
+public final class SimpleMove<C extends Cell> implements Move<C>, Comparable<SimpleMove<C>> {
 
-    private final B board;
-    private final C source;
-    private final C target;
-    private final P sourcePiece;
-    private final Optional<P> capturedPiece;
+    public final C source;
+    public final C target;
 
-    public SimpleMove(B board, C source, C target, P sourcePiece, Optional<P> capturedPiece) {
-        this.board = board;
+    private SimpleMove(C source, C target) {
         this.source = source;
         this.target = target;
-        this.sourcePiece = sourcePiece;
-        this.capturedPiece = capturedPiece;
     }
 
-    public B getBoard() {
-        return board;
+    public static <C extends Cell> SimpleMove<C> of(C source, C target) {
+        return new SimpleMove<>(source, target);
     }
 
+    @Override
     public C getSource() {
-        return source;
+        return null;
     }
 
+    @Override
     public C getTarget() {
-        return target;
+        return null;
     }
 
-    public P getSourcePiece() {
-        return sourcePiece;
+    @Override
+    public int compareTo(SimpleMove<C> o) {
+        if (o == this) return 0;
+        int a = this.source.compareTo(o.source);
+        if (a != 0) return a;
+        return this.target.compareTo(o.target);
     }
 
-    public Optional<P> getCapturedPiece() {
-        return capturedPiece;
+    @Override
+    public String toString() {
+        return "[" + source + "->" + target + "]";
     }
 }

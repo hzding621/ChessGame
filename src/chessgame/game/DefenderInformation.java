@@ -1,6 +1,6 @@
 package chessgame.game;
 
-import chessgame.board.BoardView;
+import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
 import chessgame.board.PieceLocator;
 import chessgame.piece.Piece;
@@ -13,11 +13,11 @@ import java.util.*;
 /**
  * Contains information computed from opponent pieces
  */
-public final class DefenderInformation<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardView<C, A, P>> {
+public final class DefenderInformation<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardViewer<C, A, P>> {
 
-    private final Set<C> isAttacked = new HashSet<>();
-    private final Collection<PieceLocator<C, A, P>> checkers = new HashSet<>();
-    private final Map<C, Collection<PinnedSet<C>>> kingDefenders = new HashMap<>();
+    private final Set<C> isAttacked = new TreeSet<>();
+    private final Collection<PieceLocator<C, A, P>> checkers = new TreeSet<>();
+    private final Map<C, Collection<PinnedSet<C>>> kingDefenders = new TreeMap<>();
 
     /**
      * @return the set of positions that are currently under attacked by the defending side
@@ -59,11 +59,11 @@ public final class DefenderInformation<C extends Cell, A extends PieceType, P ex
 
         // Iterate through all the pieces of the current defenders
         board.getAllPiecesForPlayer(boardInformation.getDefender())
-            .parallelStream()
+            .stream()
             .forEach(defenderLocator -> {
                 // Get the positions a defending piece are attacking
                 rules.attacking(board, defenderLocator.getCell(), boardInformation.getDefender())
-                    .parallelStream()
+                    .stream()
                     .forEach(targetCell -> {
                         // Mark the position as being under attacked
                         isAttacked.add(targetCell);
@@ -76,12 +76,11 @@ public final class DefenderInformation<C extends Cell, A extends PieceType, P ex
 
                 // Get the positions a defending piece is pinning
                 rules.pinning(board, defenderLocator.getCell(), boardInformation.getDefender())
-                    .parallelStream()
+                    .stream()
                     .forEach(pinnedSet -> {
                         if (pinnedSet.getHided().equals(actorKing)) {
                             // If the hided piece is same as actor's king, register the protecting piece in the kingDefenders
-                            kingDefenders
-                                .getOrDefault(pinnedSet.getHided(), new HashSet<>()).add(pinnedSet);
+                            kingDefenders.getOrDefault(pinnedSet.getHided(), new HashSet<>()).add(pinnedSet);
                         }
                     });
 

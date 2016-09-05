@@ -1,7 +1,7 @@
 package chessgame.piece;
 
 import chessgame.board.Direction;
-import chessgame.board.GridView;
+import chessgame.board.GridViewer;
 import chessgame.board.Cell;
 import chessgame.player.Player;
 import chessgame.rule.RangeAttackPieceRule;
@@ -25,10 +25,16 @@ public final class Rook<C extends Cell, A extends PieceType> extends AbstractPie
                 '}';
     }
     public static final class RookRule<C extends Cell, A extends PieceType, D extends Direction, P extends Piece<A>,
-            B extends GridView<C, D, A, P>> implements RangeAttackPieceRule<C, D, A, P, B> {
+            B extends GridViewer<C, D, A, P>> extends AbstractPieceRule<C, A, P, B>
+            implements RangeAttackPieceRule<C, D, A, P, B> {
+
+        public RookRule(B gridViewer) {
+            super(gridViewer);
+        }
+
         @Override
-        public Collection<D> getAttackingDirections(B board) {
-            return board.getOrthogonalDirections();
+        public Collection<D> getAttackingDirections() {
+            return boardViewer.getOrthogonalDirections();
         }
     }
 }
