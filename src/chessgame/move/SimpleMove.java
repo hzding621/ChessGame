@@ -8,7 +8,7 @@ import chessgame.piece.PieceType;
 import java.util.Optional;
 
 /**
- * Represents a simple move
+ * Represents a move wherein a piece moves from A to B. Contains details about the pieces
  */
 public class SimpleMove<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardView<C, A, P>>
         implements Move<C, A, P, B> {

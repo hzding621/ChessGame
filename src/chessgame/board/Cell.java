@@ -3,7 +3,7 @@ package chessgame.board;
 import java.util.Optional;
 
 /**
- * Created by haozhending on 9/3/16.
+ * Represents a position where a chess piece can locate
  */
 public interface Cell {
 }

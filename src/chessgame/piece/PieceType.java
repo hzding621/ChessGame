@@ -1,13 +1,10 @@
 package chessgame.piece;
 
-import java.util.Collection;
-
 /**
- * Created by haozhending on 9/4/16.
+ * Each Piece instance contains an instance of PieceType.
+ * This interface is used to bind Piece classes to their associated PieceRule classes
  */
 public interface PieceType {
-
-    Collection<PieceType> getAllTypes();
 
     boolean isKing();
 }

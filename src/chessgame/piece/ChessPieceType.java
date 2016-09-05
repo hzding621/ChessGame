@@ -10,11 +10,6 @@ public enum ChessPieceType implements PieceType {
     PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING;
 
     @Override
-    public Collection<PieceType> getAllTypes() {
-        return Arrays.asList(ChessPieceType.values());
-    }
-
-    @Override
     public boolean isKing() {
         return this == KING;
     };

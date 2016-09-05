@@ -23,7 +23,6 @@ public final class File {
         File file = (File) o;
 
         return delegate.equals(file.delegate);
-
     }
 
     @Override

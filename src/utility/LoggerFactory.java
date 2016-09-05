@@ -3,7 +3,8 @@ package utility;
 import java.util.logging.Logger;
 
 /**
- * Created by haozhending on 9/3/16.
+ * Factory class used to create Loggers
+ * TODO: tune this class
  */
 public final class LoggerFactory {
 

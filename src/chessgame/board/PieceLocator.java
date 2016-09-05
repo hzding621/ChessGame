@@ -25,4 +25,22 @@ public final class PieceLocator<C extends Cell, A extends PieceType, P extends P
     public C getCell() {
         return cell;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PieceLocator<?, ?, ?> that = (PieceLocator<?, ?, ?>) o;
+
+        if (!cell.equals(that.cell)) return false;
+        return piece.equals(that.piece);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = cell.hashCode();
+        result = 31 * result + piece.hashCode();
+        return result;
+    }
 }

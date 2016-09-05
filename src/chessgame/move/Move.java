@@ -6,7 +6,7 @@ import chessgame.piece.Piece;
 import chessgame.piece.PieceType;
 
 /**
- * Created by haozhending on 9/4/16.
+ * Represents a move in the game wherein a piece is moved from A to B
  */
 public interface Move<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardView<C, A, P>> {
 
