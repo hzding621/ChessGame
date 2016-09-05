@@ -1,7 +1,7 @@
 package chessgame.piece;
 
 /**
- * Created by haozhending on 9/3/16.
+ * Class that implements Knight piece moving logic
  */
 
 import chessgame.board.Cell;
@@ -10,12 +10,10 @@ import chessgame.board.GridBoard;
 import chessgame.player.Player;
 import chessgame.rule.PieceRule;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
 /**
- * Class that implements Rook piece moving logic
+ * Class that implements Knight piece moving logic
  */
 public final class Knight<C extends Cell, A extends PieceType> extends AbstractPiece<C, A> {
 
@@ -34,16 +32,23 @@ public final class Knight<C extends Cell, A extends PieceType> extends AbstractP
     public static final class KnightRule<C extends Cell, A extends PieceType, D extends Direction, P extends Piece<A>,
             B extends GridBoard<C, D, A, P>> implements PieceRule<C, A, P, B> {
 
-        @Override
-        public Collection<C> attacking(B board, C position, Player player) {
-            return board.attackPawnStyle(position, player);
+        private Optional<C> knightStyle(B board, C startPosition, D direction, boolean closeWise) {
+            Optional<C> middlePosition = board.moveOnce(startPosition, direction);
+            if (!middlePosition.isPresent()) return Optional.empty();
+
+            direction = closeWise ? (D) direction.getClockwise() : (D) direction.getCounterClockwise();
+            return board.moveOnce(middlePosition.get(), direction);
         }
 
         @Override
-        public Collection<C> basicMoves(B board, C position, Player player) {
-            return board.moveForward(position, player)
-                    .map(Arrays::asList)
-                    .orElse(Collections.emptyList());
+        public Collection<C> attacking(B board, C position, Player player) {
+            final List<C> targets = new ArrayList<>();
+            board.getOrthogonalDirections().stream()
+                .forEach(direction ->{
+                        knightStyle(board, position, direction, true).ifPresent(targets::add);
+                        knightStyle(board, position, direction, false).ifPresent(targets::add);
+                });
+            return targets;
         }
 
         @Override

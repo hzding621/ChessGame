@@ -20,6 +20,7 @@ public abstract class AbstractBoard<C extends Cell, A extends PieceType, P exten
 
     @Override
     public void initializeBoard() {
+        // TODO
     }
 
     @Override
@@ -32,6 +33,7 @@ public abstract class AbstractBoard<C extends Cell, A extends PieceType, P exten
         return occupants.get(cell) != null && !occupants.get(cell).getPlayer().equals(player);
     }
 
+    @Override
     public Optional<P> getPiece(C cell) {
         if (!occupants.containsKey(cell)) {
             return Optional.empty();
@@ -39,15 +41,7 @@ public abstract class AbstractBoard<C extends Cell, A extends PieceType, P exten
         return Optional.of(occupants.get(cell));
     }
 
-    public Optional<P> setPiece(C cell, P piece) {
-        if (piece == null) {
-            throw new IllegalStateException("Cannot set board to a null pieceType");
-        }
-        Optional<P> previousPiece = getPiece(cell);
-        occupants.put(cell, piece);
-        return previousPiece;
-    }
-
+    @Override
     public P movePiece(C source, C target) {
         if (!occupants.containsKey(source)) {
             throw new IllegalStateException("Source position is empty!");

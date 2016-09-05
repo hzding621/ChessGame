@@ -16,12 +16,6 @@ public interface Board<C extends Cell, A extends PieceType, P extends Piece<A>> 
     Optional<P> getPiece(C cell);
 
     /**
-     * @param piece The pieceType to set at this board, cannot be null
-     * @return the previous pieceType at this board
-     */
-    Optional<P> setPiece(C cell, P piece);
-
-    /**
      * Remove the piece at this position
      * @return the previous piece at this position
      */

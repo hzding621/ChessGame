@@ -7,13 +7,14 @@ import chessgame.player.Player;
 import java.util.*;
 
 /**
- * Represents a standarad chess piece set with board configuration information
+ * Represents a standard 8x8 chess piece set
  */
 public final class ChessPieceSet implements PieceSet<SquareCell, ChessPieceType, Piece<ChessPieceType>> {
 
-    private static final Map<Player, Map<ChessPieceType, List<SquareCell>>> configuration = new HashMap<>();
+    private final Map<Player, Map<ChessPieceType, List<SquareCell>>> configuration = new HashMap<>();
+    private final Map<Player, SquareCell> kingStartingPositions = new HashMap<>();
 
-    static {
+    {
         Coordinate.Factory coordinateFactory = new Coordinate.Factory(8);
         SquareCell.Factory factory = new SquareCell.Factory(coordinateFactory, coordinateFactory);
         configuration.put(Player.WHITE, new HashMap<>());
@@ -56,6 +57,19 @@ public final class ChessPieceSet implements PieceSet<SquareCell, ChessPieceType,
         populatePieces(Player.BLACK, ChessPieceType.KING, factory, new int[][] {
                 {4, 7}
         });
+
+        // Define King starting position
+        kingStartingPositions.put(Player.WHITE, factory.of(4, 0).get());
+        kingStartingPositions.put(Player.BLACK, factory.of(4, 7).get());
+    }
+
+    public Map<Player, Map<ChessPieceType, List<SquareCell>>> getConfiguration() {
+        return configuration;
+    }
+
+    @Override
+    public Map<Player, SquareCell> getKingStartingPositions() {
+        return kingStartingPositions;
     }
 
     @Override
@@ -80,7 +94,7 @@ public final class ChessPieceSet implements PieceSet<SquareCell, ChessPieceType,
         return configuration.get(player).get(type);
     }
 
-    private static void populatePieces(Player player,
+    private void populatePieces(Player player,
                                        ChessPieceType type,
                                        SquareCell.Factory factory, int[][] indices) {
         for (int[] position: indices) {

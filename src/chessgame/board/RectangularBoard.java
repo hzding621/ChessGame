@@ -89,8 +89,8 @@ public abstract class RectangularBoard<A extends PieceType, P extends Piece<A>>
     public Collection<SquareCell> attackPawnStyle(SquareCell startCell, Player player) {
         final List<SquareCell> list = new ArrayList<>();
         SquareDirection[] dirs = player == Player.WHITE
-                ? new SquareDirection[]{SquareDirection.NORTHWEST, SquareDirection.NORTHEAST}
-                : new SquareDirection[]{SquareDirection.SOUTHWEST, SquareDirection.SOUTHEAST};
+                ? new SquareDirection[] {SquareDirection.NORTHWEST, SquareDirection.NORTHEAST}
+                : new SquareDirection[] {SquareDirection.SOUTHWEST, SquareDirection.SOUTHEAST};
         for (SquareDirection dir: dirs) {
             getGridCellFactory().moveOnce(startCell, dir).ifPresent(cell -> {
                 if (isOccupied(cell)) {

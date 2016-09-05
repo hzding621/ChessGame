@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Represents mappings from a piece type to the rule associated with it on a certain type of board
  */
-public final class PieceRulesBindings<C extends Cell, A extends PieceType, P extends Piece<A>, B extends Board<C, A, P>> {
+public final class RuleBindings<C extends Cell, A extends PieceType, P extends Piece<A>, B extends Board<C, A, P>> {
 
     private final Map<A, PieceRule<C, A, P, B>> ruleBindings = new HashMap<>();
 

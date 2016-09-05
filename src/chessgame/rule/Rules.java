@@ -3,7 +3,6 @@ package chessgame.rule;
 import chessgame.board.Board;
 import chessgame.board.Cell;
 import chessgame.board.PieceLocator;
-import chessgame.game.BoardInformation;
 import chessgame.game.DefenderInformation;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceType;
@@ -17,10 +16,10 @@ import java.util.Collections;
  */
 public class Rules<C extends Cell, A extends PieceType, P extends Piece<A>, B extends Board<C, A, P>> {
 
-    private final PieceRulesBindings<C, A, P, B> pieceRulesBindings;
+    private final RuleBindings<C, A, P, B> ruleBindings;
 
-    public Rules(PieceRulesBindings<C, A, P, B> pieceRulesBindings) {
-        this.pieceRulesBindings = pieceRulesBindings;
+    public Rules(RuleBindings<C, A, P, B> ruleBindings) {
+        this.ruleBindings = ruleBindings;
     }
 
     private boolean canMoveByPlayer(B board, C position, Player player) {
@@ -39,7 +38,7 @@ public class Rules<C extends Cell, A extends PieceType, P extends Piece<A>, B ex
             throw new IllegalStateException("Player " + pinner + " cannot move " + source);
         }
         P piece = board.getPiece(source).get();
-        PieceRule<C, A, P, B> rule = pieceRulesBindings.getRule(piece.getPieceClass());
+        PieceRule<C, A, P, B> rule = ruleBindings.getRule(piece.getPieceClass());
         if (!(rule instanceof PinningPieceRule)) {
             return Collections.emptyList();
         }
@@ -52,7 +51,7 @@ public class Rules<C extends Cell, A extends PieceType, P extends Piece<A>, B ex
             throw new IllegalStateException("Get attacking set of non-existing piece at " + source);
         }
         P piece = board.getPiece(source).get();
-        return pieceRulesBindings.getRule(piece.getPieceClass())
+        return ruleBindings.getRule(piece.getPieceClass())
                 .attacking(board, source, actor);
     }
 
@@ -62,7 +61,7 @@ public class Rules<C extends Cell, A extends PieceType, P extends Piece<A>, B ex
         }
 
         P piece = board.getPiece(source).get();
-        return pieceRulesBindings.getRule(piece.getPieceClass())
+        return ruleBindings.getRule(piece.getPieceClass())
                 .basicMoves(board, source, actor);
     }
 
@@ -71,7 +70,7 @@ public class Rules<C extends Cell, A extends PieceType, P extends Piece<A>, B ex
 
         int remainingCheckers = information.getCheckers().size();
         for (PieceLocator<C, A, P> checker: information.getCheckers()) {
-            if (pieceRulesBindings.getRule(checker.getPiece().getPieceClass())
+            if (ruleBindings.getRule(checker.getPiece().getPieceClass())
                     .getBlockingPositionsWhenAttacking(board, checker.getCell(),
                             actorKing, actor)
                     .stream()

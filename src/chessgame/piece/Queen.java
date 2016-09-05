@@ -5,13 +5,12 @@ import chessgame.board.Direction;
 import chessgame.board.GridBoard;
 import chessgame.player.Player;
 import chessgame.rule.DirectionalAttackingPieceRule;
-import chessgame.rule.PinnedSet;
-import chessgame.rule.PinningPieceRule;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
+/**
+ * Class that implements Queen piece moving logic
+ */
 public final class Queen<C extends Cell, A extends PieceType> extends AbstractPiece<C, A> {
 
     public Queen(A pieceClass, Player player, int id) {

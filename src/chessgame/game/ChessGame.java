@@ -4,7 +4,7 @@ import chessgame.board.ChessBoard;
 import chessgame.board.SquareCell;
 import chessgame.piece.*;
 import chessgame.player.Player;
-import chessgame.rule.PieceRulesBindings;
+import chessgame.rule.RuleBindings;
 import chessgame.rule.Rules;
 
 import java.util.*;
@@ -30,13 +30,17 @@ public class ChessGame implements Game<SquareCell, ChessPieceType, Piece<ChessPi
         ChessBoard chessBoard = new ChessBoard(pieceSet);
         chessBoard.initializeBoard();
 
-        PieceRulesBindings<SquareCell, ChessPieceType, Piece<ChessPieceType>, ChessBoard> pieceRulesBindings = new PieceRulesBindings<>();
-        pieceRulesBindings.addRule(ChessPieceType.BISHOP, new Bishop.BishopRule<>());
-        pieceRulesBindings.addRule(ChessPieceType.ROOK, new Rook.RookRule<>());
-        pieceRulesBindings.addRule(ChessPieceType.QUEEN, new Queen.QueenRule<>());
+        RuleBindings<SquareCell, ChessPieceType, Piece<ChessPieceType>, ChessBoard> ruleBindings = new RuleBindings<>();
 
-        return new ChessGame(chessBoard, new Rules<>(pieceRulesBindings),
-                new BoardInformation<>());
+        ruleBindings.addRule(ChessPieceType.PAWN, new Pawn.PawnRule<>());
+        ruleBindings.addRule(ChessPieceType.KNIGHT, new Knight.KnightRule<>());
+        ruleBindings.addRule(ChessPieceType.BISHOP, new Bishop.BishopRule<>());
+        ruleBindings.addRule(ChessPieceType.ROOK, new Rook.RookRule<>());
+        ruleBindings.addRule(ChessPieceType.QUEEN, new Queen.QueenRule<>());
+        ruleBindings.addRule(ChessPieceType.KING, new King.KingRule<>());
+
+        return new ChessGame(chessBoard, new Rules<>(ruleBindings),
+                new BoardInformation<>(pieceSet));
     }
 
     @Override

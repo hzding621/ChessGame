@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
- * Class that implements Rook piece moving logic
+ * Class that implements Pawn piece moving logic
  */
 public final class Pawn<C extends Cell, A extends PieceType> extends AbstractPiece<C, A> {
 

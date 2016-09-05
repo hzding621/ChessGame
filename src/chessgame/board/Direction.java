@@ -1,7 +1,7 @@
 package chessgame.board;
 
 /**
- * Created by haozhending on 9/3/16.
+ * Represents a direction any piece can move on a board
  */
 public interface Direction {
 

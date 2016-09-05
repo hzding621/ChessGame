@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Class that implements Rook piece moving logic
+ * Class that implements Bishop piece moving logic
  */
 public final class Bishop<C extends Cell, A extends PieceType> extends AbstractPiece<C, A> {
 
