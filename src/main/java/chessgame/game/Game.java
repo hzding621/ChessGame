@@ -40,7 +40,7 @@ interface Game<C extends Cell, A extends PieceType, P extends Piece<A>, B extend
                 .collect(Collectors.toCollection(TreeSet::new));
     }
 
-    default Set<C> getMoves(C c) {
+    default Set<C> allPotentialMovesOf(C c) {
         return allPotentialMovesBySource().getOrDefault(c, Collections.emptySet());
     }
 

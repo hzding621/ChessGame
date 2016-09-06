@@ -77,10 +77,11 @@ public class SquareCell implements Cell {
             if (file.length() != 1) {
                 throw new IllegalArgumentException("Grid cell factory does not support encoding of files larger than 26!");
             }
-            if (file.charAt(0) > 'Z' || file.charAt(0) < 'A') {
-                throw new IllegalArgumentException("Grid cell factory only support uppercase english encoding for files!");
+            if (!Character.isAlphabetic(file.charAt(0))) {
+                throw new IllegalArgumentException("Grid cell factory only support alphabetic encoding for files!");
             }
-            int fileIndex = file.charAt(0) - 'A';
+
+            int fileIndex = Character.toUpperCase(file.charAt(0)) - 'A';
             int rankIndex = Integer.parseInt(rank) - 1;
             return at(fileIndex, rankIndex);
         }

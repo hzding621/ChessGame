@@ -9,7 +9,7 @@ public interface GridCellFactory<C extends Cell, D extends Direction> {
 
 
     /**
-     * @param file String representation of the file, by uppercase english letters, i.e. 'A', 'B', etc.
+     * @param file String representation of the file, by alphabetic letters, i.e. 'A', 'B','a', 'b', etc.
      * @param rank String representation of the rank, i.e. '1', '2', etc.
      * @throws IllegalStateException if index is out of range of this factory
      * @return cell at this file and rank
