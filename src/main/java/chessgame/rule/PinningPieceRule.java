@@ -20,5 +20,5 @@ public interface PinningPieceRule<C extends Cell, A extends PieceType, P extends
      * @param player the player
      * @return The set of pinning attack the piece is making at position
      */
-    Collection<PinnedSet<C>> pinningAttack(C position, Player player);
+    Collection<Pin<C>> pinningAttack(C position, Player player);
 }

@@ -3,7 +3,7 @@ package chessgame.board;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceType;
 import chessgame.player.Player;
-import chessgame.rule.PinnedSet;
+import chessgame.rule.Pin;
 
 import java.util.Collection;
 import java.util.List;
@@ -39,8 +39,8 @@ public interface GridViewer<C extends Cell, D extends Direction, A extends Piece
     Optional<C> moveOnce(C startCell, D direction);
 
     /**
-     * Returns a series of cell movement that
-     * starts at a cell, goes at a certain direction, and either stops at first occupant or at the edge of board
+     * Returns a series of cell movement that starts at a cell, goes at a certain direction,
+     * and either stops at first occupant or at the edge of board
      *
      * @param startCell the cell the movement starts at
      * @param direction the direction the movement goes at
@@ -48,7 +48,15 @@ public interface GridViewer<C extends Cell, D extends Direction, A extends Piece
      */
     List<C> furthestReach(C startCell, D direction);
 
-    Optional<PinnedSet<C>> findPinnedSet(C startCell, D direction, Player player);
+    /**
+     * Return if exists the pinned pieces a piece at startCell is pinning.
+     * Both of the pinned pieces must belong to enemy
+     * @param startCell the location of the player's piece
+     * @param direction the direction of the
+     * @param player the player
+     * @return Non-empty if the pinning situation exists.
+     */
+    Optional<Pin<C>> findPin(C startCell, D direction, Player player);
 
     /**
      * return the position where the piece starts at startCell and move toward the enemy's side by one step

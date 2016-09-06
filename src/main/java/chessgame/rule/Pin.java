@@ -5,12 +5,12 @@ import chessgame.board.Cell;
 /**
  * Represents a set of pieces that form a king-pinning relationship
  */
-public final class PinnedSet<C extends Cell> {
+public final class Pin<C extends Cell> {
     private final C attacker;
     private final C protector;
     private final C hided;
 
-    public PinnedSet(C attacker, C protector, C hided) {
+    public Pin(C attacker, C protector, C hided) {
         this.attacker = attacker;
         this.protector = protector;
         this.hided = hided;

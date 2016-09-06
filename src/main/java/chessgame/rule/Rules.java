@@ -30,7 +30,7 @@ public class Rules<C extends Cell, A extends PieceType, P extends Piece<A>, B ex
         return  piece.getPlayer().equals(player);
     }
 
-    public Collection<PinnedSet<C>> pinning(B board, C source, Player pinner) {
+    public Collection<Pin<C>> pinning(B board, C source, Player pinner) {
         if (!board.getPiece(source).isPresent()) {
             throw new IllegalStateException("Get pinning set of non-existing piece at " + source);
         }

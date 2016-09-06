@@ -4,7 +4,7 @@ import chessgame.piece.Piece;
 import chessgame.piece.PieceSet;
 import chessgame.piece.PieceType;
 import chessgame.player.Player;
-import chessgame.rule.PinnedSet;
+import chessgame.rule.Pin;
 import utility.CollectionUtils;
 
 import java.util.*;
@@ -67,13 +67,13 @@ public abstract class RectangularBoard<A extends PieceType, P extends Piece<A>>
     }
 
     @Override
-    public Optional<PinnedSet<SquareCell>> findPinnedSet(SquareCell startCell, SquareDirection direction, Player player) {
+    public Optional<Pin<SquareCell>> findPin(SquareCell startCell, SquareDirection direction, Player player) {
 
         Optional<SquareCell> firstMeet = firstOccupant(startCell, direction);
         if (!firstMeet.isPresent() || !isEnemy(firstMeet.get(), player)) return Optional.empty();
         Optional<SquareCell> secondMeet = firstOccupant(firstMeet.get(), direction);
         if (!secondMeet.isPresent() || !isEnemy(secondMeet.get(), player)) return Optional.empty();
-        return Optional.of(new PinnedSet<>(startCell, firstMeet.get(), secondMeet.get()));
+        return Optional.of(new Pin<>(startCell, firstMeet.get(), secondMeet.get()));
     }
 
     @Override
@@ -98,11 +98,7 @@ public abstract class RectangularBoard<A extends PieceType, P extends Piece<A>>
                 ? new SquareDirection[] {SquareDirection.NORTHWEST, SquareDirection.NORTHEAST}
                 : new SquareDirection[] {SquareDirection.SOUTHWEST, SquareDirection.SOUTHEAST};
         for (SquareDirection dir: dirs) {
-            getGridCellFactory().moveOnce(startCell, dir).ifPresent(cell -> {
-                if (isOccupied(cell)) {
-                    list.add(cell);
-                }
-            });
+            getGridCellFactory().moveOnce(startCell, dir).ifPresent(list::add);
         }
         return list;
     }

@@ -32,11 +32,11 @@ public interface RangeAttackPieceRule<C extends Cell, D extends Direction, A ext
     }
 
     @Override
-    default Collection<PinnedSet<C>> pinningAttack(C position, Player player) {
-        List<PinnedSet<C>> pinnedSets = new ArrayList<>();
+    default Collection<Pin<C>> pinningAttack(C position, Player player) {
+        List<Pin<C>> pins = new ArrayList<>();
         getAttackingDirections().forEach(direction ->
-                getBoardViewer().findPinnedSet(position, direction, player).ifPresent(pinnedSets::add));
-        return pinnedSets;
+                getBoardViewer().findPin(position, direction, player).ifPresent(pins::add));
+        return pins;
     }
 
     @Override

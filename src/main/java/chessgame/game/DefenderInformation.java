@@ -5,7 +5,7 @@ import chessgame.board.Cell;
 import chessgame.board.PieceLocator;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceType;
-import chessgame.rule.PinnedSet;
+import chessgame.rule.Pin;
 import chessgame.rule.Rules;
 
 import java.util.*;
@@ -17,7 +17,7 @@ public final class DefenderInformation<C extends Cell, A extends PieceType, P ex
 
     private final Set<C> isAttacked = new TreeSet<>();
     private final Collection<PieceLocator<C, A, P>> checkers = new TreeSet<>();
-    private final Map<C, Collection<PinnedSet<C>>> kingDefenders = new TreeMap<>();
+    private final Map<C, Collection<Pin<C>>> kingDefenders = new TreeMap<>();
 
     /**
      * @return the set of positions that are currently under attacked by the defending side
@@ -43,7 +43,7 @@ public final class DefenderInformation<C extends Cell, A extends PieceType, P ex
     /**
      * @return mapping from actor side pieces to pinning situation
      */
-    public Map<C, Collection<PinnedSet<C>>> getKingDefenders() {
+    public Map<C, Collection<Pin<C>>> getKingDefenders() {
         return kingDefenders;
     }
 
@@ -90,7 +90,7 @@ public final class DefenderInformation<C extends Cell, A extends PieceType, P ex
     /**
      * @return all pinning situation wherein the input piece is the protecting piece
      */
-    public Collection<PinnedSet<C>> isKingDefender(C actorCell) {
+    public Collection<Pin<C>> isKingDefender(C actorCell) {
         return kingDefenders.getOrDefault(actorCell, Collections.emptyList());
     }
 }

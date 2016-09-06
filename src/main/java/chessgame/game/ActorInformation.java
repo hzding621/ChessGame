@@ -5,7 +5,7 @@ import chessgame.board.Cell;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceType;
 import chessgame.player.Player;
-import chessgame.rule.PinnedSet;
+import chessgame.rule.Pin;
 import chessgame.rule.Rules;
 
 import java.util.*;
@@ -35,7 +35,7 @@ public class ActorInformation<C extends Cell, A extends PieceType, P extends Pie
             .forEach(actorLocator -> {
 
                 // Get the king-pinners of the actor piece
-                Collection<PinnedSet<C>> kingDefendings = defenderInformation.isKingDefender(actorLocator.getCell());
+                Collection<Pin<C>> kingDefendings = defenderInformation.isKingDefender(actorLocator.getCell());
 
                 // Get all potential moves for the actor piece
                 Set<C> moves = rules.basicMoves(board, actorLocator.getCell(), actor)
