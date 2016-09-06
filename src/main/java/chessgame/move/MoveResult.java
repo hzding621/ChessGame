@@ -3,7 +3,6 @@ package chessgame.move;
 import chessgame.board.Cell;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
-import chessgame.player.Player;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -13,8 +12,16 @@ import java.util.Optional;
  */
 public interface MoveResult<C extends Cell, P extends PieceClass> {
 
+    /**
+     * @return all moved pieces as a result of this move
+     */
     Collection<MovedPiece<C, P>> getMovedPieces();
 
+    /**
+     * Annotated piece that includes its soruce position and its optional target position
+     * If the piece is taken out of the board, target is empty
+     * If the piece appears from nowhere (for example in case of Pawn promotion), source is empty
+     */
     class MovedPiece<C extends Cell, P extends PieceClass> {
 
         private final Piece<P> movedPiece;
@@ -32,8 +39,8 @@ public interface MoveResult<C extends Cell, P extends PieceClass> {
             return new MovedPiece<>(movedPiece, source, target);
         }
 
-        public C getSource() {
-            return source;
+        public Optional<C> getSource() {
+            return Optional.ofNullable(source);
         }
 
         public Optional<C> getTarget() {

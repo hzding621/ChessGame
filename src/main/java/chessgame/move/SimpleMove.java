@@ -8,7 +8,7 @@ import chessgame.player.Player;
 import java.util.*;
 
 /**
- * Represents a possible move current player can make
+ * Represents a move that involves a single piece
  */
 public final class SimpleMove<C extends Cell> implements Move<C>, Comparable<SimpleMove<C>> {
 
