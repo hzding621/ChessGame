@@ -14,11 +14,11 @@ import java.util.Collections;
 /**
  * Represents a set of rules associated with an instance of game
  */
-public class Rules<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardViewer<C, A, P>> {
+public class Rules<C extends Cell, P extends PieceType, B extends BoardViewer<C, P>> {
 
-    private final RuleBindings<C, A, P, B> ruleBindings;
+    private final RuleBindings<C, P, B> ruleBindings;
 
-    public Rules(RuleBindings<C, A, P, B> ruleBindings) {
+    public Rules(RuleBindings<C, P, B> ruleBindings) {
         this.ruleBindings = ruleBindings;
     }
 
@@ -26,7 +26,7 @@ public class Rules<C extends Cell, A extends PieceType, P extends Piece<A>, B ex
         if (!board.getPiece(position).isPresent()) {
             return false;
         }
-        P piece = board.getPiece(position).get();
+        Piece piece = board.getPiece(position).get();
         return  piece.getPlayer().equals(player);
     }
 
@@ -37,12 +37,12 @@ public class Rules<C extends Cell, A extends PieceType, P extends Piece<A>, B ex
         if (!canMoveByPlayer(board, source, pinner)) {
             throw new IllegalStateException("Player " + pinner + " cannot move " + source);
         }
-        P piece = board.getPiece(source).get();
-        PieceRule<C, A, P, B> rule = ruleBindings.getRule(piece.getPieceClass());
+        Piece<P> piece = board.getPiece(source).get();
+        PieceRule<C, P, B> rule = ruleBindings.getRule(piece.getPieceClass());
         if (!(rule instanceof PinningPieceRule)) {
             return Collections.emptyList();
         }
-        PinningPieceRule<C, A, P, B> pinningRule = (PinningPieceRule<C, A, P, B>) rule;
+        PinningPieceRule<C, P, B> pinningRule = (PinningPieceRule<C, P, B>) rule;
         return pinningRule.pinningAttack(source, pinner);
     }
 
@@ -50,7 +50,7 @@ public class Rules<C extends Cell, A extends PieceType, P extends Piece<A>, B ex
         if (!board.getPiece(source).isPresent()) {
             throw new IllegalStateException("Get attacking set of non-existing piece at " + source);
         }
-        P piece = board.getPiece(source).get();
+        Piece<P> piece = board.getPiece(source).get();
         return ruleBindings.getRule(piece.getPieceClass())
                 .attacking(source, actor);
     }
@@ -60,16 +60,16 @@ public class Rules<C extends Cell, A extends PieceType, P extends Piece<A>, B ex
             throw new IllegalStateException("Player " + actor + " cannot move " + source);
         }
 
-        P piece = board.getPiece(source).get();
+        Piece<P> piece = board.getPiece(source).get();
         return ruleBindings.getRule(piece.getPieceClass())
                 .basicMoves(source, actor);
     }
 
     public boolean canRemoveCheckThreats(C movedToPosition, Player checker, C actorKing,
-                                         DefenderInformation<C, A, P, B> information) {
+                                         DefenderInformation<C, P, B> information) {
 
         int remainingCheckers = information.getCheckers().size();
-        for (PieceLocator<C, A, P> checkerLocator: information.getCheckers()) {
+        for (PieceLocator<C, P> checkerLocator: information.getCheckers()) {
             if (ruleBindings.getRule(checkerLocator.getPiece().getPieceClass())
                     .getBlockingPositionsWhenAttacking(checkerLocator.getCell(),
                             actorKing, checker)

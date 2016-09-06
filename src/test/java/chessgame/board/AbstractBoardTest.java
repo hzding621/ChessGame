@@ -14,8 +14,8 @@ import java.util.*;
  */
 public final class AbstractBoardTest {
 
-    private SquareCell.Builder builder;
-    private AbstractBoard<SquareCell, KingPawn, Piece<KingPawn>> testBoard;
+    private Square.Builder builder;
+    private AbstractBoard<Square, KingPawn> testBoard;
     /**
      * Create a test board like the following, where W is white pawn and B is black pawn, k is white king, K is black king
      *
@@ -27,7 +27,7 @@ public final class AbstractBoardTest {
     @Before
     public void instantiateTestPieceSet() {
         Coordinate.Builder coordinateBuilder = new Coordinate.Builder(4);
-        builder = new SquareCell.Builder(coordinateBuilder, coordinateBuilder);
+        builder = new Square.Builder(coordinateBuilder, coordinateBuilder);
         testBoard = new AbstractBoard<>(new KingPawnGame(builder));
     }
 
@@ -65,14 +65,14 @@ public final class AbstractBoardTest {
 
     @Test
     public void testGetPiecesForPlayer() {
-        Collection<PieceLocator<SquareCell, KingPawn, Piece<KingPawn>>> locators =
+        Collection<PieceLocator<Square, KingPawn>> locators =
                 testBoard.getPiecesForPlayer(KingPawn.KING, Player.WHITE);
         Assert.assertEquals(locators.size(), 1);
     }
 
     @Test
     public void testGetAllPiecesForPlayer() {
-        Collection<PieceLocator<SquareCell, KingPawn, Piece<KingPawn>>> locators =
+        Collection<PieceLocator<Square, KingPawn>> locators =
                 testBoard.getAllPiecesForPlayer(Player.WHITE);
         Assert.assertEquals(locators.size(), 2);
     }

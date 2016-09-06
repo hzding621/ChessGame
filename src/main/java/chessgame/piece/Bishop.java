@@ -11,9 +11,9 @@ import java.util.Collection;
 /**
  * Class that implements Bishop piece moving logic
  */
-public final class Bishop<C extends Cell, A extends PieceType> extends AbstractPiece<C, A> {
+public final class Bishop<C extends Cell, P extends PieceType> extends AbstractPiece<C, P> {
 
-    public Bishop(A pieceClass, Player player, int id) {
+    public Bishop(P pieceClass, Player player, int id) {
         super(pieceClass, player, id);
     }
 
@@ -25,9 +25,9 @@ public final class Bishop<C extends Cell, A extends PieceType> extends AbstractP
                 '}';
     }
 
-    public static final class BishopRule<C extends Cell, A extends PieceType, D extends Direction, P extends Piece<A>,
-            B extends GridViewer<C, D, A, P>> extends AbstractPieceRule<C, A, P, B>
-            implements RangeAttackPieceRule<C, D, A, P, B> {
+    public static final class BishopRule<C extends Cell, P extends PieceType, D extends Direction,
+            B extends GridViewer<C, D, P>> extends AbstractPieceRule<C, P, B>
+            implements RangeAttackPieceRule<C, P, D, B> {
 
         public BishopRule(B gridViewer) {
             super(gridViewer);

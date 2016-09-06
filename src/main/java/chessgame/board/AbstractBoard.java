@@ -12,11 +12,11 @@ import java.util.stream.Collectors;
  * Represents a chess board in the abstract way. Stores a mapping from cells to pieces.
  * Makes no assumptions about how cells are connected to each other.
  */
-public class AbstractBoard<C extends Cell, A extends PieceType, P extends Piece<A>> implements Board<C, A, P> {
+public class AbstractBoard<C extends Cell, P extends PieceType> implements Board<C, P> {
 
-    protected final Map<C, P> occupants;
+    protected final Map<C, Piece<P>> occupants;
 
-    protected AbstractBoard(GameSetting<C, A, P> gameSetting) {
+    protected AbstractBoard(GameSetting<C, P> gameSetting) {
         this.occupants = new TreeMap<>(
                 gameSetting.constructAllPieces()
                         .stream()
@@ -34,7 +34,7 @@ public class AbstractBoard<C extends Cell, A extends PieceType, P extends Piece<
     }
 
     @Override
-    public Optional<P> getPiece(C cell) {
+    public Optional<Piece<P>> getPiece(C cell) {
         if (!occupants.containsKey(cell)) {
             return Optional.empty();
         }
@@ -42,7 +42,7 @@ public class AbstractBoard<C extends Cell, A extends PieceType, P extends Piece<
     }
 
     @Override
-    public P movePiece(C source, C target) {
+    public Piece<P> movePiece(C source, C target) {
         if (!occupants.containsKey(source)) {
             throw new IllegalStateException("Source position is empty!");
         }
@@ -54,8 +54,8 @@ public class AbstractBoard<C extends Cell, A extends PieceType, P extends Piece<
     }
 
     @Override
-    public P clearPiece(C cell) {
-        Optional<P> previousPiece = getPiece(cell);
+    public Piece<P> clearPiece(C cell) {
+        Optional<Piece<P>> previousPiece = getPiece(cell);
         if (!previousPiece.isPresent()) {
             throw new IllegalStateException("Try to clear a cell that is already empty!");
         }
@@ -64,7 +64,7 @@ public class AbstractBoard<C extends Cell, A extends PieceType, P extends Piece<
     }
 
     @Override
-    public Collection<PieceLocator<C, A, P>> getPiecesForPlayer(PieceType type, Player player) {
+    public Collection<PieceLocator<C, P>> getPiecesForPlayer(PieceType type, Player player) {
         return occupants.entrySet()
                         .stream()
                         .filter(e -> e.getValue().getPieceClass().equals(type)
@@ -74,7 +74,7 @@ public class AbstractBoard<C extends Cell, A extends PieceType, P extends Piece<
     }
 
     @Override
-    public Collection<PieceLocator<C, A, P>> getAllPiecesForPlayer(Player player) {
+    public Collection<PieceLocator<C, P>> getAllPiecesForPlayer(Player player) {
         return occupants.entrySet()
                         .stream()
                         .filter(e -> e.getValue().getPlayer().equals(player))

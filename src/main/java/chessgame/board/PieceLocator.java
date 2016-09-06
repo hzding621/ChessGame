@@ -8,22 +8,22 @@ import chessgame.piece.PieceType;
  * Its purpose is to mitigate extra queries to BoardViewer to find Piece for a certain Cell
  * It should only live during one round of game for consistency
  */
-public final class PieceLocator<C extends Cell, A extends PieceType, P extends Piece<A>>
-        implements Comparable<PieceLocator<C, A, P>>{
+public final class PieceLocator<C extends Cell, P extends PieceType>
+        implements Comparable<PieceLocator<C, P>>{
 
     private final C cell;
-    private final P piece;
+    private final Piece<P> piece;
 
-    public PieceLocator(C cell, P piece) {
+    public PieceLocator(C cell, Piece<P> piece) {
         this.piece = piece;
         this.cell = cell;
     }
 
-    public static <C extends Cell, A extends PieceType, P extends Piece<A>> PieceLocator<C, A, P> of(C cell, P piece) {
+    public static <C extends Cell, P extends PieceType> PieceLocator<C, P> of(C cell, Piece<P> piece) {
         return new PieceLocator<>(cell, piece);
     }
 
-    public P getPiece() {
+    public Piece<P> getPiece() {
         return piece;
     }
 
@@ -36,7 +36,7 @@ public final class PieceLocator<C extends Cell, A extends PieceType, P extends P
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        PieceLocator<?, ?, ?> that = (PieceLocator<?, ?, ?>) o;
+        PieceLocator<?, ?> that = (PieceLocator<?, ?>) o;
 
         if (!cell.equals(that.cell)) return false;
         return piece.equals(that.piece);
@@ -50,7 +50,7 @@ public final class PieceLocator<C extends Cell, A extends PieceType, P extends P
     }
 
     @Override
-    public int compareTo(PieceLocator<C, A, P> o) {
+    public int compareTo(PieceLocator<C, P> o) {
         if (o == this) return 0;
         return this.cell.compareTo(o.cell);
     }

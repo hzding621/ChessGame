@@ -2,7 +2,7 @@ package chessgame.game;
 
 import chessgame.board.Coordinate;
 import chessgame.board.PieceLocator;
-import chessgame.board.SquareCell;
+import chessgame.board.Square;
 import chessgame.piece.ChessPieceType;
 import chessgame.piece.Piece;
 import chessgame.player.Player;
@@ -12,17 +12,17 @@ import java.util.*;
 /**
  * Represents a customized board configuration. Used for testing purposes.
  */
-public final class ConfigurableGameSetting implements GameSetting<SquareCell, ChessPieceType, Piece<ChessPieceType>> {
+public final class ConfigurableGameSetting implements GameSetting<Square, ChessPieceType> {
 
     private final Set<ChessPieceType> supportedTypes;
-    private final Map<Player, Map<ChessPieceType, Collection<PieceLocator<SquareCell, ChessPieceType,
-            Piece<ChessPieceType>>>>> locators;
-    private final Map<Player, SquareCell> kingStartingPositions;
+    private final Map<Player, Map<ChessPieceType, Collection<PieceLocator<Square, ChessPieceType
+            >>>> locators;
+    private final Map<Player, Square> kingStartingPositions;
 
     private ConfigurableGameSetting(Set<ChessPieceType> supportedTypes,
-                                    Map<Player, Map<ChessPieceType, Collection<PieceLocator<SquareCell, ChessPieceType,
-                                         Piece<ChessPieceType>>>>> locators,
-                                    Map<Player, SquareCell> kingStartingPositions) {
+                                    Map<Player, Map<ChessPieceType, Collection<PieceLocator<Square, ChessPieceType
+                                            >>>> locators,
+                                    Map<Player, Square> kingStartingPositions) {
         this.supportedTypes = supportedTypes;
         this.locators = locators;
         this.kingStartingPositions = kingStartingPositions;
@@ -34,13 +34,13 @@ public final class ConfigurableGameSetting implements GameSetting<SquareCell, Ch
     }
 
     @Override
-    public Collection<PieceLocator<SquareCell, ChessPieceType, Piece<ChessPieceType>>>
+    public Collection<PieceLocator<Square, ChessPieceType>>
     constructPiecesOfTypeAndPlayer(ChessPieceType type, Player player) {
         return locators.getOrDefault(player, Collections.emptyMap()).getOrDefault(type, Collections.emptySet());
     }
 
     @Override
-    public Map<Player, SquareCell> getKingStartingPositions() {
+    public Map<Player, Square> getKingStartingPositions() {
         return kingStartingPositions;
     }
 
@@ -56,18 +56,18 @@ public final class ConfigurableGameSetting implements GameSetting<SquareCell, Ch
 
     public static final class Builder {
 
-        private final SquareCell.Builder builder;
-        private final Map<Player, Map<ChessPieceType, Collection<PieceLocator<SquareCell,
-                ChessPieceType, Piece<ChessPieceType>>>>> locators = new HashMap<>();
+        private final Square.Builder builder;
+        private final Map<Player, Map<ChessPieceType, Collection<PieceLocator<Square,
+                ChessPieceType>>>> locators = new HashMap<>();
         private final Map<ChessPieceType, Integer> pieceTypeCount = new HashMap<>();
-        private final Map<Player, SquareCell> kingPositions = new HashMap<>();
+        private final Map<Player, Square> kingPositions = new HashMap<>();
 
         public Builder(int fileLength, int rankLength) {
-            this.builder = new SquareCell.Builder(new Coordinate.Builder(fileLength), new Coordinate.Builder(rankLength));
+            this.builder = new Square.Builder(new Coordinate.Builder(fileLength), new Coordinate.Builder(rankLength));
         }
 
         public Builder piece(ChessPieceType type, Player player, String file, String rank) {
-            SquareCell cell = builder.at(file, rank);
+            Square cell = builder.at(file, rank);
             return piece(type, player, cell.getFile().getCoordinate().getIndex(), cell.getRank().getCoordinate().getIndex());
         }
         public Builder piece(ChessPieceType type, Player player, int file, int rank) {

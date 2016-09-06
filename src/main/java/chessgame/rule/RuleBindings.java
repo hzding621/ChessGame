@@ -1,7 +1,6 @@
 package chessgame.rule;
 
 import chessgame.board.*;
-import chessgame.piece.Piece;
 import chessgame.piece.PieceType;
 
 import java.util.HashMap;
@@ -10,15 +9,15 @@ import java.util.Map;
 /**
  * Represents mappings from a piece type to the rule associated with it on a certain type of board
  */
-public abstract class RuleBindings<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardViewer<C, A, P>> {
+public abstract class RuleBindings<C extends Cell, P extends PieceType, B extends BoardViewer<C, P>> {
 
-    private final Map<A, PieceRule<C, A, P, B>> bindings = new HashMap<>();
+    private final Map<P, PieceRule<C, P, B>> bindings = new HashMap<>();
 
-    public boolean addRule(A pieceType, PieceRule<C, A, P, B> rule) {
+    public boolean addRule(P pieceType, PieceRule<C, P, B> rule) {
         return bindings.putIfAbsent(pieceType, rule) == null;
     }
 
-    public PieceRule<C, A, P, B> getRule(A pieceType) {
+    public PieceRule<C, P, B> getRule(P pieceType) {
         return bindings.get(pieceType);
     }
 }

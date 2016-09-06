@@ -3,7 +3,6 @@ package chessgame.rule;
 import chessgame.board.Cell;
 import chessgame.board.Direction;
 import chessgame.board.GridViewer;
-import chessgame.piece.Piece;
 import chessgame.piece.PieceType;
 import chessgame.player.Player;
 
@@ -15,8 +14,8 @@ import java.util.List;
  * This type of piece attack in symmetric directions, such as Rook, Bishop, Queen
  * Such pieces must be associated with GridViewer
  */
-public interface RangeAttackPieceRule<C extends Cell, D extends Direction, A extends PieceType, P extends Piece<A>,
-        B extends GridViewer<C, D, A, P>> extends PinningPieceRule<C, A, P, B> {
+public interface RangeAttackPieceRule<C extends Cell, P extends PieceType, D extends Direction,
+        B extends GridViewer<C, D, P>> extends PinningPieceRule<C, P, B> {
 
     /**
      * @return the directions from which the piece can perform range attacks

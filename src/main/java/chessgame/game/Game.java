@@ -4,7 +4,6 @@ import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
 import chessgame.move.Move;
 import chessgame.move.SimpleMove;
-import chessgame.piece.Piece;
 import chessgame.piece.PieceType;
 import chessgame.rule.Rules;
 import chessgame.player.Player;
@@ -16,13 +15,13 @@ import java.util.stream.Collectors;
 /**
  * Interface for a variant of chess game
  */
-interface Game<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardViewer<C, A, P>> {
+interface Game<C extends Cell, P extends PieceType, B extends BoardViewer<C, P>> {
 
     B getBoard();
 
-    BoardInformation<C, A, P, B> getBoardInformation();
+    BoardInformation<C, P, B> getBoardInformation();
 
-    Rules<C, A, P, B> getRule();
+    Rules<C, P, B> getRule();
 
     Player getActor();
 

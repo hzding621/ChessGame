@@ -3,7 +3,6 @@ package chessgame.game;
 import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
 import chessgame.board.PieceLocator;
-import chessgame.piece.Piece;
 import chessgame.piece.PieceType;
 import chessgame.rule.Pin;
 import chessgame.rule.Rules;
@@ -13,10 +12,10 @@ import java.util.*;
 /**
  * Contains information computed from opponent pieces
  */
-public final class DefenderInformation<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardViewer<C, A, P>> {
+public final class DefenderInformation<C extends Cell, P extends PieceType, B extends BoardViewer<C, P>> {
 
     private final Set<C> isAttacked = new TreeSet<>();
-    private final Collection<PieceLocator<C, A, P>> checkers = new TreeSet<>();
+    private final Collection<PieceLocator<C, P>> checkers = new TreeSet<>();
     private final Map<C, Collection<Pin<C>>> kingDefenders = new TreeMap<>();
 
     /**
@@ -36,7 +35,7 @@ public final class DefenderInformation<C extends Cell, A extends PieceType, P ex
     /**
      * @return the set of defending side pieces that are currently checking actor side king
      */
-    public Collection<PieceLocator<C, A, P>> getCheckers() {
+    public Collection<PieceLocator<C, P>> getCheckers() {
         return checkers;
     }
 
@@ -52,7 +51,7 @@ public final class DefenderInformation<C extends Cell, A extends PieceType, P ex
      * which pieces are king-defenders (cannot move unless the move invalidates the pinning), and opponent pieces that
      * are checking the current king. This method runs after every move is made
      */
-    public void refresh(B board, Rules<C, A, P, B> rules, PlayerInformation playerInformation, C actorKing) {
+    public void refresh(B board, Rules<C, P, B> rules, PlayerInformation playerInformation, C actorKing) {
         isAttacked.clear();
         checkers.clear();
         kingDefenders.clear();

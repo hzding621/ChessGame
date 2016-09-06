@@ -1,8 +1,7 @@
 package chessgame.game;
 
 import chessgame.board.PieceLocator;
-import chessgame.board.SquareCell;
-import chessgame.game.GameSetting;
+import chessgame.board.Square;
 import chessgame.piece.King;
 import chessgame.piece.KingPawn;
 import chessgame.piece.Pawn;
@@ -14,15 +13,15 @@ import java.util.*;
 /**
  * A 4x4 toy peice set that is used for testing purposes
  */
-public final class KingPawnGame implements GameSetting<SquareCell, KingPawn, Piece<KingPawn>> {
+public final class KingPawnGame implements GameSetting<Square, KingPawn> {
 
-    private final SquareCell.Builder builder;
-    private final Piece whitePawn = new Pawn<SquareCell, KingPawn>(KingPawn.PAWN, Player.WHITE, 0);
-    private final Piece blackPawn = new Pawn<SquareCell, KingPawn>(KingPawn.PAWN, Player.BLACK, 0);
-    private final Piece whiteKing = new King<SquareCell, KingPawn>(KingPawn.KING, Player.WHITE, 0);
-    private final Piece blackKing = new King<SquareCell, KingPawn>(KingPawn.KING, Player.BLACK, 0);
+    private final Square.Builder builder;
+    private final Piece whitePawn = new Pawn<Square, KingPawn>(KingPawn.PAWN, Player.WHITE, 0);
+    private final Piece blackPawn = new Pawn<Square, KingPawn>(KingPawn.PAWN, Player.BLACK, 0);
+    private final Piece whiteKing = new King<Square, KingPawn>(KingPawn.KING, Player.WHITE, 0);
+    private final Piece blackKing = new King<Square, KingPawn>(KingPawn.KING, Player.BLACK, 0);
 
-    public KingPawnGame(SquareCell.Builder builder) {
+    public KingPawnGame(Square.Builder builder) {
         this.builder = builder;
     }
 
@@ -32,7 +31,7 @@ public final class KingPawnGame implements GameSetting<SquareCell, KingPawn, Pie
     }
 
     @Override
-    public Collection<PieceLocator<SquareCell, KingPawn, Piece<KingPawn>>>
+    public Collection<PieceLocator<Square, KingPawn>>
     constructPiecesOfTypeAndPlayer(KingPawn type, Player player) {
         return player == Player.WHITE
                 ? Arrays.asList(PieceLocator.of(builder.at(1,0), whitePawn),
@@ -42,8 +41,8 @@ public final class KingPawnGame implements GameSetting<SquareCell, KingPawn, Pie
     }
 
     @Override
-    public Map<Player, SquareCell> getKingStartingPositions() {
-        Map<Player, SquareCell> map = new HashMap<>();
+    public Map<Player, Square> getKingStartingPositions() {
+        Map<Player, Square> map = new HashMap<>();
         map.put(Player.WHITE, builder.at(2, 0));
         map.put(Player.BLACK, builder.at(2, 3));
         return map;

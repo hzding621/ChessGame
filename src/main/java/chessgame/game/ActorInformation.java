@@ -2,7 +2,6 @@ package chessgame.game;
 
 import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
-import chessgame.piece.Piece;
 import chessgame.piece.PieceType;
 import chessgame.player.Player;
 import chessgame.rule.Pin;
@@ -14,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * Contains information computed from actor's pieces
  */
-public class ActorInformation<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardViewer<C, A, P>> {
+public class ActorInformation<C extends Cell, P extends PieceType, B extends BoardViewer<C, P>> {
     private final Map<C, Set<C>> availableMoves = new TreeMap<>();
 
     /**
@@ -22,8 +21,8 @@ public class ActorInformation<C extends Cell, A extends PieceType, P extends Pie
      * This also allows to check whether the actor has been checkmated, i.e. there are no valid moves for the actor
      * This method runs after every move is made and the defender information has been updated.
      */
-    public void refresh(B board, Rules<C, A, P, B> rules,
-                        DefenderInformation<C, A, P, B> defenderInformation,
+    public void refresh(B board, Rules<C, P, B> rules,
+                        DefenderInformation<C, P, B> defenderInformation,
                         PlayerInformation playerInformation,
                         C actorKing) {
         Player actor = playerInformation.getActor();

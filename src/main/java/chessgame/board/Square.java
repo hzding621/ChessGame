@@ -5,12 +5,12 @@ import java.util.Optional;
 /**
  * Immutable class that represents a single cell on a two dimensional chess board
  */
-public class SquareCell implements Cell {
+public class Square implements Cell {
 
     private final File file;
     private final Rank rank;
 
-    private SquareCell(File file, Rank rank) {
+    private Square(File file, Rank rank) {
         this.file = file;
         this.rank = rank;
     }
@@ -23,7 +23,7 @@ public class SquareCell implements Cell {
         return rank;
     }
 
-    public static SquareDirection findDirection(SquareCell startCell, SquareCell endCell) {
+    public static TwoDimension findDirection(Square startCell, Square endCell) {
         if (startCell.equals(endCell)) {
             throw new IllegalArgumentException("Two cells are equal!");
         }
@@ -31,17 +31,17 @@ public class SquareCell implements Cell {
         int y1 = startCell.getRank().getCoordinate().getIndex(), y2 = endCell.getRank().getCoordinate().getIndex();
         int xDiff = x2 - x1, yDiff = y2 - y1;
         if (x1 == x2) {
-            return yDiff > 0 ? SquareDirection.NORTH : SquareDirection.SOUTH;
+            return yDiff > 0 ? TwoDimension.NORTH : TwoDimension.SOUTH;
         } else if (y1 == y2) {
-            return xDiff > 0 ? SquareDirection.EAST : SquareDirection.WEST;
+            return xDiff > 0 ? TwoDimension.EAST : TwoDimension.WEST;
         } else {
             if (Math.abs(xDiff) != Math.abs(yDiff)) {
                 throw new IllegalArgumentException("Two cells are not on the same line!");
             }
-            if (xDiff > 0 && yDiff > 0) return SquareDirection.NORTHEAST;
-            if (xDiff > 0 && yDiff < 0) return SquareDirection.SOUTHEAST;
-            if (xDiff < 0 && yDiff > 0) return SquareDirection.NORTHWEST;
-            if (xDiff < 0 && yDiff < 0) return SquareDirection.SOUTHWEST;
+            if (xDiff > 0 && yDiff > 0) return TwoDimension.NORTHEAST;
+            if (xDiff > 0 && yDiff < 0) return TwoDimension.SOUTHEAST;
+            if (xDiff < 0 && yDiff > 0) return TwoDimension.NORTHWEST;
+            if (xDiff < 0 && yDiff < 0) return TwoDimension.SOUTHWEST;
         }
         throw new IllegalArgumentException("Should never reach here!");
     }
@@ -53,17 +53,17 @@ public class SquareCell implements Cell {
 
     @Override
     public int compareTo(Cell o) {
-        if (!(o instanceof SquareCell)) {
-            throw new IllegalStateException("Cannot compare SquareCell to a cell of different type: "
+        if (!(o instanceof Square)) {
+            throw new IllegalStateException("Cannot compare Square to a cell of different type: "
                     + o.getClass() + "! ");
         }
-        SquareCell that = (SquareCell) o;
+        Square that = (Square) o;
         int fileDiff = this.file.compareTo(that.file);
         if (fileDiff != 0) return fileDiff;
         return this.rank.compareTo(that.rank);
     }
 
-    public static final class Builder implements GridCellFactory<SquareCell, SquareDirection> {
+    public static final class Builder implements GridCellFactory<Square, TwoDimension> {
         private final Coordinate.Builder rankBuilder;
         private final Coordinate.Builder fileBuilder;
 
@@ -73,7 +73,7 @@ public class SquareCell implements Cell {
         }
 
         @Override
-        public SquareCell at(String file, String rank) {
+        public Square at(String file, String rank) {
             if (file.length() != 1) {
                 throw new IllegalArgumentException("Grid cell factory does not support encoding of files larger than 26!");
             }
@@ -87,14 +87,14 @@ public class SquareCell implements Cell {
         }
 
         @Override
-        public SquareCell at(int fileIndex, int rankIndex) {
+        public Square at(int fileIndex, int rankIndex) {
             Coordinate fileCoordinate = fileBuilder.at(fileIndex);
             Coordinate rankCoordinate = rankBuilder.at(rankIndex);
-            return new SquareCell(File.of(fileCoordinate), Rank.of(rankCoordinate));
+            return new Square(File.of(fileCoordinate), Rank.of(rankCoordinate));
         }
 
         @Override
-        public Optional<SquareCell> moveOnce(SquareCell cell, SquareDirection direction) {
+        public Optional<Square> moveOnce(Square cell, TwoDimension direction) {
             int xDelta = direction.getX(), yDelta = direction.getY();
             int fileIndex = cell.file.getCoordinate().getIndex() + xDelta;
             int rankIndex = cell.rank.getCoordinate().getIndex() + yDelta;
@@ -127,7 +127,7 @@ public class SquareCell implements Cell {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SquareCell that = (SquareCell) o;
+        Square that = (Square) o;
 
         if (!rank.equals(that.rank)) return false;
         return file.equals(that.file);

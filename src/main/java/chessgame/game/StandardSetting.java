@@ -2,8 +2,7 @@ package chessgame.game;
 
 import chessgame.board.Coordinate;
 import chessgame.board.PieceLocator;
-import chessgame.board.SquareCell;
-import chessgame.game.GameSetting;
+import chessgame.board.Square;
 import chessgame.piece.*;
 import chessgame.player.Player;
 
@@ -12,14 +11,14 @@ import java.util.*;
 /**
  * Represents a standard 8x8 chess piece set
  */
-public final class StandardSetting implements GameSetting<SquareCell, ChessPieceType, Piece<ChessPieceType>> {
+public final class StandardSetting implements GameSetting<Square, ChessPieceType> {
 
-    private final Map<Player, Map<ChessPieceType, List<SquareCell>>> configuration = new HashMap<>();
-    private final Map<Player, SquareCell> kingStartingPositions = new HashMap<>();
+    private final Map<Player, Map<ChessPieceType, List<Square>>> configuration = new HashMap<>();
+    private final Map<Player, Square> kingStartingPositions = new HashMap<>();
 
     {
         Coordinate.Builder coordinateBuilder = new Coordinate.Builder(8);
-        SquareCell.Builder builder = new SquareCell.Builder(coordinateBuilder, coordinateBuilder);
+        Square.Builder builder = new Square.Builder(coordinateBuilder, coordinateBuilder);
         configuration.put(Player.WHITE, new HashMap<>());
         configuration.put(Player.BLACK, new HashMap<>());
 
@@ -66,7 +65,7 @@ public final class StandardSetting implements GameSetting<SquareCell, ChessPiece
         kingStartingPositions.put(Player.BLACK, builder.at(4, 7));
     }
 
-    public Map<Player, Map<ChessPieceType, List<SquareCell>>> getConfiguration() {
+    public Map<Player, Map<ChessPieceType, List<Square>>> getConfiguration() {
         return configuration;
     }
 
@@ -76,9 +75,9 @@ public final class StandardSetting implements GameSetting<SquareCell, ChessPiece
     }
 
     @Override
-    public Collection<PieceLocator<SquareCell, ChessPieceType, Piece<ChessPieceType>>> constructPiecesOfTypeAndPlayer(ChessPieceType type, Player player) {
-        List<SquareCell> startingPositions = configuration.get(player).get(type);
-        List<PieceLocator<SquareCell, ChessPieceType, Piece<ChessPieceType>>> output = new ArrayList<>();
+    public Collection<PieceLocator<Square, ChessPieceType>> constructPiecesOfTypeAndPlayer(ChessPieceType type, Player player) {
+        List<Square> startingPositions = configuration.get(player).get(type);
+        List<PieceLocator<Square, ChessPieceType>> output = new ArrayList<>();
         for (int i = 0; i < startingPositions.size(); i++) {
             output.add(PieceLocator.of(startingPositions.get(i), createPiece(type, player, i)));
         }
@@ -104,7 +103,7 @@ public final class StandardSetting implements GameSetting<SquareCell, ChessPiece
     }
 
     @Override
-    public Map<Player, SquareCell> getKingStartingPositions() {
+    public Map<Player, Square> getKingStartingPositions() {
         return kingStartingPositions;
     }
 
@@ -120,7 +119,7 @@ public final class StandardSetting implements GameSetting<SquareCell, ChessPiece
 
     private void populatePieces(Player player,
                                 ChessPieceType type,
-                                SquareCell.Builder builder, int[][] indices) {
+                                Square.Builder builder, int[][] indices) {
         for (int[] position: indices) {
             configuration.get(player).putIfAbsent(type, new ArrayList<>());
             try {

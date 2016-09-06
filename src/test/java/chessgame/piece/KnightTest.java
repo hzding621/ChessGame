@@ -2,7 +2,7 @@ package chessgame.piece;
 
 import chessgame.board.ChessBoard;
 import chessgame.board.Coordinate;
-import chessgame.board.SquareCell;
+import chessgame.board.Square;
 import chessgame.game.ConfigurableGameSetting;
 import chessgame.player.Player;
 import org.junit.Assert;
@@ -16,13 +16,13 @@ import java.util.Collection;
  */
 public final class KnightTest {
 
-    private SquareCell.Builder builder;
+    private Square.Builder builder;
     private ChessBoard testBoard;
 
     @Before
     public void instantiateTestPieceSet() {
         Coordinate.Builder coordinateBuilder = new Coordinate.Builder(8);
-        builder = new SquareCell.Builder(coordinateBuilder, coordinateBuilder);
+        builder = new Square.Builder(coordinateBuilder, coordinateBuilder);
     }
 
     @Test
@@ -36,7 +36,7 @@ public final class KnightTest {
                 .piece(ChessPieceType.KING, Player.BLACK, "E", "8")
                 .build()
         );
-        Collection<SquareCell> attacked =
+        Collection<Square> attacked =
                 new Knight.KnightRule<>(testBoard).attacking(builder.at("D", "4"), Player.WHITE);
         Assert.assertEquals(attacked.size(), 8);
     }
@@ -52,7 +52,7 @@ public final class KnightTest {
                 .piece(ChessPieceType.KING, Player.BLACK, "E", "8")
                 .build()
         );
-        Collection<SquareCell> attacked =
+        Collection<Square> attacked =
                 new Knight.KnightRule<>(testBoard).attacking(builder.at("H", "1"), Player.WHITE);
         Assert.assertEquals(attacked.size(), 2);
     }
@@ -68,7 +68,7 @@ public final class KnightTest {
                 .piece(ChessPieceType.KING, Player.BLACK, "E", "8")
                 .build()
         );
-        Collection<SquareCell> blockingPositionsWhenAttacking =
+        Collection<Square> blockingPositionsWhenAttacking =
                 new Knight.KnightRule<>(testBoard).getBlockingPositionsWhenAttacking(
                         builder.at("F", "6"), builder.at("E", "8"), Player.WHITE);
         Assert.assertEquals(blockingPositionsWhenAttacking.size(), 2);

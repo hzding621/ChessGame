@@ -12,9 +12,9 @@ import java.util.*;
 /**
  * Class that implements King piece moving logic. Specific rules regarding king checking is handled elsewhere
  */
-public final class King<C extends Cell, A extends PieceType> extends AbstractPiece<C, A> {
+public final class King<C extends Cell, P extends PieceType> extends AbstractPiece<C, P> {
 
-    public King(A pieceClass, Player player, int id) {
+    public King(P pieceClass, Player player, int id) {
         super(pieceClass, player, id);
     }
 
@@ -25,13 +25,13 @@ public final class King<C extends Cell, A extends PieceType> extends AbstractPie
                 ", id=" + getId() +
                 '}';
     }
-    public static final class KingRule<C extends Cell, A extends PieceType, D extends Direction, P extends Piece<A>,
-            B extends GridViewer<C, D, A, P>> extends AbstractPieceRule<C, A, P, B> implements
-            RequiresPieceInformation<C, A, P> {
+    public static final class KingRule<C extends Cell, P extends PieceType, D extends Direction,
+            B extends GridViewer<C, D, P>> extends AbstractPieceRule<C, P, B> implements
+            RequiresPieceInformation<C, P> {
 
-        private final PieceInformation<C, A, P> pieceInformation;
+        private final PieceInformation<C, P> pieceInformation;
 
-        public KingRule(B gridViewer, PieceInformation<C, A, P> pieceInformation) {
+        public KingRule(B gridViewer, PieceInformation<C, P> pieceInformation) {
             super(gridViewer);
             this.pieceInformation = pieceInformation;
         }
@@ -57,7 +57,7 @@ public final class King<C extends Cell, A extends PieceType> extends AbstractPie
         }
 
         @Override
-        public PieceInformation<C, A, P> getPieceInformation() {
+        public PieceInformation<C, P> getPieceInformation() {
             return pieceInformation;
         }
     }

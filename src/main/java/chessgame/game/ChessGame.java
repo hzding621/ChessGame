@@ -2,8 +2,8 @@ package chessgame.game;
 
 import chessgame.board.ChessBoard;
 import chessgame.board.GridCellFactory;
-import chessgame.board.SquareCell;
-import chessgame.board.SquareDirection;
+import chessgame.board.Square;
+import chessgame.board.TwoDimension;
 import chessgame.move.Move;
 import chessgame.piece.*;
 import chessgame.player.Player;
@@ -15,14 +15,14 @@ import java.util.*;
 /**
  * The standard chess game
  */
-public class ChessGame implements Game<SquareCell, ChessPieceType, Piece<ChessPieceType>, ChessBoard> {
+public class ChessGame implements Game<Square, ChessPieceType, ChessBoard> {
     private final ChessBoard chessBoard;
-    private final Rules<SquareCell, ChessPieceType, Piece<ChessPieceType>, ChessBoard> chessRules;
-    private final BoardInformation<SquareCell, ChessPieceType, Piece<ChessPieceType>, ChessBoard> boardInformation;
+    private final Rules<Square, ChessPieceType, ChessBoard> chessRules;
+    private final BoardInformation<Square, ChessPieceType, ChessBoard> boardInformation;
 
     private ChessGame(ChessBoard chessBoard,
-                      Rules<SquareCell, ChessPieceType, Piece<ChessPieceType>, ChessBoard> chessRules,
-                      BoardInformation<SquareCell, ChessPieceType, Piece<ChessPieceType>, ChessBoard> boardInformation) {
+                      Rules<Square, ChessPieceType, ChessBoard> chessRules,
+                      BoardInformation<Square, ChessPieceType, ChessBoard> boardInformation) {
         this.chessBoard = chessBoard;
         this.chessRules = chessRules;
         this.boardInformation = boardInformation;
@@ -31,7 +31,7 @@ public class ChessGame implements Game<SquareCell, ChessPieceType, Piece<ChessPi
 
     public static ChessGame constructGame() {
         StandardSetting pieceSet = new StandardSetting();
-        BoardInformation<SquareCell, ChessPieceType, Piece<ChessPieceType>, ChessBoard> boardInformation =
+        BoardInformation<Square, ChessPieceType, ChessBoard> boardInformation =
                 new BoardInformation<>(pieceSet);
         ChessBoard board = new ChessBoard(pieceSet);
         ChessRuleBindings ruleBindings = new ChessRuleBindings(board, boardInformation.getPieceInformation());
@@ -44,12 +44,12 @@ public class ChessGame implements Game<SquareCell, ChessPieceType, Piece<ChessPi
     }
 
     @Override
-    public BoardInformation<SquareCell, ChessPieceType, Piece<ChessPieceType>, ChessBoard> getBoardInformation() {
+    public BoardInformation<Square, ChessPieceType, ChessBoard> getBoardInformation() {
         return boardInformation;
     }
 
     @Override
-    public Rules<SquareCell, ChessPieceType, Piece<ChessPieceType>, ChessBoard> getRule() {
+    public Rules<Square, ChessPieceType, ChessBoard> getRule() {
         return chessRules;
     }
 
@@ -64,7 +64,7 @@ public class ChessGame implements Game<SquareCell, ChessPieceType, Piece<ChessPi
     }
 
     @Override
-    public Map<SquareCell, Set<SquareCell>> allPotentialMovesBySource() {
+    public Map<Square, Set<Square>> allPotentialMovesBySource() {
         return boardInformation.getAvailableMoves();
     }
 
@@ -77,7 +77,7 @@ public class ChessGame implements Game<SquareCell, ChessPieceType, Piece<ChessPi
     }
 
     @Override
-    public void move(SquareCell source, SquareCell target) {
+    public void move(Square source, Square target) {
         if (!boardInformation.getAvailableMoves().getOrDefault(source, Collections.emptySet()).contains(target)) {
             throw new IllegalStateException("Invalid move from " + source + " to " + target);
         }
@@ -109,7 +109,7 @@ public class ChessGame implements Game<SquareCell, ChessPieceType, Piece<ChessPi
     public static void main(String[] args) {
         ChessGame game = ChessGame.constructGame();
 
-        GridCellFactory<SquareCell, SquareDirection> factory = game.getBoard().getGridCellFactory();
+        GridCellFactory<Square, TwoDimension> factory = game.getBoard().getGridCellFactory();
         String[][] moves = new String[][] {
                 {"D", "2", "D", "4"},
                 {"D", "7", "D", "5"},
@@ -120,7 +120,7 @@ public class ChessGame implements Game<SquareCell, ChessPieceType, Piece<ChessPi
                 {"B", "5", "C", "6"},
         };
 
-        Collection<Move<SquareCell>> allMoves = null;
+        Collection<Move<Square>> allMoves = null;
         for (String[] move: moves) {
             allMoves = game.allPotentialMoves();
             game.move(factory.at(move[0], move[1]), factory.at(move[2], move[3]));

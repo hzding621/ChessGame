@@ -6,18 +6,18 @@ import chessgame.piece.*;
 /**
  * Represents a regular 8x8 chess board
  */
-public final class ChessBoard extends RectangularBoard<ChessPieceType, Piece<ChessPieceType>> {
+public final class ChessBoard extends RectangularBoard<ChessPieceType> {
 
     private final Coordinate.Builder coordinateBuilder = new Coordinate.Builder(8);
-    private final SquareCell.Builder cellBuilder =
-            new SquareCell.Builder(coordinateBuilder, coordinateBuilder);
+    private final Square.Builder cellBuilder =
+            new Square.Builder(coordinateBuilder, coordinateBuilder);
 
-    public ChessBoard(GameSetting<SquareCell, ChessPieceType, Piece<ChessPieceType>> gameSetting) {
+    public ChessBoard(GameSetting<Square, ChessPieceType> gameSetting) {
         super(gameSetting);
     }
 
     @Override
-    public GridCellFactory<SquareCell, SquareDirection> getGridCellFactory() {
+    public GridCellFactory<Square, TwoDimension> getGridCellFactory() {
         return cellBuilder;
     }
 }

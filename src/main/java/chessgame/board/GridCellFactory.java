@@ -7,7 +7,6 @@ import java.util.Optional;
  */
 public interface GridCellFactory<C extends Cell, D extends Direction> {
 
-
     /**
      * @param file String representation of the file, by alphabetic letters, i.e. 'A', 'B','a', 'b', etc.
      * @param rank String representation of the rank, i.e. '1', '2', etc.

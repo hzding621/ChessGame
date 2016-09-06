@@ -11,9 +11,9 @@ import java.util.Collection;
 /**
  * Class that implements Queen piece moving logic
  */
-public final class Queen<C extends Cell, A extends PieceType> extends AbstractPiece<C, A> {
+public final class Queen<C extends Cell, P extends PieceType> extends AbstractPiece<C, P> {
 
-    public Queen(A pieceClass, Player player, int id) {
+    public Queen(P pieceClass, Player player, int id) {
         super(pieceClass, player, id);
     }
 
@@ -24,9 +24,9 @@ public final class Queen<C extends Cell, A extends PieceType> extends AbstractPi
                 ", id=" + getId() +
                 '}';
     }
-    public static final class QueenRule<C extends Cell, A extends PieceType, D extends Direction, P extends Piece<A>,
-            B extends GridViewer<C, D, A, P>> extends AbstractPieceRule<C, A, P, B>
-            implements RangeAttackPieceRule<C, D, A, P, B> {
+    public static final class QueenRule<C extends Cell, P extends PieceType, D extends Direction,
+            B extends GridViewer<C, D, P>> extends AbstractPieceRule<C, P, B>
+            implements RangeAttackPieceRule<C, P, D, B> {
 
         public QueenRule(B gridViewer) {
             super(gridViewer);

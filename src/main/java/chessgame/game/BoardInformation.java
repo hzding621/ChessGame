@@ -2,7 +2,6 @@ package chessgame.game;
 
 import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
-import chessgame.piece.Piece;
 import chessgame.piece.PieceType;
 import chessgame.player.Player;
 
@@ -11,16 +10,16 @@ import java.util.*;
 /**
  * Stores information about the board at runtime. Is NOT responsible for computing the information.
  */
-public final class BoardInformation<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardViewer<C, A, P>> {
+public final class BoardInformation<C extends Cell, P extends PieceType, B extends BoardViewer<C, P>> {
 
-    private final PieceInformation<C, A, P> pieceInformation;
-    private final DefenderInformation<C, A, P, B> defenderInformation = new DefenderInformation<>();
-    private final ActorInformation<C, A, P, B> actorInformation = new ActorInformation<>();
+    private final PieceInformation<C, P> pieceInformation;
+    private final DefenderInformation<C, P, B> defenderInformation = new DefenderInformation<>();
+    private final ActorInformation<C, P, B> actorInformation = new ActorInformation<>();
     private final PlayerInformation playerInformation;
 
     private boolean checkmated;
 
-    public BoardInformation(GameSetting<C, A, P> gameSetting) {
+    public BoardInformation(GameSetting<C, P> gameSetting) {
         playerInformation = new PlayerInformation(gameSetting.starter(), gameSetting.starter().next());
         pieceInformation = new PieceInformation<>(gameSetting.getKingStartingPositions());
         checkmated = false;
@@ -37,7 +36,7 @@ public final class BoardInformation<C extends Cell, A extends PieceType, P exten
         return checkmated;
     }
 
-    public PieceInformation<C, A, P> getPieceInformation() {
+    public PieceInformation<C, P> getPieceInformation() {
         return pieceInformation;
     }
 
@@ -61,7 +60,7 @@ public final class BoardInformation<C extends Cell, A extends PieceType, P exten
         checkmated = true;
     }
 
-    public DefenderInformation<C, A, P, B> getDefenderInformation() {
+    public DefenderInformation<C, P, B> getDefenderInformation() {
         return defenderInformation;
     }
 
@@ -69,7 +68,7 @@ public final class BoardInformation<C extends Cell, A extends PieceType, P exten
         return playerInformation;
     }
 
-    public ActorInformation<C, A, P, B> getActorInformation() {
+    public ActorInformation<C, P, B> getActorInformation() {
         return actorInformation;
     }
 

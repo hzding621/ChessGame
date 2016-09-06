@@ -11,20 +11,20 @@ import java.util.Map;
 /**
  * Represents runtime piece information such as how many moves it has made
  */
-public final class PieceInformation<C extends Cell, A extends PieceType, P extends Piece<A>> {
+public final class PieceInformation<C extends Cell, P extends PieceType> {
 
-    private final Map<P, Integer> moveCounts = new HashMap<>();
+    private final Map<Piece<P>, Integer> moveCounts = new HashMap<>();
     private final Map<Player, C> kingPosition = new HashMap<>();
 
     public PieceInformation(Map<Player, C> kingStartingPosition) {
         kingPosition.putAll(kingStartingPosition);
     }
 
-    public void incrementPieceMoveCount(P piece) {
+    public void incrementPieceMoveCount(Piece<P> piece) {
         moveCounts.put(piece, moveCounts.getOrDefault(piece, 0) + 1);
     }
 
-    public int getPieceMoveCount(P piece) {
+    public int getPieceMoveCount(Piece<P> piece) {
         return moveCounts.getOrDefault(piece, 0);
     }
 

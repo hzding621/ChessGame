@@ -1,23 +1,23 @@
 package chessgame.rule;
 
 import chessgame.board.ChessBoard;
-import chessgame.board.SquareCell;
+import chessgame.board.Square;
 import chessgame.game.PieceInformation;
 import chessgame.piece.*;
 
 /**
  * Inherit the empty rule bindings to include standard chess pieces rule mappings
  */
-public final class ChessRuleBindings extends RuleBindings<SquareCell, ChessPieceType, Piece<ChessPieceType>, ChessBoard>
+public final class ChessRuleBindings extends RuleBindings<Square, ChessPieceType, ChessBoard>
 implements
-        RequiresBoardView<SquareCell, ChessPieceType, Piece<ChessPieceType>, ChessBoard>,
-        RequiresPieceInformation<SquareCell, ChessPieceType, Piece<ChessPieceType>> {
+        RequiresBoardView<Square, ChessPieceType, ChessBoard>,
+        RequiresPieceInformation<Square, ChessPieceType> {
 
     private final ChessBoard chessBoard;
-    private final PieceInformation<SquareCell, ChessPieceType, Piece<ChessPieceType>> pieceInformation;
+    private final PieceInformation<Square, ChessPieceType> pieceInformation;
 
     public ChessRuleBindings(ChessBoard chessBoard,
-                             PieceInformation<SquareCell, ChessPieceType, Piece<ChessPieceType>> pieceInformation)
+                             PieceInformation<Square, ChessPieceType> pieceInformation)
     {
         this.chessBoard = chessBoard;
         this.pieceInformation = pieceInformation;
@@ -35,7 +35,7 @@ implements
     }
 
     @Override
-    public PieceInformation<SquareCell, ChessPieceType, Piece<ChessPieceType>> getPieceInformation() {
+    public PieceInformation<Square, ChessPieceType> getPieceInformation() {
         return pieceInformation;
     }
 }

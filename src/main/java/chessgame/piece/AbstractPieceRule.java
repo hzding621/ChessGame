@@ -7,8 +7,8 @@ import chessgame.rule.PieceRule;
 /**
  * Abstract piece rule that depends on a board view. Standard piece rule usually can inherit this class
  */
-public abstract class AbstractPieceRule<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardViewer<C, A, P>>
-    implements PieceRule<C, A, P, B> {
+public abstract class AbstractPieceRule<C extends Cell, P extends PieceType, B extends BoardViewer<C, P>>
+    implements PieceRule<C, P, B> {
 
     protected final B boardViewer;
 

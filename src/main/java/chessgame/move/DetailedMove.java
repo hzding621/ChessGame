@@ -10,16 +10,16 @@ import java.util.Optional;
 /**
  * Represents a move wherein a piece moves from A to B. Contains details about the pieces
  */
-public class DetailedMove<C extends Cell, A extends PieceType, P extends Piece<A>, B extends BoardViewer<C, A, P>>
+public class DetailedMove<C extends Cell, P extends PieceType, B extends BoardViewer<C, P>>
         implements Move<C> {
 
     private final B board;
     private final C source;
     private final C target;
-    private final P sourcePiece;
-    private final Optional<P> capturedPiece;
+    private final Piece<P> sourcePiece;
+    private final Optional<Piece<P>> capturedPiece;
 
-    public DetailedMove(B board, C source, C target, P sourcePiece, Optional<P> capturedPiece) {
+    public DetailedMove(B board, C source, C target, Piece<P> sourcePiece, Optional<Piece<P>> capturedPiece) {
         this.board = board;
         this.source = source;
         this.target = target;
@@ -39,11 +39,11 @@ public class DetailedMove<C extends Cell, A extends PieceType, P extends Piece<A
         return target;
     }
 
-    public P getSourcePiece() {
+    public Piece<P> getSourcePiece() {
         return sourcePiece;
     }
 
-    public Optional<P> getCapturedPiece() {
+    public Optional<Piece<P>> getCapturedPiece() {
         return capturedPiece;
     }
 }

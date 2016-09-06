@@ -14,9 +14,9 @@ import java.util.*;
 /**
  * Class that implements Knight piece moving logic
  */
-public final class Knight<C extends Cell, A extends PieceType> extends AbstractPiece<C, A> {
+public final class Knight<C extends Cell, P extends PieceType> extends AbstractPiece<C, P> {
 
-    public Knight(A pieceClass, Player player, int id) {
+    public Knight(P pieceClass, Player player, int id) {
         super(pieceClass, player, id);
     }
 
@@ -28,8 +28,8 @@ public final class Knight<C extends Cell, A extends PieceType> extends AbstractP
                 '}';
     }
 
-    public static final class KnightRule<C extends Cell, A extends PieceType, D extends Direction, P extends Piece<A>,
-            B extends GridViewer<C, D, A, P>> extends AbstractPieceRule<C, A, P, B> {
+    public static final class KnightRule<C extends Cell, P extends PieceType, D extends Direction,
+            B extends GridViewer<C, D, P>> extends AbstractPieceRule<C, P, B> {
 
         public KnightRule(B gridViewer) {
             super(gridViewer);

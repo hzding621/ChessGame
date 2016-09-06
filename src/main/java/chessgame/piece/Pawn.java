@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
 /**
  * Class that implements Pawn piece moving logic
  */
-public final class Pawn<C extends Cell, A extends PieceType> extends AbstractPiece<C, A> {
+public final class Pawn<C extends Cell, P extends PieceType> extends AbstractPiece<C, P> {
 
-    public Pawn(A pieceClass, Player player, int id) {
+    public Pawn(P pieceClass, Player player, int id) {
         super(pieceClass, player, id);
     }
 
@@ -31,13 +31,13 @@ public final class Pawn<C extends Cell, A extends PieceType> extends AbstractPie
                 '}';
     }
 
-    public static final class PawnRule<C extends Cell, A extends PieceType, D extends Direction, P extends Piece<A>,
-            B extends GridViewer<C, D, A, P>> extends AbstractPieceRule<C, A, P, B>
-            implements RequiresPieceInformation<C, A, P>{
+    public static final class PawnRule<C extends Cell, P extends PieceType, D extends Direction,
+            B extends GridViewer<C, D, P>> extends AbstractPieceRule<C, P, B>
+            implements RequiresPieceInformation<C, P>{
 
-        private final PieceInformation<C, A, P> pieceInformation;
+        private final PieceInformation<C, P> pieceInformation;
 
-        public PawnRule(B gridViewer, PieceInformation<C, A, P> pieceInformation) {
+        public PawnRule(B gridViewer, PieceInformation<C, P> pieceInformation) {
             super(gridViewer);
             this.pieceInformation = pieceInformation;
         }
@@ -78,7 +78,7 @@ public final class Pawn<C extends Cell, A extends PieceType> extends AbstractPie
         }
 
         @Override
-        public PieceInformation<C, A, P> getPieceInformation() {
+        public PieceInformation<C, P> getPieceInformation() {
             return pieceInformation;
         }
     }
