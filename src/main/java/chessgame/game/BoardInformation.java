@@ -2,6 +2,7 @@ package chessgame.game;
 
 import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
+import chessgame.move.Move;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 
@@ -37,10 +38,6 @@ public final class BoardInformation<C extends Cell, P extends PieceClass, B exte
         return pieceInformation.locateKing(player);
     }
 
-    public void moveKing(Player player, C cell) {
-        pieceInformation.updateKingPosition(player, cell);
-    }
-
     public Player getActor() {
         return playerInformation.getActor();
     }
@@ -61,7 +58,7 @@ public final class BoardInformation<C extends Cell, P extends PieceClass, B exte
         return actorInformation;
     }
 
-    public Map<C, Set<C>> getAvailableMoves() {
+    public Map<C, Set<Move<C>>> getAvailableMoves() {
         return actorInformation.getAvailableMoves();
     }
 

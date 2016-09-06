@@ -1,12 +1,11 @@
 package chessgame.piece;
 
-import chessgame.board.Cell;
 import chessgame.player.Player;
 
 /**
  * Abstract class for piece implementation to extend from. Contains basic information that are shared by all pieces.
  */
-public abstract class AbstractPiece<C extends Cell, P extends PieceClass>
+public abstract class AbstractPiece<P extends PieceClass>
         implements Piece<P> {
 
     private final P pieceClass;
@@ -39,7 +38,7 @@ public abstract class AbstractPiece<C extends Cell, P extends PieceClass>
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AbstractPiece<?, ?> that = (AbstractPiece<?, ?>) o;
+        AbstractPiece<?> that = (AbstractPiece<?>) o;
 
         if (id != that.id) return false;
         if (!pieceClass.equals(that.pieceClass)) return false;

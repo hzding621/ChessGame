@@ -16,10 +16,10 @@ import java.util.*;
 public final class KingPawnGame implements GameSetting<Square, KingPawn> {
 
     private final Square.Builder builder;
-    private final Piece whitePawn = new Pawn<Square, KingPawn>(KingPawn.PAWN, Player.WHITE, 0);
-    private final Piece blackPawn = new Pawn<Square, KingPawn>(KingPawn.PAWN, Player.BLACK, 0);
-    private final Piece whiteKing = new King<Square, KingPawn>(KingPawn.KING, Player.WHITE, 0);
-    private final Piece blackKing = new King<Square, KingPawn>(KingPawn.KING, Player.BLACK, 0);
+    private final Piece whitePawn = new Pawn<KingPawn>(KingPawn.PAWN, Player.WHITE, 0);
+    private final Piece blackPawn = new Pawn<KingPawn>(KingPawn.PAWN, Player.BLACK, 0);
+    private final Piece whiteKing = new King<KingPawn>(KingPawn.KING, Player.WHITE, 0);
+    private final Piece blackKing = new King<KingPawn>(KingPawn.KING, Player.BLACK, 0);
 
     public KingPawnGame(Square.Builder builder) {
         this.builder = builder;

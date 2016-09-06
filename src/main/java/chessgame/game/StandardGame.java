@@ -5,12 +5,16 @@ import chessgame.board.GridCellFactory;
 import chessgame.board.Square;
 import chessgame.board.TwoDimension;
 import chessgame.move.Move;
+import chessgame.move.MoveResult;
+import chessgame.move.SimpleMove;
 import chessgame.piece.*;
 import chessgame.player.Player;
 import chessgame.rule.ChessRuleBindings;
 import chessgame.rule.Rules;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * The standard chess game
@@ -27,7 +31,7 @@ public class StandardGame implements Game<Square, StandardPieces, ChessBoard> {
         this.chessBoard = chessBoard;
         this.chessRules = chessRules;
         this.boardInformation = boardInformation;
-        refreshInformation();
+        recomputeAvailableMovesForThisRound();
     }
 
     public static StandardGame constructGame() {
@@ -65,11 +69,20 @@ public class StandardGame implements Game<Square, StandardPieces, ChessBoard> {
     }
 
     @Override
-    public Map<Square, Set<Square>> allPotentialMovesBySource() {
-        return boardInformation.getAvailableMoves();
+    public Collection<Move<Square>> availableMoves() {
+        return boardInformation.getAvailableMoves().values()
+                .stream()
+                .map(Set::stream)
+                .flatMap(Function.identity())
+                .collect(Collectors.toCollection(TreeSet::new));
     }
 
-    private void refreshInformation() {
+    @Override
+    public Collection<Move<Square>> availableMovesFrom(Square square) {
+        return boardInformation.getAvailableMoves().getOrDefault(square, Collections.emptySet());
+    }
+
+    private void recomputeAvailableMovesForThisRound() {
         // Defender information is used to compute actor information so must be computed earlier
         boardInformation.getDefenderInformation().refresh(chessBoard, chessRules,
                 boardInformation.getPlayerInformation(), boardInformation.locateKing(boardInformation.getActor()));
@@ -87,32 +100,21 @@ public class StandardGame implements Game<Square, StandardPieces, ChessBoard> {
     }
 
     @Override
-    public void move(Square source, Square target) {
+    public void move(Move<Square> attemptedMove) {
         if (gameStatus != GameStatus.OPEN) {
             throw new IllegalStateException("Game has ended in " + gameStatus);
         }
-        if (!boardInformation.getAvailableMoves().getOrDefault(source, Collections.emptySet()).contains(target)) {
-            throw new IllegalStateException("Invalid move from " + source + " to " + target);
+        Square source = attemptedMove.getSource(), target = attemptedMove.getTarget();
+        if (!boardInformation.getAvailableMoves().getOrDefault(source, Collections.emptySet()).contains(attemptedMove)) {
+            throw new IllegalStateException("Attempted move " + attemptedMove + " is invalid!");
         }
-        chessBoard.getPiece(target).ifPresent(p -> {
-            if (p.getPieceClass().isKing()) {
-                throw new IllegalStateException("Can never directly capture a King!");
-            }
-        });
-        chessBoard.clearPiece(target);
-        Piece<StandardPieces> movedPiece = chessBoard.movePiece(source, target);
+        MoveResult<Square, StandardPieces> history = attemptedMove.<StandardPieces>getTransition().apply(chessBoard);
 
-        // Increment move count for moved piece
-        boardInformation.getPieceInformation().incrementPieceMoveCount(movedPiece);
-
-        // Update King's position
-        if (source.equals(boardInformation.locateKing(boardInformation.getActor()))) {
-            boardInformation.moveKing(boardInformation.getActor(), target);
-        }
-
+        // Update piece information, including piece move count and king position updates
+        boardInformation.getPieceInformation().updateInformation(history);
         boardInformation.getPlayerInformation().nextRound();
 
-        refreshInformation();
+        recomputeAvailableMovesForThisRound();
     }
 
     @Override
@@ -136,10 +138,10 @@ public class StandardGame implements Game<Square, StandardPieces, ChessBoard> {
 
         Collection<Move<Square>> allMoves = null;
         for (String[] move: moves) {
-            allMoves = game.allPotentialMoves();
-            game.move(factory.at(move[0], move[1]), factory.at(move[2], move[3]));
+            allMoves = game.availableMoves();
+            game.move(SimpleMove.of(factory.at(move[0], move[1]), factory.at(move[2], move[3]), game.getActor()));
         }
-        allMoves = game.allPotentialMoves();
+        allMoves = game.availableMoves();
 
         System.out.println("Game Over!");
     }

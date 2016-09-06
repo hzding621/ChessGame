@@ -22,10 +22,12 @@ public final class CollectionUtils {
     /**
      * @return transform the element into an arraylist containing the element, or an empty arraylist if the element is empty
      */
-    public static <E> List<E> asArrayList(Optional<E> element) {
+    @SafeVarargs
+    public static <E> List<E> asArrayList(Optional<E>... elements) {
         List<E> newArrayList = new ArrayList<>();
-        element.ifPresent(newArrayList::add);
+        for (Optional<E> element: elements) {
+            element.ifPresent(newArrayList::add);
+        }
         return newArrayList;
     }
-
 }

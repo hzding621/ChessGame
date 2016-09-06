@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * Class that implements King piece moving logic. Specific rules regarding king checking is handled elsewhere
  */
-public final class King<C extends Cell, P extends PieceClass> extends AbstractPiece<C, P> {
+public final class King<P extends PieceClass> extends AbstractPiece<P> {
 
     public King(P pieceClass, Player player, int id) {
         super(pieceClass, player, id);

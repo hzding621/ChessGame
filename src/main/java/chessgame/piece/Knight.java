@@ -14,7 +14,7 @@ import java.util.*;
 /**
  * Class that implements Knight piece moving logic
  */
-public final class Knight<C extends Cell, P extends PieceClass> extends AbstractPiece<C, P> {
+public final class Knight<P extends PieceClass> extends AbstractPiece<P> {
 
     public Knight(P pieceClass, Player player, int id) {
         super(pieceClass, player, id);

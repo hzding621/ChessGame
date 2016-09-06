@@ -1,6 +1,7 @@
 package chessgame.game;
 
 import chessgame.board.Cell;
+import chessgame.move.MoveResult;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
@@ -20,8 +21,16 @@ public final class PieceInformation<C extends Cell, P extends PieceClass> {
         kingPosition.putAll(kingStartingPosition);
     }
 
-    public void incrementPieceMoveCount(Piece<P> piece) {
-        moveCounts.put(piece, moveCounts.getOrDefault(piece, 0) + 1);
+    public void updateInformation(MoveResult<C, P> history) {
+        history.getMovedPieces().stream().forEach(movedPiece -> {
+            moveCounts.put(movedPiece.getPiece(), moveCounts.getOrDefault(movedPiece.getPiece(), 0) + 1);
+            if (movedPiece.getPiece().getPieceClass().isKing()) {
+                if (!movedPiece.getTarget().isPresent()) {
+                    throw new IllegalStateException("King should never have been captured!");
+                }
+                kingPosition.put(movedPiece.getPiece().getPlayer(), movedPiece.getTarget().get());
+            }
+        });
     }
 
     public int getPieceMoveCount(Piece<P> piece) {
@@ -31,9 +40,4 @@ public final class PieceInformation<C extends Cell, P extends PieceClass> {
     public C locateKing(Player player) {
         return kingPosition.get(player);
     }
-
-    public void updateKingPosition(Player player, C cell) {
-        kingPosition.put(player, cell);
-    }
-
 }

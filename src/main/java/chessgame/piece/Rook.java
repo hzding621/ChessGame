@@ -11,7 +11,7 @@ import java.util.Collection;
 /**
  * Class that implements Rook piece moving logic
  */
-public final class Rook<C extends Cell, P extends PieceClass> extends AbstractPiece<C, P> {
+public final class Rook<P extends PieceClass> extends AbstractPiece<P> {
 
     public Rook(P pieceClass, Player player, int id) {
         super(pieceClass, player, id);

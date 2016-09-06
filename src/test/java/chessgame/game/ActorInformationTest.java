@@ -4,6 +4,7 @@ import chessgame.board.ChessBoard;
 import chessgame.board.GridCellFactory;
 import chessgame.board.Square;
 import chessgame.board.TwoDimension;
+import chessgame.move.Move;
 import chessgame.piece.StandardPieces;
 import chessgame.player.Player;
 import chessgame.rule.ChessRuleBindings;
@@ -36,23 +37,28 @@ public final class ActorInformationTest {
                 boardInformation.getPlayerInformation(), boardInformation.locateKing(boardInformation.getActor()));
     }
 
+    private static boolean checkIsValidMove(Map<Square, Set<Move<Square>>> allMoves, Square source, Square target) {
+        return allMoves.get(source)
+                .stream()
+                .anyMatch(move -> move.getTarget().equals(target));
+    }
+
     @Test
     public void testAvailableMovesOpeningPosition() {
         hydrate(new StandardSetting());
-        Map<Square, Set<Square>> allMoves = boardInformation.getActorInformation().getAvailableMoves();
+        Map<Square, Set<Move<Square>>> allMoves = boardInformation.getActorInformation().getAvailableMoves();
 
         // All pawns can move one or two cells upwards
         for (int i = 0; i < 8; i++) {
             String file = String.valueOf((char)('A' + i));
-            Assert.assertTrue(allMoves.get(cell.at(file, "2")).contains(cell.at(file, "3")));
-            Assert.assertTrue(allMoves.get(cell.at(file, "2")).contains(cell.at(file, "4")));
+            Assert.assertTrue(checkIsValidMove(allMoves, cell.at(file, "2"), cell.at(file, "3")));
+            Assert.assertTrue(checkIsValidMove(allMoves, cell.at(file, "2"), cell.at(file, "4")));
         }
-
         // Both knights have two moves
-        Assert.assertTrue(allMoves.get(cell.at("B", "1")).contains(cell.at("A", "3")));
-        Assert.assertTrue(allMoves.get(cell.at("B", "1")).contains(cell.at("C", "3")));
-        Assert.assertTrue(allMoves.get(cell.at("G", "1")).contains(cell.at("F", "3")));
-        Assert.assertTrue(allMoves.get(cell.at("G", "1")).contains(cell.at("H", "3")));
+        Assert.assertTrue(checkIsValidMove(allMoves, cell.at("B", "1"), cell.at("A", "3")));
+        Assert.assertTrue(checkIsValidMove(allMoves, cell.at("B", "1"), cell.at("C", "3")));
+        Assert.assertTrue(checkIsValidMove(allMoves, cell.at("G", "1"), cell.at("F", "3")));
+        Assert.assertTrue(checkIsValidMove(allMoves, cell.at("G", "1"), cell.at("H", "3")));
     }
 
     @Test
@@ -67,7 +73,7 @@ public final class ActorInformationTest {
                 .build();
         hydrate(endGame);
 
-        Map<Square, Set<Square>> allMoves = boardInformation.getActorInformation().getAvailableMoves();
+        Map<Square, Set<Move<Square>>> allMoves = boardInformation.getActorInformation().getAvailableMoves();
 
         Assert.assertTrue(allMoves.isEmpty());
         Assert.assertEquals(boardInformation.getDefenderInformation().getCheckers().size(), 1);
@@ -84,7 +90,7 @@ public final class ActorInformationTest {
                 .build();
         hydrate(endGame);
 
-        Map<Square, Set<Square>> allMoves = boardInformation.getActorInformation().getAvailableMoves();
+        Map<Square, Set<Move<Square>>> allMoves = boardInformation.getActorInformation().getAvailableMoves();
 
         Assert.assertTrue(allMoves.isEmpty());
         Assert.assertTrue(boardInformation.getDefenderInformation().getCheckers().isEmpty());

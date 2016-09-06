@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 /**
  * Class that implements Pawn piece moving logic
  */
-public final class Pawn<C extends Cell, P extends PieceClass> extends AbstractPiece<C, P> {
+public final class Pawn<P extends PieceClass> extends AbstractPiece<P> {
 
     public Pawn(P pieceClass, Player player, int id) {
         super(pieceClass, player, id);

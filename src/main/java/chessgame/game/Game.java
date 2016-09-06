@@ -27,23 +27,11 @@ interface Game<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>
 
     Player getDefender();
 
-    Map<C, Set<C>> allPotentialMovesBySource();
+    Collection<Move<C>> availableMoves();
 
-    default Collection<Move<C>> allPotentialMoves() {
-        return allPotentialMovesBySource().entrySet()
-                .stream()
-                .map(e -> e.getValue()
-                        .stream()
-                        .map(target -> SimpleMove.of(e.getKey(), target)))
-                .flatMap(Function.identity())
-                .collect(Collectors.toCollection(TreeSet::new));
-    }
+    Collection<Move<C>> availableMovesFrom(C c);
 
-    default Set<C> allPotentialMovesOf(C c) {
-        return allPotentialMovesBySource().getOrDefault(c, Collections.emptySet());
-    }
-
-    void move(C source, C target);
+    void move(Move<C> move);
 
     GameStatus getGameStatus();
 }

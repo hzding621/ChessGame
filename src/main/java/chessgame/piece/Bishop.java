@@ -11,7 +11,7 @@ import java.util.Collection;
 /**
  * Class that implements Bishop piece moving logic
  */
-public final class Bishop<C extends Cell, P extends PieceClass> extends AbstractPiece<C, P> {
+public final class Bishop<P extends PieceClass> extends AbstractPiece<P> {
 
     public Bishop(P pieceClass, Player player, int id) {
         super(pieceClass, player, id);
