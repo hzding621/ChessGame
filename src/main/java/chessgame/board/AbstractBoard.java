@@ -1,7 +1,7 @@
 package chessgame.board;
 
 import chessgame.piece.Piece;
-import chessgame.piece.PieceSet;
+import chessgame.game.GameSetting;
 import chessgame.piece.PieceType;
 import chessgame.player.Player;
 
@@ -16,9 +16,9 @@ public class AbstractBoard<C extends Cell, A extends PieceType, P extends Piece<
 
     protected final Map<C, P> occupants;
 
-    protected AbstractBoard(PieceSet<C, A, P> pieceSet) {
+    protected AbstractBoard(GameSetting<C, A, P> gameSetting) {
         this.occupants = new TreeMap<>(
-                pieceSet.constructAllPieces()
+                gameSetting.constructAllPieces()
                         .stream()
                         .collect(Collectors.toMap(PieceLocator::getCell, PieceLocator::getPiece)));
     }

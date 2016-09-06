@@ -3,7 +3,6 @@ package chessgame.game;
 import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
 import chessgame.piece.Piece;
-import chessgame.piece.PieceSet;
 import chessgame.piece.PieceType;
 import chessgame.player.Player;
 
@@ -21,9 +20,9 @@ public final class BoardInformation<C extends Cell, A extends PieceType, P exten
 
     private boolean checkmated;
 
-    public BoardInformation(PieceSet<C, A, P> pieceSet) {
-        playerInformation = new PlayerInformation(Player.WHITE, Player.BLACK);
-        pieceInformation = new PieceInformation<>(pieceSet.getKingStartingPositions());
+    public BoardInformation(GameSetting<C, A, P> gameSetting) {
+        playerInformation = new PlayerInformation(gameSetting.starter(), gameSetting.starter().next());
+        pieceInformation = new PieceInformation<>(gameSetting.getKingStartingPositions());
         checkmated = false;
     }
 

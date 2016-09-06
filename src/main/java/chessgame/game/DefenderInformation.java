@@ -52,17 +52,17 @@ public final class DefenderInformation<C extends Cell, A extends PieceType, P ex
      * which pieces are king-defenders (cannot move unless the move invalidates the pinning), and opponent pieces that
      * are checking the current king. This method runs after every move is made
      */
-    public void refresh(B board, Rules<C, A, P, B> rules, PlayerInformation boardInformation, C actorKing) {
+    public void refresh(B board, Rules<C, A, P, B> rules, PlayerInformation playerInformation, C actorKing) {
         isAttacked.clear();
         checkers.clear();
         kingDefenders.clear();
 
         // Iterate through all the pieces of the current defenders
-        board.getAllPiecesForPlayer(boardInformation.getDefender())
+        board.getAllPiecesForPlayer(playerInformation.getDefender())
             .stream()
             .forEach(defenderLocator -> {
                 // Get the positions a defending piece are attacking
-                rules.attacking(board, defenderLocator.getCell(), boardInformation.getDefender())
+                rules.attacking(board, defenderLocator.getCell(), playerInformation.getDefender())
                     .stream()
                     .forEach(targetCell -> {
                         // Mark the position as being under attacked
@@ -75,7 +75,7 @@ public final class DefenderInformation<C extends Cell, A extends PieceType, P ex
                     });
 
                 // Get the positions a defending piece is pinning
-                rules.pinning(board, defenderLocator.getCell(), boardInformation.getDefender())
+                rules.pinning(board, defenderLocator.getCell(), playerInformation.getDefender())
                     .stream()
                     .forEach(pinnedSet -> {
                         if (pinnedSet.getHided().equals(actorKing)) {

@@ -6,5 +6,8 @@ package chessgame.piece;
  */
 public interface PieceType {
 
+    /**
+     * @return whether this piece should be recognized as King in this game
+     */
     boolean isKing();
 }

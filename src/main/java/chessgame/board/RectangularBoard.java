@@ -1,7 +1,7 @@
 package chessgame.board;
 
 import chessgame.piece.Piece;
-import chessgame.piece.PieceSet;
+import chessgame.game.GameSetting;
 import chessgame.piece.PieceType;
 import chessgame.player.Player;
 import chessgame.rule.Pin;
@@ -15,8 +15,8 @@ import java.util.*;
 public abstract class RectangularBoard<A extends PieceType, P extends Piece<A>>
         extends AbstractBoard<SquareCell, A, P> implements GridViewer<SquareCell, SquareDirection, A, P> {
 
-    protected RectangularBoard(PieceSet<SquareCell, A, P> pieceSet) {
-        super(pieceSet);
+    protected RectangularBoard(GameSetting<SquareCell, A, P> gameSetting) {
+        super(gameSetting);
     }
 
     @Override

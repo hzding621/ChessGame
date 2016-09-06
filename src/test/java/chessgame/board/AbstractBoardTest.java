@@ -1,5 +1,6 @@
 package chessgame.board;
 
+import chessgame.game.KingPawnGame;
 import chessgame.piece.*;
 import chessgame.player.Player;
 import org.junit.Assert;
@@ -14,7 +15,7 @@ import java.util.*;
 public final class AbstractBoardTest {
 
     private SquareCell.Builder builder;
-    private AbstractBoard<SquareCell, KingPawnGame, Piece<KingPawnGame>> testBoard;
+    private AbstractBoard<SquareCell, KingPawn, Piece<KingPawn>> testBoard;
     /**
      * Create a test board like the following, where W is white pawn and B is black pawn, k is white king, K is black king
      *
@@ -27,13 +28,13 @@ public final class AbstractBoardTest {
     public void instantiateTestPieceSet() {
         Coordinate.Builder coordinateBuilder = new Coordinate.Builder(4);
         builder = new SquareCell.Builder(coordinateBuilder, coordinateBuilder);
-        testBoard = new AbstractBoard<>(new KingPawnToySet(builder));
+        testBoard = new AbstractBoard<>(new KingPawnGame(builder));
     }
 
     @Test
     public void testGetPiece() {
-        Piece<KingPawnGame> p = testBoard.getPiece(builder.at(1,0)).get();
-        Assert.assertEquals(p.getPieceClass(), KingPawnGame.PAWN);
+        Piece<KingPawn> p = testBoard.getPiece(builder.at(1,0)).get();
+        Assert.assertEquals(p.getPieceClass(), KingPawn.PAWN);
         Assert.assertEquals(p.getPlayer(), Player.WHITE);
 
         Assert.assertFalse(testBoard.getPiece(builder.at(0,0)).isPresent());
@@ -41,7 +42,7 @@ public final class AbstractBoardTest {
 
     @Test
     public void testMovePieceToEmptyCell() {
-        Piece<KingPawnGame> p = testBoard.movePiece(builder.at(1, 0), builder.at(1, 1));
+        Piece<KingPawn> p = testBoard.movePiece(builder.at(1, 0), builder.at(1, 1));
         Assert.assertFalse(testBoard.getPiece(builder.at(1, 0)).isPresent());
         Assert.assertEquals(testBoard.getPiece(builder.at(1,1)).get(), p);
     }
@@ -64,14 +65,14 @@ public final class AbstractBoardTest {
 
     @Test
     public void testGetPiecesForPlayer() {
-        Collection<PieceLocator<SquareCell, KingPawnGame, Piece<KingPawnGame>>> locators =
-                testBoard.getPiecesForPlayer(KingPawnGame.KING, Player.WHITE);
+        Collection<PieceLocator<SquareCell, KingPawn, Piece<KingPawn>>> locators =
+                testBoard.getPiecesForPlayer(KingPawn.KING, Player.WHITE);
         Assert.assertEquals(locators.size(), 1);
     }
 
     @Test
     public void testGetAllPiecesForPlayer() {
-        Collection<PieceLocator<SquareCell, KingPawnGame, Piece<KingPawnGame>>> locators =
+        Collection<PieceLocator<SquareCell, KingPawn, Piece<KingPawn>>> locators =
                 testBoard.getAllPiecesForPlayer(Player.WHITE);
         Assert.assertEquals(locators.size(), 2);
     }

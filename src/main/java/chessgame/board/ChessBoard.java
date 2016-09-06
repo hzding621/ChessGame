@@ -1,5 +1,6 @@
 package chessgame.board;
 
+import chessgame.game.GameSetting;
 import chessgame.piece.*;
 
 /**
@@ -11,8 +12,8 @@ public final class ChessBoard extends RectangularBoard<ChessPieceType, Piece<Che
     private final SquareCell.Builder cellBuilder =
             new SquareCell.Builder(coordinateBuilder, coordinateBuilder);
 
-    public ChessBoard(PieceSet<SquareCell, ChessPieceType, Piece<ChessPieceType>> pieceSet) {
-        super(pieceSet);
+    public ChessBoard(GameSetting<SquareCell, ChessPieceType, Piece<ChessPieceType>> gameSetting) {
+        super(gameSetting);
     }
 
     @Override

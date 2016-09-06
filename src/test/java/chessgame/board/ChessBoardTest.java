@@ -1,9 +1,6 @@
 package chessgame.board;
 
-import chessgame.piece.ChessPieceSet;
-import chessgame.piece.KingPawnGame;
-import chessgame.piece.KingPawnToySet;
-import chessgame.piece.Piece;
+import chessgame.game.StandardSetting;
 import chessgame.player.Player;
 import chessgame.rule.Pin;
 import org.junit.Assert;
@@ -27,7 +24,7 @@ public final class ChessBoardTest {
     public void instantiateTestPieceSet() {
         Coordinate.Builder coordinateBuilder = new Coordinate.Builder(8);
         builder = new SquareCell.Builder(coordinateBuilder, coordinateBuilder);
-        testBoard = new ChessBoard(new ChessPieceSet());
+        testBoard = new ChessBoard(new StandardSetting());
     }
 
     @Test

@@ -30,7 +30,7 @@ public class ChessGame implements Game<SquareCell, ChessPieceType, Piece<ChessPi
     }
 
     public static ChessGame constructGame() {
-        ChessPieceSet pieceSet = new ChessPieceSet();
+        StandardSetting pieceSet = new StandardSetting();
         BoardInformation<SquareCell, ChessPieceType, Piece<ChessPieceType>, ChessBoard> boardInformation =
                 new BoardInformation<>(pieceSet);
         ChessBoard board = new ChessBoard(pieceSet);

@@ -1,8 +1,10 @@
-package chessgame.piece;
+package chessgame.game;
 
 import chessgame.board.Coordinate;
 import chessgame.board.PieceLocator;
 import chessgame.board.SquareCell;
+import chessgame.game.GameSetting;
+import chessgame.piece.*;
 import chessgame.player.Player;
 
 import java.util.*;
@@ -10,7 +12,7 @@ import java.util.*;
 /**
  * Represents a standard 8x8 chess piece set
  */
-public final class ChessPieceSet implements PieceSet<SquareCell, ChessPieceType, Piece<ChessPieceType>> {
+public final class StandardSetting implements GameSetting<SquareCell, ChessPieceType, Piece<ChessPieceType>> {
 
     private final Map<Player, Map<ChessPieceType, List<SquareCell>>> configuration = new HashMap<>();
     private final Map<Player, SquareCell> kingStartingPositions = new HashMap<>();
@@ -83,7 +85,7 @@ public final class ChessPieceSet implements PieceSet<SquareCell, ChessPieceType,
         return output;
     }
 
-    private static Piece<ChessPieceType> createPiece(ChessPieceType type, Player player, int id) {
+    public static Piece<ChessPieceType> createPiece(ChessPieceType type, Player player, int id) {
         switch (type) {
             case PAWN:
                 return new Pawn<>(type, player, id);
@@ -109,6 +111,11 @@ public final class ChessPieceSet implements PieceSet<SquareCell, ChessPieceType,
     @Override
     public Collection<Player> getPlayers() {
         return Arrays.asList(Player.WHITE, Player.BLACK);
+    }
+
+    @Override
+    public Player starter() {
+        return Player.WHITE;
     }
 
     private void populatePieces(Player player,
