@@ -2,7 +2,7 @@ package chessgame.board;
 
 import chessgame.piece.Piece;
 import chessgame.game.GameSetting;
-import chessgame.piece.PieceType;
+import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 
 import java.util.*;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * Represents a chess board in the abstract way. Stores a mapping from cells to pieces.
  * Makes no assumptions about how cells are connected to each other.
  */
-public class AbstractBoard<C extends Cell, P extends PieceType> implements Board<C, P> {
+public class AbstractBoard<C extends Cell, P extends PieceClass> implements Board<C, P> {
 
     protected final Map<C, Piece<P>> occupants;
 
@@ -64,7 +64,7 @@ public class AbstractBoard<C extends Cell, P extends PieceType> implements Board
     }
 
     @Override
-    public Collection<PieceLocator<C, P>> getPiecesForPlayer(PieceType type, Player player) {
+    public Collection<PieceLocator<C, P>> getPiecesForPlayer(PieceClass type, Player player) {
         return occupants.entrySet()
                         .stream()
                         .filter(e -> e.getValue().getPieceClass().equals(type)

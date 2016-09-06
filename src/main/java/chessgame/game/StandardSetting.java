@@ -11,9 +11,9 @@ import java.util.*;
 /**
  * Represents a standard 8x8 chess piece set
  */
-public final class StandardSetting implements GameSetting<Square, ChessPieceType> {
+public final class StandardSetting implements GameSetting<Square, StandardPieces> {
 
-    private final Map<Player, Map<ChessPieceType, List<Square>>> configuration = new HashMap<>();
+    private final Map<Player, Map<StandardPieces, List<Square>>> configuration = new HashMap<>();
     private final Map<Player, Square> kingStartingPositions = new HashMap<>();
 
     {
@@ -23,40 +23,40 @@ public final class StandardSetting implements GameSetting<Square, ChessPieceType
         configuration.put(Player.BLACK, new HashMap<>());
 
         // Definition of standard chess piece locations
-        populatePieces(Player.WHITE, ChessPieceType.PAWN, builder, new int[][] {
+        populatePieces(Player.WHITE, StandardPieces.PAWN, builder, new int[][] {
                 {0, 1}, {1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}, {6, 1}, {7, 1}
         });
-        populatePieces(Player.BLACK, ChessPieceType.PAWN, builder, new int[][] {
+        populatePieces(Player.BLACK, StandardPieces.PAWN, builder, new int[][] {
                 {0, 6}, {1, 6}, {2, 6}, {3, 6}, {4, 6}, {5, 6}, {6, 6}, {7, 6}
         });
-        populatePieces(Player.WHITE, ChessPieceType.ROOK, builder, new int[][] {
+        populatePieces(Player.WHITE, StandardPieces.ROOK, builder, new int[][] {
                 {0, 0}, {7, 0}
         });
-        populatePieces(Player.BLACK, ChessPieceType.ROOK, builder, new int[][] {
+        populatePieces(Player.BLACK, StandardPieces.ROOK, builder, new int[][] {
                 {0, 7}, {7, 7}
         });
-        populatePieces(Player.WHITE, ChessPieceType.KNIGHT, builder, new int[][] {
+        populatePieces(Player.WHITE, StandardPieces.KNIGHT, builder, new int[][] {
                 {1, 0}, {6, 0}
         });
-        populatePieces(Player.BLACK, ChessPieceType.KNIGHT, builder, new int[][] {
+        populatePieces(Player.BLACK, StandardPieces.KNIGHT, builder, new int[][] {
                 {1, 7}, {6, 7}
         });
-        populatePieces(Player.WHITE, ChessPieceType.BISHOP, builder, new int[][] {
+        populatePieces(Player.WHITE, StandardPieces.BISHOP, builder, new int[][] {
                 {2, 0}, {5, 0}
         });
-        populatePieces(Player.BLACK, ChessPieceType.BISHOP, builder, new int[][] {
+        populatePieces(Player.BLACK, StandardPieces.BISHOP, builder, new int[][] {
                 {2, 7}, {5, 7}
         });
-        populatePieces(Player.WHITE, ChessPieceType.QUEEN, builder, new int[][] {
+        populatePieces(Player.WHITE, StandardPieces.QUEEN, builder, new int[][] {
                 {3, 0}
         });
-        populatePieces(Player.BLACK, ChessPieceType.QUEEN, builder, new int[][] {
+        populatePieces(Player.BLACK, StandardPieces.QUEEN, builder, new int[][] {
                 {3, 7}
         });
-        populatePieces(Player.WHITE, ChessPieceType.KING, builder, new int[][] {
+        populatePieces(Player.WHITE, StandardPieces.KING, builder, new int[][] {
                 {4, 0}
         });
-        populatePieces(Player.BLACK, ChessPieceType.KING, builder, new int[][] {
+        populatePieces(Player.BLACK, StandardPieces.KING, builder, new int[][] {
                 {4, 7}
         });
 
@@ -65,26 +65,26 @@ public final class StandardSetting implements GameSetting<Square, ChessPieceType
         kingStartingPositions.put(Player.BLACK, builder.at(4, 7));
     }
 
-    public Map<Player, Map<ChessPieceType, List<Square>>> getConfiguration() {
+    public Map<Player, Map<StandardPieces, List<Square>>> getConfiguration() {
         return configuration;
     }
 
     @Override
-    public Collection<ChessPieceType> getSupportedTypes() {
+    public Collection<StandardPieces> getSupportedTypes() {
         return configuration.get(Player.WHITE).keySet();
     }
 
     @Override
-    public Collection<PieceLocator<Square, ChessPieceType>> constructPiecesOfTypeAndPlayer(ChessPieceType type, Player player) {
+    public Collection<PieceLocator<Square, StandardPieces>> constructPiecesOfTypeAndPlayer(StandardPieces type, Player player) {
         List<Square> startingPositions = configuration.get(player).get(type);
-        List<PieceLocator<Square, ChessPieceType>> output = new ArrayList<>();
+        List<PieceLocator<Square, StandardPieces>> output = new ArrayList<>();
         for (int i = 0; i < startingPositions.size(); i++) {
             output.add(PieceLocator.of(startingPositions.get(i), createPiece(type, player, i)));
         }
         return output;
     }
 
-    public static Piece<ChessPieceType> createPiece(ChessPieceType type, Player player, int id) {
+    public static Piece<StandardPieces> createPiece(StandardPieces type, Player player, int id) {
         switch (type) {
             case PAWN:
                 return new Pawn<>(type, player, id);
@@ -118,7 +118,7 @@ public final class StandardSetting implements GameSetting<Square, ChessPieceType
     }
 
     private void populatePieces(Player player,
-                                ChessPieceType type,
+                                StandardPieces type,
                                 Square.Builder builder, int[][] indices) {
         for (int[] position: indices) {
             configuration.get(player).putIfAbsent(type, new ArrayList<>());

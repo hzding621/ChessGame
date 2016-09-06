@@ -2,7 +2,7 @@ package chessgame.game;
 
 import chessgame.board.Cell;
 import chessgame.board.PieceLocator;
-import chessgame.piece.PieceType;
+import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 
 import java.util.Collection;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 /**
  * Represents a certain kind of chess piece set with board configuration
  */
-public interface GameSetting<C extends Cell, P extends PieceType> {
+public interface GameSetting<C extends Cell, P extends PieceClass> {
 
     /**
      * Create all pieces in this game setting. Used to populate the chess board

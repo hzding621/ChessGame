@@ -2,7 +2,7 @@ package chessgame.game;
 
 import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
-import chessgame.piece.PieceType;
+import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 import chessgame.rule.Pin;
 import chessgame.rule.Rules;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * Contains information computed from actor's pieces
  */
-public class ActorInformation<C extends Cell, P extends PieceType, B extends BoardViewer<C, P>> {
+public class ActorInformation<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>> {
     private final Map<C, Set<C>> availableMoves = new TreeMap<>();
 
     /**

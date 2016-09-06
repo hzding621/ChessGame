@@ -1,12 +1,12 @@
 package chessgame.board;
 
 import chessgame.piece.Piece;
-import chessgame.piece.PieceType;
+import chessgame.piece.PieceClass;
 
 /**
  * Represents a board in a chess game, which can be quried as well as updated
  */
-public interface Board<C extends Cell, P extends PieceType> extends BoardViewer<C, P> {
+public interface Board<C extends Cell, P extends PieceClass> extends BoardViewer<C, P> {
 
     /**
      * Remove the piece at this position

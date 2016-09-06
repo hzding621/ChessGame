@@ -3,7 +3,7 @@ package chessgame.game;
 import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
 import chessgame.board.PieceLocator;
-import chessgame.piece.PieceType;
+import chessgame.piece.PieceClass;
 import chessgame.rule.Pin;
 import chessgame.rule.Rules;
 
@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * Contains information computed from opponent pieces
  */
-public final class DefenderInformation<C extends Cell, P extends PieceType, B extends BoardViewer<C, P>> {
+public final class DefenderInformation<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>> {
 
     private final Set<C> isAttacked = new TreeSet<>();
     private final Collection<PieceLocator<C, P>> checkers = new TreeSet<>();

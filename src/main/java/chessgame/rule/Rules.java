@@ -5,7 +5,7 @@ import chessgame.board.Cell;
 import chessgame.board.PieceLocator;
 import chessgame.game.DefenderInformation;
 import chessgame.piece.Piece;
-import chessgame.piece.PieceType;
+import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 
 import java.util.Collection;
@@ -14,7 +14,7 @@ import java.util.Collections;
 /**
  * Represents a set of rules associated with an instance of game
  */
-public class Rules<C extends Cell, P extends PieceType, B extends BoardViewer<C, P>> {
+public class Rules<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>> {
 
     private final RuleBindings<C, P, B> ruleBindings;
 

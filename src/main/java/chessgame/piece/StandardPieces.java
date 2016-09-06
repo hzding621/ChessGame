@@ -3,7 +3,7 @@ package chessgame.piece;
 /**
  * Represent a standard Chess piece set of 32 pieces
  */
-public enum ChessPieceType implements PieceType {
+public enum StandardPieces implements PieceClass {
     PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING;
 
     @Override

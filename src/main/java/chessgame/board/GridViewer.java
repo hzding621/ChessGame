@@ -1,6 +1,6 @@
 package chessgame.board;
 
-import chessgame.piece.PieceType;
+import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 import chessgame.rule.Pin;
 
@@ -11,7 +11,7 @@ import java.util.Optional;
 /**
  * A GridViewer is a BoardViewer that supports the notion of orthogonal and diagonal directions.
  */
-public interface GridViewer<C extends Cell, D extends Direction, P extends PieceType>
+public interface GridViewer<C extends Cell, D extends Direction, P extends PieceClass>
         extends BoardViewer<C, P> {
 
     /**

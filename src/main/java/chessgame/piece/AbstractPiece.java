@@ -6,7 +6,7 @@ import chessgame.player.Player;
 /**
  * Abstract class for piece implementation to extend from. Contains basic information that are shared by all pieces.
  */
-public abstract class AbstractPiece<C extends Cell, P extends PieceType>
+public abstract class AbstractPiece<C extends Cell, P extends PieceClass>
         implements Piece<P> {
 
     private final P pieceClass;

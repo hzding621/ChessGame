@@ -6,7 +6,7 @@ package chessgame.rule;
 
 import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
-import chessgame.piece.PieceType;
+import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 
 import java.util.Collection;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * Abstraction of moving rule for the piece class,
  * handles piece moving logic
  */
-public interface PieceRule<C extends Cell, P extends PieceType, B extends BoardViewer<C, P>>
+public interface PieceRule<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
         extends RequiresBoardView<C, P, B> {
 
     /**

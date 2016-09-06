@@ -4,7 +4,7 @@ import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
 import chessgame.move.Move;
 import chessgame.move.SimpleMove;
-import chessgame.piece.PieceType;
+import chessgame.piece.PieceClass;
 import chessgame.rule.Rules;
 import chessgame.player.Player;
 
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * Interface for a variant of chess game
  */
-interface Game<C extends Cell, P extends PieceType, B extends BoardViewer<C, P>> {
+interface Game<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>> {
 
     B getBoard();
 
@@ -44,4 +44,6 @@ interface Game<C extends Cell, P extends PieceType, B extends BoardViewer<C, P>>
     }
 
     void move(C source, C target);
+
+    GameStatus getGameStatus();
 }

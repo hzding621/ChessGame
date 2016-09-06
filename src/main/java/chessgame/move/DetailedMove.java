@@ -3,14 +3,14 @@ package chessgame.move;
 import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
 import chessgame.piece.Piece;
-import chessgame.piece.PieceType;
+import chessgame.piece.PieceClass;
 
 import java.util.Optional;
 
 /**
  * Represents a move wherein a piece moves from A to B. Contains details about the pieces
  */
-public class DetailedMove<C extends Cell, P extends PieceType, B extends BoardViewer<C, P>>
+public class DetailedMove<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
         implements Move<C> {
 
     private final B board;

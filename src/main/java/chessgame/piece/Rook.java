@@ -11,7 +11,7 @@ import java.util.Collection;
 /**
  * Class that implements Rook piece moving logic
  */
-public final class Rook<C extends Cell, P extends PieceType> extends AbstractPiece<C, P> {
+public final class Rook<C extends Cell, P extends PieceClass> extends AbstractPiece<C, P> {
 
     public Rook(P pieceClass, Player player, int id) {
         super(pieceClass, player, id);
@@ -24,7 +24,7 @@ public final class Rook<C extends Cell, P extends PieceType> extends AbstractPie
                 ", id=" + getId() +
                 '}';
     }
-    public static final class RookRule<C extends Cell, P extends PieceType, D extends Direction,
+    public static final class RookRule<C extends Cell, P extends PieceClass, D extends Direction,
             B extends GridViewer<C, D, P>> extends AbstractPieceRule<C, P, B>
             implements RangeAttackPieceRule<C, P, D, B> {
 

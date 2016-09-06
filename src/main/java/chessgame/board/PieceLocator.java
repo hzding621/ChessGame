@@ -1,14 +1,14 @@
 package chessgame.board;
 
 import chessgame.piece.Piece;
-import chessgame.piece.PieceType;
+import chessgame.piece.PieceClass;
 
 /**
  * A value type that represents a pair of cell and piece.
  * Its purpose is to mitigate extra queries to BoardViewer to find Piece for a certain Cell
  * It should only live during one round of game for consistency
  */
-public final class PieceLocator<C extends Cell, P extends PieceType>
+public final class PieceLocator<C extends Cell, P extends PieceClass>
         implements Comparable<PieceLocator<C, P>>{
 
     private final C cell;
@@ -19,7 +19,7 @@ public final class PieceLocator<C extends Cell, P extends PieceType>
         this.cell = cell;
     }
 
-    public static <C extends Cell, P extends PieceType> PieceLocator<C, P> of(C cell, Piece<P> piece) {
+    public static <C extends Cell, P extends PieceClass> PieceLocator<C, P> of(C cell, Piece<P> piece) {
         return new PieceLocator<>(cell, piece);
     }
 

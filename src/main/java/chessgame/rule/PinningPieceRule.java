@@ -2,7 +2,7 @@ package chessgame.rule;
 
 import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
-import chessgame.piece.PieceType;
+import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 
 import java.util.Collection;
@@ -10,7 +10,7 @@ import java.util.Collection;
 /**
  * This interface exposes additional rule associated with pieces capable of making pinning/discovered attacks
  */
-public interface PinningPieceRule<C extends Cell, P extends PieceType, B extends BoardViewer<C, P>>
+public interface PinningPieceRule<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
         extends PieceRule<C, P, B> {
 
     /**

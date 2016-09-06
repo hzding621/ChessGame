@@ -15,27 +15,28 @@ import java.util.*;
 /**
  * The standard chess game
  */
-public class ChessGame implements Game<Square, ChessPieceType, ChessBoard> {
+public class StandardGame implements Game<Square, StandardPieces, ChessBoard> {
     private final ChessBoard chessBoard;
-    private final Rules<Square, ChessPieceType, ChessBoard> chessRules;
-    private final BoardInformation<Square, ChessPieceType, ChessBoard> boardInformation;
+    private final Rules<Square, StandardPieces, ChessBoard> chessRules;
+    private final BoardInformation<Square, StandardPieces, ChessBoard> boardInformation;
+    private GameStatus gameStatus = GameStatus.OPEN;
 
-    private ChessGame(ChessBoard chessBoard,
-                      Rules<Square, ChessPieceType, ChessBoard> chessRules,
-                      BoardInformation<Square, ChessPieceType, ChessBoard> boardInformation) {
+    private StandardGame(ChessBoard chessBoard,
+                         Rules<Square, StandardPieces, ChessBoard> chessRules,
+                         BoardInformation<Square, StandardPieces, ChessBoard> boardInformation) {
         this.chessBoard = chessBoard;
         this.chessRules = chessRules;
         this.boardInformation = boardInformation;
         refreshInformation();
     }
 
-    public static ChessGame constructGame() {
+    public static StandardGame constructGame() {
         StandardSetting pieceSet = new StandardSetting();
-        BoardInformation<Square, ChessPieceType, ChessBoard> boardInformation =
+        BoardInformation<Square, StandardPieces, ChessBoard> boardInformation =
                 new BoardInformation<>(pieceSet);
         ChessBoard board = new ChessBoard(pieceSet);
         ChessRuleBindings ruleBindings = new ChessRuleBindings(board, boardInformation.getPieceInformation());
-        return new ChessGame(board, new Rules<>(ruleBindings), boardInformation);
+        return new StandardGame(board, new Rules<>(ruleBindings), boardInformation);
     }
 
     @Override
@@ -44,12 +45,12 @@ public class ChessGame implements Game<Square, ChessPieceType, ChessBoard> {
     }
 
     @Override
-    public BoardInformation<Square, ChessPieceType, ChessBoard> getBoardInformation() {
+    public BoardInformation<Square, StandardPieces, ChessBoard> getBoardInformation() {
         return boardInformation;
     }
 
     @Override
-    public Rules<Square, ChessPieceType, ChessBoard> getRule() {
+    public Rules<Square, StandardPieces, ChessBoard> getRule() {
         return chessRules;
     }
 
@@ -74,10 +75,22 @@ public class ChessGame implements Game<Square, ChessPieceType, ChessBoard> {
                 boardInformation.getPlayerInformation(), boardInformation.locateKing(boardInformation.getActor()));
         boardInformation.getActorInformation().refresh(chessBoard, chessRules, boardInformation.getDefenderInformation(),
                 boardInformation.getPlayerInformation(), boardInformation.locateKing(boardInformation.getActor()));
+
+        // Update Checkmate/Stalemate situation
+        if (boardInformation.getAvailableMoves().isEmpty()) {
+            if (boardInformation.getDefenderInformation().getCheckers().isEmpty()) {
+                gameStatus = GameStatus.CHECKMATE;
+            } else {
+                gameStatus = GameStatus.STALEMATE;
+            }
+        }
     }
 
     @Override
     public void move(Square source, Square target) {
+        if (gameStatus != GameStatus.OPEN) {
+            throw new IllegalStateException("Game has ended in " + gameStatus);
+        }
         if (!boardInformation.getAvailableMoves().getOrDefault(source, Collections.emptySet()).contains(target)) {
             throw new IllegalStateException("Invalid move from " + source + " to " + target);
         }
@@ -87,7 +100,7 @@ public class ChessGame implements Game<Square, ChessPieceType, ChessBoard> {
             }
         });
         chessBoard.clearPiece(target);
-        Piece<ChessPieceType> movedPiece = chessBoard.movePiece(source, target);
+        Piece<StandardPieces> movedPiece = chessBoard.movePiece(source, target);
 
         // Increment move count for moved piece
         boardInformation.getPieceInformation().incrementPieceMoveCount(movedPiece);
@@ -100,14 +113,15 @@ public class ChessGame implements Game<Square, ChessPieceType, ChessBoard> {
         boardInformation.getPlayerInformation().nextRound();
 
         refreshInformation();
+    }
 
-        if (boardInformation.getAvailableMoves().isEmpty()) {
-            boardInformation.endGame();
-        }
+    @Override
+    public GameStatus getGameStatus() {
+        return gameStatus;
     }
 
     public static void main(String[] args) {
-        ChessGame game = ChessGame.constructGame();
+        StandardGame game = StandardGame.constructGame();
 
         GridCellFactory<Square, TwoDimension> factory = game.getBoard().getGridCellFactory();
         String[][] moves = new String[][] {

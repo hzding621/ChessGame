@@ -3,14 +3,14 @@ package chessgame.move;
 import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
 import chessgame.piece.Piece;
-import chessgame.piece.PieceType;
+import chessgame.piece.PieceClass;
 
 import java.util.Optional;
 
 /**
  * Represents a move that checks opponent king
  */
-public class CheckMove<C extends Cell, P extends PieceType, B extends BoardViewer<C, P>>
+public class CheckMove<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
         extends DetailedMove<C, P, B> {
 
     private final C opponentKing;

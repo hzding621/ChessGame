@@ -2,7 +2,7 @@ package chessgame.board;
 
 import chessgame.piece.Piece;
 import chessgame.game.GameSetting;
-import chessgame.piece.PieceType;
+import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 import chessgame.rule.Pin;
 import utility.CollectionUtils;
@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * Represents an abstract rectangular board
  */
-public abstract class RectangularBoard<P extends PieceType>
+public abstract class RectangularBoard<P extends PieceClass>
         extends AbstractBoard<Square, P> implements GridViewer<Square, TwoDimension, P> {
 
     protected RectangularBoard(GameSetting<Square, P> gameSetting) {

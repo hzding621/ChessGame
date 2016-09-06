@@ -2,7 +2,7 @@ package chessgame.game;
 
 import chessgame.board.Cell;
 import chessgame.piece.Piece;
-import chessgame.piece.PieceType;
+import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 
 import java.util.HashMap;
@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Represents runtime piece information such as how many moves it has made
  */
-public final class PieceInformation<C extends Cell, P extends PieceType> {
+public final class PieceInformation<C extends Cell, P extends PieceClass> {
 
     private final Map<Piece<P>, Integer> moveCounts = new HashMap<>();
     private final Map<Player, C> kingPosition = new HashMap<>();

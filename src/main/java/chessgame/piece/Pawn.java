@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 /**
  * Class that implements Pawn piece moving logic
  */
-public final class Pawn<C extends Cell, P extends PieceType> extends AbstractPiece<C, P> {
+public final class Pawn<C extends Cell, P extends PieceClass> extends AbstractPiece<C, P> {
 
     public Pawn(P pieceClass, Player player, int id) {
         super(pieceClass, player, id);
@@ -31,7 +31,7 @@ public final class Pawn<C extends Cell, P extends PieceType> extends AbstractPie
                 '}';
     }
 
-    public static final class PawnRule<C extends Cell, P extends PieceType, D extends Direction,
+    public static final class PawnRule<C extends Cell, P extends PieceClass, D extends Direction,
             B extends GridViewer<C, D, P>> extends AbstractPieceRule<C, P, B>
             implements RequiresPieceInformation<C, P>{
 
