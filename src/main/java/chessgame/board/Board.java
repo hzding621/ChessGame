@@ -14,7 +14,7 @@ public interface Board<C extends Cell, A extends PieceType, P extends Piece<A>> 
      * Remove the piece at this position
      * @return the previous piece at this position
      */
-    Optional<P> clearPiece(C cell);
+    P clearPiece(C cell);
 
     /**
      * Move the piece from source to target

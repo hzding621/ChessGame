@@ -23,18 +23,22 @@ public final class Coordinate implements Comparable<Coordinate> {
         return index;
     }
 
-    public static class Factory {
+    public static class Builder {
 
         private final int length;
-        public Factory(int length) {
+        public Builder(int length) {
             this.length = length;
         }
 
-        public Optional<Coordinate> of(int index) {
-            if (index < 0 || index >= length) {
-                return Optional.empty();
+        public Coordinate at(int index) {
+            if (!withinRange(index)) {
+                throw new IllegalStateException("Coordinate index out of range!");
             }
-            return Optional.of(new Coordinate(index));
+            return new Coordinate(index);
+        }
+
+        public boolean withinRange(int index) {
+            return index >= 0 && index < length;
         }
     }
     @Override

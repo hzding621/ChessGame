@@ -5,26 +5,25 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Contains tests for Coordinate and Coordinate.Factory
+ * Contains tests for Coordinate and Coordinate.Builder
  */
 public class CoordinateTest {
 
-    private Coordinate.Factory factory;
+    private Coordinate.Builder builder;
 
     @Before
-    public void initializeFactory() {
-        factory = new Coordinate.Factory(10);
+    public void initializeBuilder() {
+        builder = new Coordinate.Builder(10);
     }
 
     @Test
     public void testConstructCoordinate() {
-        Assert.assertTrue(factory.of(5).isPresent());
-        Assert.assertEquals(factory.of(5).get().getIndex(), 5);
+        Assert.assertEquals(builder.at(5).getIndex(), 5);
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void testConstructOutOfRangeCoordinate() {
-        Assert.assertFalse(factory.of(10).isPresent());
-        Assert.assertFalse(factory.of(12).isPresent());
+        builder.at(10);
+        builder.at(12);
     }
 }

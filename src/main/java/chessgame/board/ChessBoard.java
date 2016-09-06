@@ -7,9 +7,9 @@ import chessgame.piece.*;
  */
 public final class ChessBoard extends RectangularBoard<ChessPieceType, Piece<ChessPieceType>> {
 
-    private final Coordinate.Factory coordinateFactory = new Coordinate.Factory(8);
-    private final SquareCell.Factory cellFactory =
-            new SquareCell.Factory(coordinateFactory, coordinateFactory);
+    private final Coordinate.Builder coordinateBuilder = new Coordinate.Builder(8);
+    private final SquareCell.Builder cellBuilder =
+            new SquareCell.Builder(coordinateBuilder, coordinateBuilder);
 
     public ChessBoard(PieceSet<SquareCell, ChessPieceType, Piece<ChessPieceType>> pieceSet) {
         super(pieceSet);
@@ -17,6 +17,6 @@ public final class ChessBoard extends RectangularBoard<ChessPieceType, Piece<Che
 
     @Override
     public GridCellFactory<SquareCell, SquareDirection> getGridCellFactory() {
-        return cellFactory;
+        return cellBuilder;
     }
 }

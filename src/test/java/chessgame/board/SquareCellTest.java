@@ -7,46 +7,26 @@ import org.junit.Test;
 import java.util.Optional;
 
 /**
- * Contains tests for SquareCell and SquareCell.Factory
+ * Contains tests for SquareCell and SquareCell.Builder
  */
 public class SquareCellTest {
 
-    private Coordinate.Factory rowFactory;
-    private Coordinate.Factory columnFactory;
-    private SquareCell.Factory factory;
+    private Coordinate.Builder rowBuilder;
+    private Coordinate.Builder columnBuilder;
+    private SquareCell.Builder builder;
 
     @Before
     public void initializeFactory() {
-        rowFactory = new Coordinate.Factory(6);
-        columnFactory = new Coordinate.Factory(8);
-        factory = new SquareCell.Factory(rowFactory, columnFactory);
-    }
-
-    @Test
-    public void testConstructionOfSquareCellByFactory() {
-        Optional<SquareCell> cell;
-        for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 8; j++) {
-                cell = factory.of(i, j);
-                Assert.assertTrue(cell.isPresent());
-            }
-        }
-
-        cell = factory.of(6,5);
-        Assert.assertFalse(cell.isPresent());
-
-        cell = factory.of(5,8);
-        Assert.assertFalse(cell.isPresent());
-
-        cell = factory.of(-1,8);
-        Assert.assertFalse(cell.isPresent());
+        rowBuilder = new Coordinate.Builder(6);
+        columnBuilder = new Coordinate.Builder(8);
+        builder = new SquareCell.Builder(rowBuilder, columnBuilder);
     }
 
     @Test
     public void testFindDirectionWithNormalPoints() {
 
-        SquareCell a = factory.of(2, 2).get();
-        SquareCell b = factory.of(3, 3).get();
+        SquareCell a = builder.at(2, 2);
+        SquareCell b = builder.at(3, 3);
         Assert.assertEquals(SquareCell.findDirection(a, b), SquareDirection.NORTHEAST);
         Assert.assertEquals(SquareCell.findDirection(b, a), SquareDirection.SOUTHWEST);
     }
@@ -54,16 +34,16 @@ public class SquareCellTest {
     @Test(expected = IllegalArgumentException.class)
     public void testFindDirectionWithPointsNotOnALine() {
 
-        SquareCell a = factory.of(0,0).get();
-        SquareCell b = factory.of(1,2).get();
+        SquareCell a = builder.at(0,0);
+        SquareCell b = builder.at(1,2);
         SquareCell.findDirection(a, b);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testFindDirectionWithSamePoints() {
 
-        SquareCell a = factory.of(0,0).get();
-        SquareCell b = factory.of(0,0).get();
+        SquareCell a = builder.at(0,0);
+        SquareCell b = builder.at(0,0);
         SquareCell.findDirection(a, b);
     }
 
@@ -78,28 +58,28 @@ public class SquareCellTest {
                 SquareDirection.SOUTH, SquareDirection.SOUTHWEST, SquareDirection.WEST, SquareDirection.NORTHWEST
         };
 
-        SquareCell cell = factory.of(3,3).get();
+        SquareCell cell = builder.at(3,3);
         for (int i = 0; i < answers.length; i++) {
-            SquareCell moved = factory.moveOnce(cell, dirs[i]).get();
-            Assert.assertEquals(moved, factory.of(answers[i][0], answers[i][1]).get());
+            SquareCell moved = builder.moveOnce(cell, dirs[i]).get();
+            Assert.assertEquals(moved, builder.at(answers[i][0], answers[i][1]));
         }
     }
 
     @Test
     public void testMoveOnceAtEdge() {
-        SquareCell cell = factory.of(0,0).get();
+        SquareCell cell = builder.at(0,0);
         Optional<SquareCell> nextCell;
 
-        nextCell = factory.moveOnce(cell, SquareDirection.WEST);
+        nextCell = builder.moveOnce(cell, SquareDirection.WEST);
         Assert.assertFalse(nextCell.isPresent());
 
-        nextCell = factory.moveOnce(cell, SquareDirection.SOUTHWEST);
+        nextCell = builder.moveOnce(cell, SquareDirection.SOUTHWEST);
         Assert.assertFalse(nextCell.isPresent());
 
-        nextCell = factory.moveOnce(cell, SquareDirection.SOUTH);
+        nextCell = builder.moveOnce(cell, SquareDirection.SOUTH);
         Assert.assertFalse(nextCell.isPresent());
 
-        nextCell = factory.moveOnce(cell, SquareDirection.SOUTHEAST);
+        nextCell = builder.moveOnce(cell, SquareDirection.SOUTHEAST);
         Assert.assertFalse(nextCell.isPresent());
     }
 }

@@ -87,7 +87,10 @@ public class ChessGame implements Game<SquareCell, ChessPieceType, Piece<ChessPi
             }
         });
         chessBoard.clearPiece(target);
-        chessBoard.movePiece(source, target);
+        Piece<ChessPieceType> movedPiece = chessBoard.movePiece(source, target);
+
+        // Increment move count for moved piece
+        boardInformation.getPieceInformation().incrementPieceMoveCount(movedPiece);
 
         // Update King's position
         if (source.equals(boardInformation.locateKing(boardInformation.getActor()))) {
@@ -120,7 +123,7 @@ public class ChessGame implements Game<SquareCell, ChessPieceType, Piece<ChessPi
         Collection<Move<SquareCell>> allMoves = null;
         for (String[] move: moves) {
             allMoves = game.allPotentialMoves();
-            game.move(factory.of(move[0], move[1]).get(), factory.of(move[2], move[3]).get());
+            game.move(factory.at(move[0], move[1]), factory.at(move[2], move[3]));
         }
         allMoves = game.allPotentialMoves();
 

@@ -54,10 +54,13 @@ public class AbstractBoard<C extends Cell, A extends PieceType, P extends Piece<
     }
 
     @Override
-    public Optional<P> clearPiece(C cell) {
+    public P clearPiece(C cell) {
         Optional<P> previousPiece = getPiece(cell);
+        if (!previousPiece.isPresent()) {
+            throw new IllegalStateException("Try to clear a cell that is already empty!");
+        }
         occupants.remove(cell);
-        return previousPiece;
+        return previousPiece.get();
     }
 
     @Override

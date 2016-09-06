@@ -63,17 +63,17 @@ public class SquareCell implements Cell {
         return this.rank.compareTo(that.rank);
     }
 
-    public static final class Factory implements GridCellFactory<SquareCell, SquareDirection> {
-        private final Coordinate.Factory rankFactory;
-        private final Coordinate.Factory fileFactory;
+    public static final class Builder implements GridCellFactory<SquareCell, SquareDirection> {
+        private final Coordinate.Builder rankBuilder;
+        private final Coordinate.Builder fileBuilder;
 
-        public Factory(Coordinate.Factory fileFactory, Coordinate.Factory rankFactory) {
-            this.fileFactory = fileFactory;
-            this.rankFactory = rankFactory;
+        public Builder(Coordinate.Builder fileBuilder, Coordinate.Builder rankBuilder) {
+            this.fileBuilder = fileBuilder;
+            this.rankBuilder = rankBuilder;
         }
 
         @Override
-        public Optional<SquareCell> of(String file, String rank) {
+        public SquareCell at(String file, String rank) {
             if (file.length() != 1) {
                 throw new IllegalArgumentException("Grid cell factory does not support encoding of files larger than 26!");
             }
@@ -82,18 +82,14 @@ public class SquareCell implements Cell {
             }
             int fileIndex = file.charAt(0) - 'A';
             int rankIndex = Integer.parseInt(rank) - 1;
-            return of(fileIndex, rankIndex);
+            return at(fileIndex, rankIndex);
         }
 
         @Override
-        public Optional<SquareCell> of(int fileIndex, int rankIndex) {
-            Optional<Coordinate> fileCoordinate = fileFactory.of(fileIndex);
-            Optional<Coordinate> rankCoordinate = rankFactory.of(rankIndex);
-
-            if (!fileCoordinate.isPresent() || !rankCoordinate.isPresent()) {
-                return Optional.empty();
-            }
-            return Optional.of(new SquareCell(File.of(fileCoordinate.get()), Rank.of(rankCoordinate.get())));
+        public SquareCell at(int fileIndex, int rankIndex) {
+            Coordinate fileCoordinate = fileBuilder.at(fileIndex);
+            Coordinate rankCoordinate = rankBuilder.at(rankIndex);
+            return new SquareCell(File.of(fileCoordinate), Rank.of(rankCoordinate));
         }
 
         @Override
@@ -101,8 +97,28 @@ public class SquareCell implements Cell {
             int xDelta = direction.getX(), yDelta = direction.getY();
             int fileIndex = cell.file.getCoordinate().getIndex() + xDelta;
             int rankIndex = cell.rank.getCoordinate().getIndex() + yDelta;
-            return of(fileIndex, rankIndex);
+            if (!withinRange(fileIndex, rankIndex)) {
+                return Optional.empty();
+            }
+            return Optional.of(at(fileIndex, rankIndex));
         }
+
+        @Override
+        public boolean withinRange(int fileIndex, int rankIndex) {
+            return rankBuilder.withinRange(rankIndex) && fileBuilder.withinRange(fileIndex);
+        }
+
+        @Override
+        public boolean withinRange(String file, String rank) {
+            if (file.length() != 1 || file.charAt(0) > 'Z' || file.charAt(0) < 'A') {
+                return false;
+            }
+            int fileIndex = file.charAt(0) - 'A';
+            int rankIndex = Integer.parseInt(rank) - 1;
+            return fileBuilder.withinRange(fileIndex) && rankBuilder.withinRange(rankIndex);
+        }
+
+
     }
 
     @Override
