@@ -65,15 +65,13 @@ public final class AbstractBoardTest {
 
     @Test
     public void testGetPiecesForPlayer() {
-        Collection<PieceLocator<Square, KingPawn>> locators =
-                testBoard.getPiecesForPlayer(KingPawn.KING, Player.WHITE);
+        Collection<Square> locators = testBoard.getPiecesForPlayer(KingPawn.KING, Player.WHITE);
         Assert.assertEquals(locators.size(), 1);
     }
 
     @Test
     public void testGetAllPiecesForPlayer() {
-        Collection<PieceLocator<Square, KingPawn>> locators =
-                testBoard.getAllPiecesForPlayer(Player.WHITE);
+        Collection<Square> locators = testBoard.getAllPiecesForPlayer(Player.WHITE);
         Assert.assertEquals(locators.size(), 2);
     }
 

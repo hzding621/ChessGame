@@ -2,7 +2,7 @@ package chessgame.board;
 
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
-import chessgame.rule.Pin;
+import utility.Pair;
 
 import java.util.Collection;
 import java.util.List;
@@ -43,19 +43,18 @@ public interface GridViewer<C extends Cell, D extends Direction, P extends Piece
      *
      * @param startCell the cell the movement starts at
      * @param direction the direction the movement goes at
-     * @return the list of movement
+     * @param startInclusive whether or not to include the startCell
+     * @param meetInclusive whether or not to include the occupant if there exists  @return the list of movement
      */
-    List<C> furthestReach(C startCell, D direction);
+    List<C> furthestReach(C startCell, D direction, boolean startInclusive, boolean meetInclusive);
 
     /**
-     * Return if exists the pinned pieces a piece at startCell is pinning.
-     * Both of the pinned pieces must belong to enemy
-     * @param startCell the location of the player's piece
-     * @param direction the direction of the
-     * @param player the player
-     * @return Non-empty if the pinning situation exists.
+     * Return the first and second occupant met starting at the given cell and moving toward the given direction
+     * @param startCell the given cell
+     * @param direction the given direction
+     * @return Non-empty if there exists two such pieces
      */
-    Optional<Pin<C>> findPin(C startCell, D direction, Player player);
+    Optional<Pair<C, C>> firstAndSecondOccupant(C startCell, D direction);
 
     /**
      * return the position where the piece starts at startCell and move toward the enemy's side by one step
@@ -67,7 +66,10 @@ public interface GridViewer<C extends Cell, D extends Direction, P extends Piece
      * same as moveForward except cannot land on a cell that is occupied
      * @return empty if the startCell is at an edge or the forward position is occupied
      */
-    Optional<C> moveForwardNoOverlap(C startCell, Player player);
+    default Optional<C> moveForwardNoOverlap(C startCell, Player player) {
+        return moveForward(startCell, player)
+                .flatMap(c -> isOccupied(c) ? Optional.empty() : Optional.of(c));
+    }
 
     /**
      * @return the positions where the startCell is attacking in the pawn-style

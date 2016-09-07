@@ -5,17 +5,21 @@ import chessgame.board.Direction;
 import chessgame.board.GridViewer;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
+import utility.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * This type of piece attack in symmetric directions, such as Rook, Bishop, Queen
  * Such pieces must be associated with GridViewer
  */
 public interface RangeAttackPieceRule<C extends Cell, P extends PieceClass, D extends Direction,
-        B extends GridViewer<C, D, P>> extends PinningPieceRule<C, P, B> {
+        B extends GridViewer<C, D, P>> extends LatentAttackPiece<C, P, B> {
 
     /**
      * @return the directions from which the piece can perform range attacks
@@ -24,30 +28,30 @@ public interface RangeAttackPieceRule<C extends Cell, P extends PieceClass, D ex
 
     @Override
     default Collection<C> attacking(C position, Player player) {
-        List<C> moveTos = new ArrayList<>();
-        getAttackingDirections().forEach(direction ->
-                getBoardViewer().furthestReach(position, direction).forEach(moveTos::add));
-        return moveTos;
+        return getAttackingDirections().stream()
+                .flatMap(direction -> getBoardViewer().furthestReach(position, direction, false, true).stream())
+                .collect(Collectors.toList());
     }
 
     @Override
-    default Collection<Pin<C>> pinningAttack(C position, Player player) {
-        List<Pin<C>> pins = new ArrayList<>();
-        getAttackingDirections().forEach(direction ->
-                getBoardViewer().findPin(position, direction, player).ifPresent(pins::add));
-        return pins;
+    default Collection<LatentAttack<C>> latentAttacking(C position, Player player) {
+        return getAttackingDirections().stream()
+                .map(direction -> getBoardViewer().firstAndSecondOccupant(position, direction)
+                        .filter(pair -> getBoardViewer().isEnemy(pair.second(), player))
+                        .map(pair -> new LatentAttack<>(position, pair.first(), pair.second(),
+                                getBoardViewer().furthestReach(position, direction, true, false))))
+                .filter(Optional::isPresent).map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     @Override
-    default Collection<C> getBlockingPositionsWhenAttacking(C sourcePosition,
-                                                            C targetPosition,
-                                                            Player player) {
+    default Collection<C> attackBlockingPositions(C sourcePosition,
+                                                  C targetPosition,
+                                                  Player player) {
         if (!isAttacking(sourcePosition, targetPosition, player)) {
             throw new IllegalArgumentException(sourcePosition + " is not attacking " + targetPosition + " !");
         }
         D direction = getBoardViewer().findDirection(sourcePosition, targetPosition);
-        List<C> range = getBoardViewer().furthestReach(sourcePosition, direction);
-        range.add(sourcePosition);
-        return range;
+        return getBoardViewer().furthestReach(sourcePosition, direction, true, false);
     }
 }

@@ -7,6 +7,7 @@ import chessgame.piece.KingPawn;
 import chessgame.piece.Pawn;
 import chessgame.piece.Piece;
 import chessgame.player.Player;
+import com.google.common.collect.ImmutableList;
 
 import java.util.*;
 
@@ -16,10 +17,10 @@ import java.util.*;
 public final class KingPawnGame implements GameSetting<Square, KingPawn> {
 
     private final Square.Builder builder;
-    private final Piece whitePawn = new Pawn<KingPawn>(KingPawn.PAWN, Player.WHITE, 0);
-    private final Piece blackPawn = new Pawn<KingPawn>(KingPawn.PAWN, Player.BLACK, 0);
-    private final Piece whiteKing = new King<KingPawn>(KingPawn.KING, Player.WHITE, 0);
-    private final Piece blackKing = new King<KingPawn>(KingPawn.KING, Player.BLACK, 0);
+    private final Piece<KingPawn> whitePawn = new Pawn<>(KingPawn.PAWN, Player.WHITE, 0);
+    private final Piece<KingPawn> blackPawn = new Pawn<>(KingPawn.PAWN, Player.BLACK, 0);
+    private final Piece<KingPawn> whiteKing = new King<>(KingPawn.KING, Player.WHITE, 0);
+    private final Piece<KingPawn> blackKing = new King<>(KingPawn.KING, Player.BLACK, 0);
 
     public KingPawnGame(Square.Builder builder) {
         this.builder = builder;
@@ -34,9 +35,9 @@ public final class KingPawnGame implements GameSetting<Square, KingPawn> {
     public Collection<PieceLocator<Square, KingPawn>>
     constructPiecesOfTypeAndPlayer(KingPawn type, Player player) {
         return player == Player.WHITE
-                ? Arrays.asList(PieceLocator.of(builder.at(1,0), whitePawn),
+                ? ImmutableList.of(PieceLocator.of(builder.at(1,0), whitePawn),
                 PieceLocator.of(builder.at(2,0), whiteKing))
-                : Arrays.asList(PieceLocator.of(builder.at(1,3), blackPawn),
+                : ImmutableList.of(PieceLocator.of(builder.at(1,3), blackPawn),
                 PieceLocator.of(builder.at(2,3), blackKing));
     }
 

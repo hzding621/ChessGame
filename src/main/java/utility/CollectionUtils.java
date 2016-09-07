@@ -1,6 +1,11 @@
 package utility;
 
+import com.google.common.collect.Lists;
+
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.Collector;
+import java.util.stream.Stream;
 
 /**
  * Utility methods
@@ -29,5 +34,12 @@ public final class CollectionUtils {
             element.ifPresent(newArrayList::add);
         }
         return newArrayList;
+    }
+
+    public static <E> Collector<Optional<E>, Collection<E>, Stream<E>> filterEmpty() {
+        return Collector.of(ConcurrentLinkedQueue::new,
+                (q, oe) -> oe.ifPresent(q::add),
+                (q1, q2) -> {q1.addAll(q2); return q1;},
+                Collection::stream);
     }
 }

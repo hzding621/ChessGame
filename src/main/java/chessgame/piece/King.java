@@ -6,6 +6,7 @@ import chessgame.board.GridViewer;
 import chessgame.game.PieceInformation;
 import chessgame.player.Player;
 import chessgame.rule.RequiresPieceInformation;
+import com.google.common.collect.ImmutableList;
 
 import java.util.*;
 
@@ -45,15 +46,15 @@ public final class King<P extends PieceClass> extends AbstractPiece<P> {
         }
 
         @Override
-        public Collection<C> getBlockingPositionsWhenAttacking(C sourcePosition,
-                                                               C targetPosition,
-                                                               Player player) {
+        public Collection<C> attackBlockingPositions(C sourcePosition,
+                                                     C targetPosition,
+                                                     Player player) {
             if (!attacking(sourcePosition, player).contains(targetPosition)) {
                 throw new IllegalArgumentException(sourcePosition + " cannot attack " + targetPosition + " !");
             }
 
             // To block a pawn attack, can only capture pawn (or move away attacked piece)
-            return Arrays.asList(sourcePosition, targetPosition);
+            return ImmutableList.of(sourcePosition, targetPosition);
         }
 
         @Override

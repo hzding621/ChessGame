@@ -38,6 +38,8 @@ public interface PieceRule<C extends Cell, P extends PieceClass, B extends Board
 
     /**
      * Finds all normal moves the piece can make, including captures, but does not consider check-escapes.
+     * The default implementation filter all the attacking positions of piece with the condition that the occupant is an enemy
+     * (This is not the case for some pieces, such as Pawn, whose attacking rule and moving rule are different)
      * @param position the position of the piece
      * @param player the player the piece belongs to
      * @return all possible moves
@@ -57,5 +59,5 @@ public interface PieceRule<C extends Cell, P extends PieceClass, B extends Board
      * @param player the player the piece belongs to
      * @return all positions the opponent can move to to block the attacking
      */
-    Collection<C> getBlockingPositionsWhenAttacking(C sourcePosition, C targetPosition, Player player);
+    Collection<C> attackBlockingPositions(C sourcePosition, C targetPosition, Player player);
 }

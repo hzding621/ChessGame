@@ -9,11 +9,10 @@ import chessgame.piece.StandardPieces;
 import chessgame.player.Player;
 import chessgame.rule.ChessRuleBindings;
 import chessgame.rule.Rules;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.SetMultimap;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Contains tests for ActorInformation
@@ -30,23 +29,18 @@ public final class ActorInformationTest {
         boardInformation = new BoardInformation<>(customizedSet);
         testBoard = new ChessBoard(customizedSet);
         cell = testBoard.getGridCellFactory();
-        rules = new Rules<>(new ChessRuleBindings(testBoard, boardInformation.getPieceInformation()));
-        boardInformation.getDefenderInformation().refresh(testBoard, rules, boardInformation.getPlayerInformation(),
-                boardInformation.getPieceInformation().locateKing(boardInformation.getActor()));
-        boardInformation.getActorInformation().refresh(testBoard, rules, boardInformation.getDefenderInformation(),
-                boardInformation.getPlayerInformation(), boardInformation.locateKing(boardInformation.getActor()));
+        rules = new Rules<>(new ChessRuleBindings(testBoard, boardInformation));
+        boardInformation.updateInformationForThisRound(testBoard, rules, ImmutableList::of, true);
     }
 
-    private static boolean checkIsValidMove(Map<Square, Set<Move<Square>>> allMoves, Square source, Square target) {
-        return allMoves.get(source)
-                .stream()
-                .anyMatch(move -> move.getTarget().equals(target));
+    private static boolean checkIsValidMove(SetMultimap<Square, Move<Square>> allMoves, Square source, Square target) {
+        return allMoves.get(source).stream().anyMatch(move -> move.getTarget().equals(target));
     }
 
     @Test
     public void testAvailableMovesOpeningPosition() {
         hydrate(new StandardSetting());
-        Map<Square, Set<Move<Square>>> allMoves = boardInformation.getActorInformation().getAvailableMoves();
+        SetMultimap<Square, Move<Square>> allMoves = boardInformation.getAvailableMoves();
 
         // All pawns can move one or two cells upwards
         for (int i = 0; i < 8; i++) {
@@ -73,10 +67,10 @@ public final class ActorInformationTest {
                 .build();
         hydrate(endGame);
 
-        Map<Square, Set<Move<Square>>> allMoves = boardInformation.getActorInformation().getAvailableMoves();
+        SetMultimap<Square, Move<Square>> allMoves = boardInformation.getAvailableMoves();
 
         Assert.assertTrue(allMoves.isEmpty());
-        Assert.assertEquals(boardInformation.getDefenderInformation().getCheckers().size(), 1);
+        Assert.assertEquals(boardInformation.getCheckers().size(), 1);
     }
 
     @Test
@@ -90,9 +84,9 @@ public final class ActorInformationTest {
                 .build();
         hydrate(endGame);
 
-        Map<Square, Set<Move<Square>>> allMoves = boardInformation.getActorInformation().getAvailableMoves();
+        SetMultimap<Square, Move<Square>> allMoves = boardInformation.getAvailableMoves();
 
         Assert.assertTrue(allMoves.isEmpty());
-        Assert.assertTrue(boardInformation.getDefenderInformation().getCheckers().isEmpty());
+        Assert.assertTrue(boardInformation.getCheckers().isEmpty());
     }
 }

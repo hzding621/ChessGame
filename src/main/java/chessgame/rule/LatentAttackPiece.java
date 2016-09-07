@@ -10,7 +10,7 @@ import java.util.Collection;
 /**
  * This interface exposes additional rule associated with pieces capable of making pinning/discovered attacks
  */
-public interface PinningPieceRule<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
+public interface LatentAttackPiece<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
         extends PieceRule<C, P, B> {
 
     /**
@@ -19,5 +19,5 @@ public interface PinningPieceRule<C extends Cell, P extends PieceClass, B extend
      * @param player the player
      * @return The set of pinning attack the piece is making at position
      */
-    Collection<Pin<C>> pinningAttack(C position, Player player);
+    Collection<LatentAttack<C>> latentAttacking(C position, Player player);
 }

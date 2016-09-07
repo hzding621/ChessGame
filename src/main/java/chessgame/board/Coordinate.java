@@ -1,9 +1,8 @@
 package chessgame.board;
 
-import utility.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Optional;
-import java.util.logging.Logger;
 
 /**
  * Represents a coordinate in an abstract chess board and provides utility class to mutate the coordinate with boundary checks
@@ -11,7 +10,7 @@ import java.util.logging.Logger;
 
 public final class Coordinate implements Comparable<Coordinate> {
 
-    private static final Logger log = LoggerFactory.getInstance(Coordinate.class);
+    private static final Logger log = LoggerFactory.getLogger(Coordinate.class);
 
     private final int index;
 

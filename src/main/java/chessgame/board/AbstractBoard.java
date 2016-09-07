@@ -4,6 +4,8 @@ import chessgame.piece.Piece;
 import chessgame.game.GameSetting;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.Table;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -25,7 +27,7 @@ public class AbstractBoard<C extends Cell, P extends PieceClass> implements Boar
 
     @Override
     public boolean isOccupied(C cell) {
-        return occupants.get(cell) != null;
+        return occupants.containsKey(cell);
     }
 
     @Override
@@ -64,21 +66,20 @@ public class AbstractBoard<C extends Cell, P extends PieceClass> implements Boar
     }
 
     @Override
-    public Collection<PieceLocator<C, P>> getPiecesForPlayer(PieceClass type, Player player) {
+    public Collection<C> getPiecesForPlayer(P type, Player player) {
         return occupants.entrySet()
-                        .stream()
-                        .filter(e -> e.getValue().getPieceClass().equals(type)
-                                && e.getValue().getPlayer().equals(player))
-                        .map(e -> PieceLocator.of(e.getKey(), e.getValue()))
-                        .collect(Collectors.toList());
+                .stream()
+                .filter(e -> e.getValue().getPieceClass().equals(type) && e.getValue().getPlayer().equals(player))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Collection<PieceLocator<C, P>> getAllPiecesForPlayer(Player player) {
+    public Collection<C> getAllPiecesForPlayer(Player player) {
         return occupants.entrySet()
-                        .stream()
-                        .filter(e -> e.getValue().getPlayer().equals(player))
-                        .map(e -> PieceLocator.of(e.getKey(), e.getValue()))
-                        .collect(Collectors.toList());
+                .stream()
+                .filter(e -> e.getValue().getPlayer().equals(player))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
     }
 }

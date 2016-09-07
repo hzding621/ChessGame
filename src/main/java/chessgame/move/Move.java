@@ -5,7 +5,7 @@ import chessgame.piece.PieceClass;
 /**
  * Represents a move in the game wherein a piece is moved from A to B
  */
-public interface Move<C extends Cell> {
+public interface Move<C extends Cell>  {
 
     C getSource();
 

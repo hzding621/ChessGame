@@ -22,12 +22,12 @@ public interface BoardViewer<C extends Cell, P extends PieceClass> {
     /**
      * @return all pieces on the board of one type belonging to a certain player
      */
-    Collection<PieceLocator<C, P>> getPiecesForPlayer(P type, Player player);
+    Collection<C> getPiecesForPlayer(P type, Player player);
 
     /**
      * @return all pieces on the board of belonging to a certain player
      */
-    Collection<PieceLocator<C, P>> getAllPiecesForPlayer(Player player);
+    Collection<C> getAllPiecesForPlayer(Player player);
 
     /**
      * @param cell the cell to check

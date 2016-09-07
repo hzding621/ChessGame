@@ -21,16 +21,14 @@ public interface GameSetting<C extends Cell, P extends PieceClass> {
     default Collection<PieceLocator<C, P>> constructAllPieces() {
         Collection<PieceLocator<C, P>> locators = getSupportedTypes()
                 .stream()
-                .map(type -> getPlayers()
+                .flatMap(type -> getPlayers()
                         .stream()
-                        .map(player ->
+                        .flatMap(player ->
                                 constructPiecesOfTypeAndPlayer(type, player)
                                         .stream()
 
                         )
-                        .flatMap(e -> e)
                 )
-                .flatMap(e -> e)
                 .collect(Collectors.toList());
         return locators;
     }

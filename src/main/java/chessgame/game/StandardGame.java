@@ -11,6 +11,7 @@ import chessgame.piece.*;
 import chessgame.player.Player;
 import chessgame.rule.ChessRuleBindings;
 import chessgame.rule.Rules;
+import com.google.common.collect.ImmutableList;
 
 import java.util.*;
 import java.util.function.Function;
@@ -31,7 +32,7 @@ public class StandardGame implements Game<Square, StandardPieces, ChessBoard> {
         this.chessBoard = chessBoard;
         this.chessRules = chessRules;
         this.boardInformation = boardInformation;
-        recomputeAvailableMovesForThisRound();
+        updateInformationForThisRound(ImmutableList::of, true);
     }
 
     public static StandardGame constructGame() {
@@ -39,7 +40,7 @@ public class StandardGame implements Game<Square, StandardPieces, ChessBoard> {
         BoardInformation<Square, StandardPieces, ChessBoard> boardInformation =
                 new BoardInformation<>(pieceSet);
         ChessBoard board = new ChessBoard(pieceSet);
-        ChessRuleBindings ruleBindings = new ChessRuleBindings(board, boardInformation.getPieceInformation());
+        ChessRuleBindings ruleBindings = new ChessRuleBindings(board, boardInformation);
         return new StandardGame(board, new Rules<>(ruleBindings), boardInformation);
     }
 
@@ -70,33 +71,17 @@ public class StandardGame implements Game<Square, StandardPieces, ChessBoard> {
 
     @Override
     public Collection<Move<Square>> availableMoves() {
-        return boardInformation.getAvailableMoves().values()
-                .stream()
-                .map(Set::stream)
-                .flatMap(Function.identity())
-                .collect(Collectors.toCollection(TreeSet::new));
+        return boardInformation.getAvailableMoves().values();
     }
 
     @Override
     public Collection<Move<Square>> availableMovesFrom(Square square) {
-        return boardInformation.getAvailableMoves().getOrDefault(square, Collections.emptySet());
+        return boardInformation.getAvailableMoves().get(square);
     }
 
-    private void recomputeAvailableMovesForThisRound() {
-        // Defender information is used to compute actor information so must be computed earlier
-        boardInformation.getDefenderInformation().refresh(chessBoard, chessRules,
-                boardInformation.getPlayerInformation(), boardInformation.locateKing(boardInformation.getActor()));
-        boardInformation.getActorInformation().refresh(chessBoard, chessRules, boardInformation.getDefenderInformation(),
-                boardInformation.getPlayerInformation(), boardInformation.locateKing(boardInformation.getActor()));
-
-        // Update Checkmate/Stalemate situation
-        if (boardInformation.getAvailableMoves().isEmpty()) {
-            if (boardInformation.getDefenderInformation().getCheckers().isEmpty()) {
-                gameStatus = GameStatus.CHECKMATE;
-            } else {
-                gameStatus = GameStatus.STALEMATE;
-            }
-        }
+    private void updateInformationForThisRound(MoveResult<Square, StandardPieces> history, boolean opening) {
+        // Update everthing in board information
+        gameStatus = boardInformation.updateInformationForThisRound(chessBoard, chessRules, history, opening);
     }
 
     @Override
@@ -104,17 +89,11 @@ public class StandardGame implements Game<Square, StandardPieces, ChessBoard> {
         if (gameStatus != GameStatus.OPEN) {
             throw new IllegalStateException("Game has ended in " + gameStatus);
         }
-        Square source = attemptedMove.getSource(), target = attemptedMove.getTarget();
-        if (!boardInformation.getAvailableMoves().getOrDefault(source, Collections.emptySet()).contains(attemptedMove)) {
+        Square source = attemptedMove.getSource();
+        if (!boardInformation.getAvailableMoves().get(source).contains(attemptedMove)) {
             throw new IllegalStateException("Attempted move " + attemptedMove + " is invalid!");
         }
-        MoveResult<Square, StandardPieces> history = attemptedMove.<StandardPieces>getTransition().apply(chessBoard);
-
-        // Update piece information, including piece move count and king position updates
-        boardInformation.getPieceInformation().updateInformation(history);
-        boardInformation.getPlayerInformation().nextRound();
-
-        recomputeAvailableMovesForThisRound();
+        updateInformationForThisRound(attemptedMove.<StandardPieces>getTransition().apply(chessBoard), false);
     }
 
     @Override

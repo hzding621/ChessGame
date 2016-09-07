@@ -2,11 +2,11 @@ package chessgame.board;
 
 import chessgame.game.StandardSetting;
 import chessgame.player.Player;
-import chessgame.rule.Pin;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import utility.CollectionUtils;
+import utility.Pair;
 
 import java.util.Collection;
 import java.util.List;
@@ -30,46 +30,41 @@ public final class ChessBoardTest {
     @Test
     public void testFurthestReach() {
         // (B2) [B3 -> B7]
-        List<Square> path = testBoard.furthestReach(builder.at("B", "2"), TwoDimension.NORTH);
+        List<Square> path = testBoard.furthestReach(builder.at("B", "2"), TwoDimension.NORTH, false, true);
         Assert.assertEquals(path.size(), 5);
         Assert.assertEquals(path.get(0), builder.at("B", "3"));
         Assert.assertEquals(CollectionUtils.last(path).get(), builder.at("B", "7"));
 
         // (B2) [C3 -> G7]
-        path = testBoard.furthestReach(builder.at("B", "2"), TwoDimension.NORTHEAST);
+        path = testBoard.furthestReach(builder.at("B", "2"), TwoDimension.NORTHEAST, false, true);
         Assert.assertEquals(path.size(), 5);
         Assert.assertEquals(path.get(0), builder.at("C", "3"));
         Assert.assertEquals(CollectionUtils.last(path).get(), builder.at("G", "7"));
 
         // (B2) [B1]
-        path = testBoard.furthestReach(builder.at("B", "2"), TwoDimension.SOUTH);
+        path = testBoard.furthestReach(builder.at("B", "2"), TwoDimension.SOUTH, false, true);
         Assert.assertEquals(path.size(), 1);
         Assert.assertEquals(path.get(0), builder.at("B", "1"));
     }
 
     @Test
-    public void testFindPin() {
+    public void testFirstAndSecondOccupant() {
 
         // Move white Queen to E4
         // - pinning black Pawn at E7, black King at E8,
         // - pinning black Pawn at B7, black Rook at A8
         testBoard.movePiece(builder.at("D", "1"), builder.at("E", "4"));
 
-        Optional<Pin<Square>> pin = testBoard.findPin(builder.at("E", "4"), TwoDimension.NORTH, Player.WHITE);
+        Optional<Pair<Square, Square>> pin = testBoard.firstAndSecondOccupant(builder.at("E", "4"), TwoDimension.NORTH);
         Assert.assertTrue(pin.isPresent());
-        Assert.assertEquals(pin.get().getAttacker(), builder.at("E", "4"));
-        Assert.assertEquals(pin.get().getProtector(), builder.at("E", "7"));
-        Assert.assertEquals(pin.get().getHided(), builder.at("E", "8"));
+        Assert.assertEquals(pin.get().first(), builder.at("E", "7"));
+        Assert.assertEquals(pin.get().second(), builder.at("E", "8"));
 
-        pin = testBoard.findPin(builder.at("E", "4"), TwoDimension.NORTHWEST, Player.WHITE);
+        pin = testBoard.firstAndSecondOccupant(builder.at("E", "4"), TwoDimension.NORTHWEST);
         Assert.assertTrue(pin.isPresent());
-        Assert.assertEquals(pin.get().getAttacker(), builder.at("E", "4"));
-        Assert.assertEquals(pin.get().getProtector(), builder.at("B", "7"));
-        Assert.assertEquals(pin.get().getHided(), builder.at("A", "8"));
+        Assert.assertEquals(pin.get().first(), builder.at("B", "7"));
+        Assert.assertEquals(pin.get().second(), builder.at("A", "8"));
 
-        // Does not consider my own pieces
-        pin = testBoard.findPin(builder.at("E", "4"), TwoDimension.SOUTH, Player.WHITE);
-        Assert.assertFalse(pin.isPresent());
     }
 
     @Test

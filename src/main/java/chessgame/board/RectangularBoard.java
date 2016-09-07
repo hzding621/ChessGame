@@ -4,8 +4,8 @@ import chessgame.piece.Piece;
 import chessgame.game.GameSetting;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
-import chessgame.rule.Pin;
 import utility.CollectionUtils;
+import utility.Pair;
 
 import java.util.*;
 
@@ -46,34 +46,40 @@ public abstract class RectangularBoard<P extends PieceClass>
     }
 
     @Override
-    public List<Square> furthestReach(Square startCell, TwoDimension direction) {
+    public List<Square> furthestReach(Square startCell, TwoDimension direction, boolean startInclusive, boolean meetInclusive) {
         List<Square> cellList = new ArrayList<>();
+        if (startInclusive) {
+            cellList.add(startCell);
+        }
         Optional<Square> nextCell = moveOnce(startCell, direction);
+        Optional<Piece<P>> piece = Optional.empty();
         while (nextCell.isPresent()) {
-            cellList.add(nextCell.get());
-            Optional<Piece<P>> piece = getPiece(nextCell.get());
+            piece = getPiece(nextCell.get());
             if (piece.isPresent()) {
                 // nextCell has an occupant
                 break;
             }
+            cellList.add(nextCell.get());
             nextCell = moveOnce(nextCell.get(), direction);
+        }
+        if (meetInclusive && piece.isPresent()) {
+            cellList.add(nextCell.get());
         }
         return cellList;
     }
 
     private Optional<Square> firstOccupant(Square startCell, TwoDimension direction) {
-        return CollectionUtils.last(furthestReach(startCell, direction))
-                .filter(c -> getPiece(c).isPresent());
+        return CollectionUtils.last(furthestReach(startCell, direction, false, true)).filter(this::isOccupied);
     }
 
     @Override
-    public Optional<Pin<Square>> findPin(Square startCell, TwoDimension direction, Player player) {
+    public Optional<Pair<Square, Square>> firstAndSecondOccupant(Square startCell, TwoDimension direction) {
 
         Optional<Square> firstMeet = firstOccupant(startCell, direction);
-        if (!firstMeet.isPresent() || !isEnemy(firstMeet.get(), player)) return Optional.empty();
+        if (!firstMeet.isPresent()) return Optional.empty();
         Optional<Square> secondMeet = firstOccupant(firstMeet.get(), direction);
-        if (!secondMeet.isPresent() || !isEnemy(secondMeet.get(), player)) return Optional.empty();
-        return Optional.of(new Pin<>(startCell, firstMeet.get(), secondMeet.get()));
+        if (!secondMeet.isPresent()) return Optional.empty();
+        return Optional.of(Pair.of(firstMeet.get(), secondMeet.get()));
     }
 
     @Override
@@ -83,12 +89,6 @@ public abstract class RectangularBoard<P extends PieceClass>
         } else {
             return getGridCellFactory().moveOnce(startCell, TwoDimension.SOUTH);
         }
-    }
-
-    @Override
-    public Optional<Square> moveForwardNoOverlap(Square startCell, Player player) {
-        return moveForward(startCell, player)
-                .flatMap(c -> isOccupied(c) ? Optional.empty() : Optional.of(c));
     }
 
     @Override
