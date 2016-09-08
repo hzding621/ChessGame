@@ -16,20 +16,7 @@ import org.junit.Test;
  * Contains tests for ActorInformation
  * Mainly tests for Available Moves computation
  */
-public final class ActorInformationTest {
-
-    private RectangularBoard<StandardPieces> testBoard;
-    private GridCellFactory<Square, TwoDimension> cell;
-    private Rules<Square, StandardPieces, RectangularBoard<StandardPieces>> rules;
-    private BoardInformation<Square, StandardPieces, RectangularBoard<StandardPieces>> boardInformation;
-
-    private void hydrate(GameSetting.GridGame<Square, StandardPieces> customizedSet) {
-        boardInformation = new BoardInformation<>(customizedSet);
-        testBoard = new RectangularBoard<>(customizedSet);
-        cell = testBoard.getGridCellFactory();
-        rules = new Rules<>(new BasicRuleBindings<>(testBoard, boardInformation));
-        boardInformation.updateInformationForThisRound(testBoard, rules, ImmutableList::of, true);
-    }
+public final class ActorInformationTest extends InformationAbstractTest{
 
     private static boolean checkIsValidMove(SetMultimap<Square, Move<Square>> allMoves, Square source, Square target) {
         return allMoves.get(source)
@@ -59,14 +46,14 @@ public final class ActorInformationTest {
     @Test
     public void testCheckmateSituation() {
         // Two Rooks on 7th and 8th rank, opponent King in corner
-        GameSetting.GridGame<Square, StandardPieces> endGame = ConfigurableGameSetting.builder(8, 8)
+        GameSetting.GridGame<Square, StandardPieces> config = ConfigurableGameSetting.builder(8, 8)
                 .piece(StandardPieces.KING, Player.BLACK, "H", "8")
                 .piece(StandardPieces.ROOK, Player.WHITE, "C", "8")
                 .piece(StandardPieces.ROOK, Player.WHITE, "D", "7")
                 .piece(StandardPieces.KING, Player.WHITE, "C", "1")
                 .starter(Player.BLACK)
                 .build();
-        hydrate(endGame);
+        hydrate(config);
 
         SetMultimap<Square, Move<Square>> allMoves = boardInformation.getAvailableMoves();
 
@@ -77,13 +64,13 @@ public final class ActorInformationTest {
     @Test
     public void testStalemateSituation() {
         // White king is stalemated
-        GameSetting.GridGame<Square, StandardPieces> endGame = ConfigurableGameSetting.builder(8, 8)
+        GameSetting.GridGame<Square, StandardPieces> config = ConfigurableGameSetting.builder(8, 8)
                 .piece(StandardPieces.QUEEN, Player.BLACK, "B", "3")
                 .piece(StandardPieces.KING, Player.BLACK, "D", "3")
                 .piece(StandardPieces.KING, Player.WHITE, "C", "1")
                 .starter(Player.WHITE)
                 .build();
-        hydrate(endGame);
+        hydrate(config);
 
         SetMultimap<Square, Move<Square>> allMoves = boardInformation.getAvailableMoves();
 

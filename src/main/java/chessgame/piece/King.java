@@ -124,6 +124,11 @@ public final class King<P extends PieceClass> extends AbstractPiece<P> {
                             builder.add(constructCastlingMove(kingPosition, rookPosition, TwoDimension.EAST, player));
                         }
                     });
+
+            /* Note: in the case of castling, the move of any rook will never expose king to opponent's latent checkers
+             * however in general all pieces involved in a CompositeMove should be checked it is valid, i.e. its move
+             * does not expose king
+             */
             return builder.build();
         }
 

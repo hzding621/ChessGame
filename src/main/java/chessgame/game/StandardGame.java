@@ -99,30 +99,6 @@ public class StandardGame implements Game<Square, StandardPieces, ChessBoard> {
         return gameStatus;
     }
 
-    public static void main(String[] args) {
-        StandardGame game = StandardGame.constructGame();
-
-        GridCellFactory<Square, TwoDimension> factory = game.getBoard().getGridCellFactory();
-        String[][] moves = new String[][] {
-                {"D", "2", "D", "4"},
-                {"D", "7", "D", "5"},
-                {"E", "2", "E", "4"},
-                {"D", "5", "E", "4"},
-                {"F", "1", "B", "5"},
-                {"C", "7", "C", "6"},
-                {"B", "5", "C", "6"},
-        };
-
-        Collection<Move<Square>> allMoves = null;
-        for (String[] move: moves) {
-            allMoves = game.availableMoves();
-            game.move(SimpleMove.of(factory.at(move[0], move[1]), factory.at(move[2], move[3]), game.getActor()));
-        }
-        allMoves = game.availableMoves();
-
-        System.out.println("Game Over!");
-    }
-
     private static final String[][][] testCases = {
             {
                     {"F", "2", "F", "3"},

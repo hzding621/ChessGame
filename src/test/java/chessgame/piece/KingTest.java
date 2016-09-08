@@ -29,7 +29,7 @@ import java.util.Set;
 public class KingTest {
 
     private Square.Builder builder;
-    private ChessBoard testBoard = new ChessBoard(new StandardSetting());;
+    private ChessBoard testBoard = new ChessBoard(new StandardSetting());
     private PieceInformation<Square, StandardPieces> pieceInformation = new PieceInformation<Square, StandardPieces>() {
         @Override
         public int getPieceMoveCount(Piece<StandardPieces> piece) {
