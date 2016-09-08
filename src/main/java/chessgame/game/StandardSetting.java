@@ -2,7 +2,14 @@ package chessgame.game;
 
 import chessgame.board.Coordinate;
 import chessgame.board.Square;
-import chessgame.piece.*;
+import chessgame.piece.Bishop;
+import chessgame.piece.King;
+import chessgame.piece.Knight;
+import chessgame.piece.Pawn;
+import chessgame.piece.Piece;
+import chessgame.piece.Queen;
+import chessgame.piece.Rook;
+import chessgame.piece.StandardPieces;
 import chessgame.player.Player;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Lists;
@@ -14,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
 
 /**
  * Represents a standard 8x8 chess piece set

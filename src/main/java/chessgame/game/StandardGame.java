@@ -1,21 +1,16 @@
 package chessgame.game;
 
 import chessgame.board.ChessBoard;
-import chessgame.board.GridCellFactory;
 import chessgame.board.Square;
-import chessgame.board.TwoDimension;
 import chessgame.move.Move;
 import chessgame.move.MoveResult;
-import chessgame.move.SimpleMove;
-import chessgame.piece.*;
+import chessgame.piece.StandardPieces;
 import chessgame.player.Player;
-import chessgame.rule.BasicRuleBindings;
 import chessgame.rule.Rules;
 import chessgame.rule.StandardRuleBindings;
 import com.google.common.collect.ImmutableList;
 
 import java.util.Collection;
-
 
 /**
  * The standard chess game

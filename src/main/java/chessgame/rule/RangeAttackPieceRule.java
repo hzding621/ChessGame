@@ -3,16 +3,11 @@ package chessgame.rule;
 import chessgame.board.Cell;
 import chessgame.board.Direction;
 import chessgame.board.GridViewer;
-import chessgame.board.TwoDimension;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
-import utility.CollectionUtils;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**

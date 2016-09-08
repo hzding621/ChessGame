@@ -29,10 +29,8 @@ public class ActorInformationImpl<C extends Cell, P extends PieceClass, B extend
         Player actor = playerInformation.getActor();
         availableMoves.clear();
 
-        board.getPiecesForPlayer(actor)
-                .stream()
-                .forEach(sourcePosition -> availableMoves.putAll(sourcePosition,
-                        rules.computeAvailableMoves(board, sourcePosition, actor, defenderInformation)));
+        board.getPiecesForPlayer(actor).forEach(sourcePosition -> availableMoves.putAll(sourcePosition,
+                rules.computeAvailableMoves(board, sourcePosition, actor, defenderInformation)));
     }
 
     @Override

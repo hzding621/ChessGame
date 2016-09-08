@@ -1,6 +1,6 @@
 package chessgame.game;
 
-import chessgame.board.GridCellFactory;
+import chessgame.board.GridCellBuilder;
 import chessgame.board.RectangularBoard;
 import chessgame.board.Square;
 import chessgame.board.TwoDimension;
@@ -15,7 +15,7 @@ import com.google.common.collect.ImmutableList;
 public class InformationAbstractTest {
 
     protected RectangularBoard<StandardPieces> testBoard;
-    protected GridCellFactory<Square, TwoDimension> cell;
+    protected GridCellBuilder<Square, TwoDimension> cell;
     protected Rules<Square, StandardPieces, RectangularBoard<StandardPieces>> rules;
     protected BoardInformation<Square, StandardPieces, RectangularBoard<StandardPieces>> boardInformation;
 

@@ -5,7 +5,6 @@ import chessgame.board.Cell;
 import chessgame.piece.PieceClass;
 import chessgame.rule.Attack;
 import chessgame.rule.LatentAttack;
-import chessgame.rule.Rules;
 
 import java.util.Set;
 

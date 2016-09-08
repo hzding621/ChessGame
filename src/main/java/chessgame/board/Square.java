@@ -46,6 +46,12 @@ public class Square implements Cell {
         throw new IllegalArgumentException("Should never reach here!");
     }
 
+    public Builder builder(int fileLength, int rankLength) {
+        Coordinate.Builder fileBuilder = new Coordinate.Builder(fileLength);
+        Coordinate.Builder rankBuilder = new Coordinate.Builder(rankLength);
+        return new Builder(fileBuilder, rankBuilder);
+    }
+
     @Override
     public String toString() {
         return file.toString() + rank.toString();
@@ -63,7 +69,7 @@ public class Square implements Cell {
         return this.rank.compareTo(that.rank);
     }
 
-    public static final class Builder implements GridCellFactory<Square, TwoDimension> {
+    public static final class Builder implements GridCellBuilder<Square, TwoDimension> {
         private final Coordinate.Builder rankBuilder;
         private final Coordinate.Builder fileBuilder;
 

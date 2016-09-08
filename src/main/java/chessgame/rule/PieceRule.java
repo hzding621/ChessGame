@@ -1,9 +1,5 @@
 package chessgame.rule;
 
-/**
- * Interface for moving rule for a certain type of piece
- */
-
 import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
 import chessgame.piece.PieceClass;

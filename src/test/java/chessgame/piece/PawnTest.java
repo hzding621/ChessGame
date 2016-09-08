@@ -17,7 +17,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Collection;
 
-
 /**
  * Contains tests for Pawn
  */

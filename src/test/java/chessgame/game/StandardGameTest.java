@@ -1,6 +1,6 @@
 package chessgame.game;
 
-import chessgame.board.GridCellFactory;
+import chessgame.board.GridCellBuilder;
 import chessgame.board.Square;
 import chessgame.board.TwoDimension;
 import chessgame.move.SimpleMove;
@@ -8,15 +8,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collection;
-
 /**
  * Test the computation of available moves in a standard chess game
  */
 public class StandardGameTest {
 
     private StandardGame game;
-    private GridCellFactory<Square, TwoDimension> cell;
+    private GridCellBuilder<Square, TwoDimension> cell;
 
     @Before
     public void initializeGame() {

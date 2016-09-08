@@ -1,6 +1,5 @@
 package chessgame.board;
 
-import chessgame.game.GameSetting;
 import chessgame.game.StandardSetting;
 import chessgame.piece.*;
 

@@ -4,7 +4,6 @@ import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
 import chessgame.move.Move;
 import chessgame.piece.PieceClass;
-import chessgame.rule.Rules;
 import com.google.common.collect.SetMultimap;
 
 /**

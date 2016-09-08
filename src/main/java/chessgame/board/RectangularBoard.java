@@ -4,7 +4,6 @@ import chessgame.piece.Piece;
 import chessgame.game.GameSetting;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
-import com.google.common.collect.ImmutableCollection;
 import utility.CollectionUtils;
 
 import java.util.ArrayList;
@@ -12,7 +11,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-
 
 /**
  * Represents an abstract rectangular board
@@ -156,7 +154,7 @@ public class RectangularBoard<P extends PieceClass>
     }
 
     @Override
-    public GridCellFactory<Square, TwoDimension> getGridCellFactory() {
+    public GridCellBuilder<Square, TwoDimension> getGridCellFactory() {
         return cellBuilder;
     }
 

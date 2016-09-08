@@ -1,6 +1,7 @@
 package chessgame.rule;
 
-import chessgame.board.*;
+import chessgame.board.BoardViewer;
+import chessgame.board.Cell;
 import chessgame.piece.PieceClass;
 
 import java.util.HashMap;

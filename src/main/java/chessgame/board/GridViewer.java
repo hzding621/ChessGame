@@ -99,5 +99,5 @@ public interface GridViewer<C extends Cell, D extends Direction, P extends Piece
      * Return the cell factory of this grid. Can be used to construct cell for querying the grid.
      * @return The cell factory of this grid
      */
-    GridCellFactory<C, D> getGridCellFactory();
+    GridCellBuilder<C, D> getGridCellFactory();
 }

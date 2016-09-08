@@ -1,9 +1,5 @@
 package chessgame.piece;
 
-/**
- * Class that implements Knight piece moving logic
- */
-
 import chessgame.board.Cell;
 import chessgame.board.Direction;
 import chessgame.board.GridViewer;
@@ -15,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-
 
 /**
  * Class that implements Knight piece moving logic
@@ -52,11 +47,10 @@ public final class Knight<P extends PieceClass> extends AbstractPiece<P> {
         @Override
         public Collection<C> attacking(C position, Player player) {
             final List<C> targets = new ArrayList<>();
-            boardViewer.getOrthogonalDirections().stream()
-                .forEach(direction ->{
-                        knightStyle(boardViewer, position, direction, true).ifPresent(targets::add);
-                        knightStyle(boardViewer, position, direction, false).ifPresent(targets::add);
-                });
+            boardViewer.getOrthogonalDirections().forEach(direction -> {
+                knightStyle(boardViewer, position, direction, true).ifPresent(targets::add);
+                knightStyle(boardViewer, position, direction, false).ifPresent(targets::add);
+            });
             return targets;
         }
 

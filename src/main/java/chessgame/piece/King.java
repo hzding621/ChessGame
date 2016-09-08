@@ -1,15 +1,22 @@
 package chessgame.piece;
 
-import chessgame.board.*;
+import chessgame.board.Cell;
+import chessgame.board.ChessBoard;
+import chessgame.board.Direction;
+import chessgame.board.GridViewer;
+import chessgame.board.Square;
+import chessgame.board.TwoDimension;
 import chessgame.game.DefenderInformation;
 import chessgame.game.PieceInformation;
 import chessgame.move.Castling;
 import chessgame.move.Move;
 import chessgame.move.SimpleMove;
 import chessgame.player.Player;
-import chessgame.rule.*;
+import chessgame.rule.AbstractPieceRule;
+import chessgame.rule.RequiresDefenderInformation;
+import chessgame.rule.RequiresPieceInformation;
+import chessgame.rule.SpecialMovePieceRule;
 import com.google.common.collect.ImmutableList;
-import utility.CollectionUtils;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -113,15 +120,13 @@ public final class King<P extends PieceClass> extends AbstractPiece<P> {
             Optional<Square> rightBound = boardViewer.firstOccupant(kingPosition, TwoDimension.EAST);
 
             final ImmutableList.Builder<Move<Square>> builder = ImmutableList.builder();
-            boardViewer.getPiecesOfTypeForPlayer(StandardPieces.ROOK, player)
-                    .stream()
-                    .forEach(rookPosition -> {
-                        if (leftBound.isPresent() && rookPosition.equals(leftBound.get())) {
-                            builder.add(constructCastlingMove(kingPosition, rookPosition, TwoDimension.WEST, player));
-                        } else if (rightBound.isPresent() && rookPosition.equals(rightBound.get())) {
-                            builder.add(constructCastlingMove(kingPosition, rookPosition, TwoDimension.EAST, player));
-                        }
-                    });
+            boardViewer.getPiecesOfTypeForPlayer(StandardPieces.ROOK, player).forEach(rookPosition -> {
+                if (leftBound.isPresent() && rookPosition.equals(leftBound.get())) {
+                    builder.add(constructCastlingMove(kingPosition, rookPosition, TwoDimension.WEST, player));
+                } else if (rightBound.isPresent() && rookPosition.equals(rightBound.get())) {
+                    builder.add(constructCastlingMove(kingPosition, rookPosition, TwoDimension.EAST, player));
+                }
+            });
 
             /* Note: in the case of castling, the move of any rook will never expose king to opponent's latent checkers
              * however in general all pieces involved in a CompositeMove should be checked it is valid, i.e. its move

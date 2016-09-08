@@ -1,7 +1,6 @@
 package chessgame.game;
 
 import chessgame.board.Cell;
-import chessgame.move.MoveResult;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;

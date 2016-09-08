@@ -1,6 +1,6 @@
 package chessgame.game;
 
-import chessgame.board.*;
+import chessgame.board.Square;
 import chessgame.piece.StandardPieces;
 import chessgame.player.Player;
 import org.junit.Assert;

@@ -12,7 +12,6 @@ import com.google.common.collect.*;
 import java.util.Set;
 import java.util.TreeSet;
 
-
 /**
  * Default implementation of DefenderInformation
  */

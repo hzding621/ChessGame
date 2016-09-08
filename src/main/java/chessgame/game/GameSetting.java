@@ -1,14 +1,12 @@
 package chessgame.game;
 
 import chessgame.board.Cell;
-import chessgame.board.PieceLocator;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Represents a certain kind of chess piece set with board configuration

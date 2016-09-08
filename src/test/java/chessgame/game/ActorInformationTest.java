@@ -1,13 +1,10 @@
 package chessgame.game;
 
-import chessgame.board.*;
+import chessgame.board.Square;
 import chessgame.move.Move;
 import chessgame.move.SimpleMove;
 import chessgame.piece.StandardPieces;
 import chessgame.player.Player;
-import chessgame.rule.BasicRuleBindings;
-import chessgame.rule.Rules;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.SetMultimap;
 import org.junit.Assert;
 import org.junit.Test;

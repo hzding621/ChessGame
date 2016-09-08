@@ -5,7 +5,7 @@ import java.util.Optional;
 /**
  * Builder interface for constructing cells used for grid
  */
-public interface GridCellFactory<C extends Cell, D extends Direction> {
+public interface GridCellBuilder<C extends Cell, D extends Direction> {
 
     /**
      * @param file String representation of the file, by alphabetic letters, i.e. 'A', 'B','a', 'b', etc.

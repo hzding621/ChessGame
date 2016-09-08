@@ -3,7 +3,8 @@ package chessgame.piece;
 import chessgame.player.Player;
 
 /**
- * Represents an abstract chess piece that belongs to a piece type. Should be board-ignorant.
+ * Represents an abstract chess piece that belongs to a piece type.
+ * Pieces should NOT store position information to avoid state duplication.
  * Different concrete piece types should inherit this type.
  */
 public interface Piece<P extends PieceClass> {
