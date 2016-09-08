@@ -12,22 +12,28 @@ import java.util.*;
 /**
  * Represents a customized board configuration. Used for testing purposes.
  */
-public final class ConfigurableGameSetting implements GameSetting<Square, StandardPieces> {
+public final class ConfigurableGameSetting implements GameSetting.GridGame<Square, StandardPieces> {
 
     private final Set<StandardPieces> supportedTypes;
     private final Map<Player, Map<StandardPieces, Collection<PieceLocator<Square, StandardPieces>>>> locators;
     private final Map<Player, Square> kingStartingPositions;
     private final Player starter;
+    private final int fileLength;
+    private final int rankLength;
 
     private ConfigurableGameSetting(Set<StandardPieces> supportedTypes,
                                     Map<Player, Map<StandardPieces, Collection<PieceLocator<Square, StandardPieces
                                             >>>> locators,
                                     Map<Player, Square> kingStartingPositions,
-                                    Player starter) {
+                                    Player starter,
+                                    int fileLength,
+                                    int rankLength) {
         this.supportedTypes = supportedTypes;
         this.locators = locators;
         this.kingStartingPositions = kingStartingPositions;
         this.starter = starter;
+        this.fileLength = fileLength;
+        this.rankLength = rankLength;
     }
 
     @Override
@@ -60,8 +66,20 @@ public final class ConfigurableGameSetting implements GameSetting<Square, Standa
         return starter;
     }
 
+    @Override
+    public int getRankLength() {
+        return rankLength;
+    }
+
+    @Override
+    public int getFileLength() {
+        return fileLength;
+    }
+
     public static final class Builder {
 
+        private final int fileLength;
+        private final int rankLength;
         private final Square.Builder builder;
         private final Map<Player, Map<StandardPieces, Collection<PieceLocator<Square,
                 StandardPieces>>>> locators = new HashMap<>();
@@ -71,11 +89,14 @@ public final class ConfigurableGameSetting implements GameSetting<Square, Standa
 
         private Builder(int fileLength, int rankLength) {
             this.builder = new Square.Builder(new Coordinate.Builder(fileLength), new Coordinate.Builder(rankLength));
+            this.fileLength = fileLength;
+            this.rankLength = rankLength;
         }
 
         public Builder piece(StandardPieces type, Player player, String file, String rank) {
             Square cell = builder.at(file, rank);
-            return piece(type, player, cell.getFile().getCoordinate().getIndex(), cell.getRank().getCoordinate().getIndex());
+            return piece(type, player, cell.getFile().getCoordinate().getIndex(),
+                    cell.getRank().getCoordinate().getIndex());
         }
 
         public Builder piece(StandardPieces type, Player player, int file, int rank) {
@@ -102,7 +123,8 @@ public final class ConfigurableGameSetting implements GameSetting<Square, Standa
             if (!kingPositions.containsKey(Player.WHITE) || !kingPositions.containsKey(Player.BLACK)) {
                 throw new IllegalStateException("Kings must be set.");
             }
-            return new ConfigurableGameSetting(pieceTypeCount.keySet(), locators, kingPositions, starter);
+            return new ConfigurableGameSetting(pieceTypeCount.keySet(), locators, kingPositions, starter,
+                    fileLength, rankLength);
         }
     }
 }

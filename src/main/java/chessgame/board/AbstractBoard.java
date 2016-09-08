@@ -56,13 +56,21 @@ public class AbstractBoard<C extends Cell, P extends PieceClass> implements Boar
     }
 
     @Override
-    public Piece<P> clearPiece(C cell) {
-        Optional<Piece<P>> previousPiece = getPiece(cell);
+    public Piece<P> clearPiece(C position) {
+        Optional<Piece<P>> previousPiece = getPiece(position);
         if (!previousPiece.isPresent()) {
             throw new IllegalStateException("Try to clear a cell that is already empty!");
         }
-        occupants.remove(cell);
+        occupants.remove(position);
         return previousPiece.get();
+    }
+
+    @Override
+    public void addPiece(C position, Piece<P> piece) {
+        if (isOccupied(position)) {
+            throw new IllegalStateException("The position " + position + " is already occupied!");
+        }
+        occupants.put(position, piece);
     }
 
     @Override

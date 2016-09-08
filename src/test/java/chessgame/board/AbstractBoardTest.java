@@ -34,8 +34,8 @@ public final class AbstractBoardTest {
     @Test
     public void testGetPiece() {
         Piece<KingPawn> p = testBoard.getPiece(builder.at(1,0)).get();
-        Assert.assertEquals(p.getPieceClass(), KingPawn.PAWN);
-        Assert.assertEquals(p.getPlayer(), Player.WHITE);
+        Assert.assertEquals(KingPawn.PAWN, p.getPieceClass());
+        Assert.assertEquals(Player.WHITE, p.getPlayer());
 
         Assert.assertFalse(testBoard.getPiece(builder.at(0,0)).isPresent());
     }
@@ -44,7 +44,7 @@ public final class AbstractBoardTest {
     public void testMovePieceToEmptyCell() {
         Piece<KingPawn> p = testBoard.movePiece(builder.at(1, 0), builder.at(1, 1));
         Assert.assertFalse(testBoard.getPiece(builder.at(1, 0)).isPresent());
-        Assert.assertEquals(testBoard.getPiece(builder.at(1,1)).get(), p);
+        Assert.assertEquals(p, testBoard.getPiece(builder.at(1,1)).get());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -66,13 +66,13 @@ public final class AbstractBoardTest {
     @Test
     public void testGetPiecesForPlayer() {
         Collection<Square> locators = testBoard.getPiecesForPlayer(KingPawn.KING, Player.WHITE);
-        Assert.assertEquals(locators.size(), 1);
+        Assert.assertEquals(1, locators.size());
     }
 
     @Test
     public void testGetAllPiecesForPlayer() {
         Collection<Square> locators = testBoard.getAllPiecesForPlayer(Player.WHITE);
-        Assert.assertEquals(locators.size(), 2);
+        Assert.assertEquals(2, locators.size());
     }
 
 }

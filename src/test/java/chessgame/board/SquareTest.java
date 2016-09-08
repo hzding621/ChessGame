@@ -27,8 +27,8 @@ public class SquareTest {
 
         Square a = builder.at(2, 2);
         Square b = builder.at(3, 3);
-        Assert.assertEquals(Square.findDirection(a, b), TwoDimension.NORTHEAST);
-        Assert.assertEquals(Square.findDirection(b, a), TwoDimension.SOUTHWEST);
+        Assert.assertEquals(TwoDimension.NORTHEAST, Square.findDirection(a, b));
+        Assert.assertEquals(TwoDimension.SOUTHWEST, Square.findDirection(b, a));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -61,7 +61,7 @@ public class SquareTest {
         Square cell = builder.at(3,3);
         for (int i = 0; i < answers.length; i++) {
             Square moved = builder.moveOnce(cell, dirs[i]).get();
-            Assert.assertEquals(moved, builder.at(answers[i][0], answers[i][1]));
+            Assert.assertEquals(builder.at(answers[i][0], answers[i][1]), moved);
         }
     }
 

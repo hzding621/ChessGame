@@ -12,11 +12,16 @@ import java.util.*;
 /**
  * Represents an abstract rectangular board
  */
-public abstract class RectangularBoard<P extends PieceClass>
+public class RectangularBoard<P extends PieceClass>
         extends AbstractBoard<Square, P> implements GridViewer<Square, TwoDimension, P> {
 
-    protected RectangularBoard(GameSetting<Square, P> gameSetting) {
+    private final Square.Builder cellBuilder;
+
+    public RectangularBoard(GameSetting.GridGame<Square, P> gameSetting) {
         super(gameSetting);
+        final Coordinate.Builder fileBuilder = new Coordinate.Builder(gameSetting.getFileLength());
+        final Coordinate.Builder rankBuilder = new Coordinate.Builder(gameSetting.getRankLength());
+        this.cellBuilder = new Square.Builder(fileBuilder, rankBuilder);
     }
 
     @Override
@@ -101,5 +106,10 @@ public abstract class RectangularBoard<P extends PieceClass>
             getGridCellFactory().moveOnce(startCell, dir).ifPresent(list::add);
         }
         return list;
+    }
+
+    @Override
+    public GridCellFactory<Square, TwoDimension> getGridCellFactory() {
+        return cellBuilder;
     }
 }

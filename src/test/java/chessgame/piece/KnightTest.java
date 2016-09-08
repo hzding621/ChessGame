@@ -2,6 +2,7 @@ package chessgame.piece;
 
 import chessgame.board.ChessBoard;
 import chessgame.board.Coordinate;
+import chessgame.board.RectangularBoard;
 import chessgame.board.Square;
 import chessgame.game.ConfigurableGameSetting;
 import chessgame.player.Player;
@@ -17,7 +18,7 @@ import java.util.Collection;
 public final class KnightTest {
 
     private Square.Builder builder;
-    private ChessBoard testBoard;
+    private RectangularBoard<StandardPieces> testBoard;
 
     @Before
     public void instantiateTestPieceSet() {
@@ -30,7 +31,7 @@ public final class KnightTest {
         // white knight at D4
         // white king at E1
         // black king at E8
-        testBoard = new ChessBoard(ConfigurableGameSetting.builder(8, 8)
+        testBoard = new RectangularBoard<>(ConfigurableGameSetting.builder(8, 8)
                 .piece(StandardPieces.KNIGHT, Player.WHITE, "D", "4")
                 .piece(StandardPieces.KING, Player.WHITE, "E", "1")
                 .piece(StandardPieces.KING, Player.BLACK, "E", "8")
@@ -38,7 +39,7 @@ public final class KnightTest {
         );
         Collection<Square> attacked =
                 new Knight.KnightRule<>(testBoard).attacking(builder.at("D", "4"), Player.WHITE);
-        Assert.assertEquals(attacked.size(), 8);
+        Assert.assertEquals(8, attacked.size());
     }
 
     @Test
@@ -46,7 +47,7 @@ public final class KnightTest {
         // white knight at H1
         // white king at E1
         // black king at E8
-        testBoard = new ChessBoard(ConfigurableGameSetting.builder(8, 8)
+        testBoard = new RectangularBoard<>(ConfigurableGameSetting.builder(8, 8)
                 .piece(StandardPieces.KNIGHT, Player.WHITE, "H", "1")
                 .piece(StandardPieces.KING, Player.WHITE, "E", "1")
                 .piece(StandardPieces.KING, Player.BLACK, "E", "8")
@@ -54,7 +55,7 @@ public final class KnightTest {
         );
         Collection<Square> attacked =
                 new Knight.KnightRule<>(testBoard).attacking(builder.at("H", "1"), Player.WHITE);
-        Assert.assertEquals(attacked.size(), 2);
+        Assert.assertEquals(2, attacked.size());
     }
 
     @Test
@@ -62,7 +63,7 @@ public final class KnightTest {
         // white knight at F6
         // white king at E1
         // black king at E8
-        testBoard = new ChessBoard(ConfigurableGameSetting.builder(8, 8)
+        testBoard = new RectangularBoard<>(ConfigurableGameSetting.builder(8, 8)
                 .piece(StandardPieces.KNIGHT, Player.WHITE, "F", "6")
                 .piece(StandardPieces.KING, Player.WHITE, "E", "1")
                 .piece(StandardPieces.KING, Player.BLACK, "E", "8")
@@ -71,7 +72,7 @@ public final class KnightTest {
         Collection<Square> blockingPositionsWhenAttacking =
                 new Knight.KnightRule<>(testBoard).attackBlockingPositions(
                         builder.at("F", "6"), builder.at("E", "8"), Player.WHITE);
-        Assert.assertEquals(blockingPositionsWhenAttacking.size(), 2);
+        Assert.assertEquals(2, blockingPositionsWhenAttacking.size());
         Assert.assertTrue(blockingPositionsWhenAttacking.contains(builder.at("F", "6")));
         Assert.assertTrue(blockingPositionsWhenAttacking.contains(builder.at("E", "8")));
     }

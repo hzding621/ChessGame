@@ -1,9 +1,6 @@
 package chessgame.game;
 
-import chessgame.board.ChessBoard;
-import chessgame.board.GridCellFactory;
-import chessgame.board.Square;
-import chessgame.board.TwoDimension;
+import chessgame.board.*;
 import chessgame.move.Move;
 import chessgame.piece.StandardPieces;
 import chessgame.player.Player;
@@ -20,16 +17,16 @@ import org.junit.Test;
  */
 public final class ActorInformationTest {
 
-    private ChessBoard testBoard;
+    private RectangularBoard<StandardPieces> testBoard;
     private GridCellFactory<Square, TwoDimension> cell;
-    private Rules<Square, StandardPieces, ChessBoard> rules;
-    private BoardInformation<Square, StandardPieces, ChessBoard> boardInformation;
+    private Rules<Square, StandardPieces, RectangularBoard<StandardPieces>> rules;
+    private BoardInformation<Square, StandardPieces, RectangularBoard<StandardPieces>> boardInformation;
 
-    private void hydrate(GameSetting<Square, StandardPieces> customizedSet) {
+    private void hydrate(GameSetting.GridGame<Square, StandardPieces> customizedSet) {
         boardInformation = new BoardInformation<>(customizedSet);
-        testBoard = new ChessBoard(customizedSet);
+        testBoard = new RectangularBoard<>(customizedSet);
         cell = testBoard.getGridCellFactory();
-        rules = new Rules<>(new ChessRuleBindings(testBoard, boardInformation));
+        rules = new Rules<>(new ChessRuleBindings<>(testBoard, boardInformation));
         boardInformation.updateInformationForThisRound(testBoard, rules, ImmutableList::of, true);
     }
 
@@ -58,7 +55,7 @@ public final class ActorInformationTest {
     @Test
     public void testCheckmateSituation() {
         // Two Rooks on 7th and 8th rank, opponent King in corner
-        GameSetting<Square, StandardPieces> endGame = ConfigurableGameSetting.builder(8, 8)
+        GameSetting.GridGame<Square, StandardPieces> endGame = ConfigurableGameSetting.builder(8, 8)
                 .piece(StandardPieces.KING, Player.BLACK, "H", "8")
                 .piece(StandardPieces.ROOK, Player.WHITE, "C", "8")
                 .piece(StandardPieces.ROOK, Player.WHITE, "D", "7")
@@ -70,13 +67,13 @@ public final class ActorInformationTest {
         SetMultimap<Square, Move<Square>> allMoves = boardInformation.getAvailableMoves();
 
         Assert.assertTrue(allMoves.isEmpty());
-        Assert.assertEquals(boardInformation.getCheckers().size(), 1);
+        Assert.assertEquals(1,boardInformation.getCheckers().size(), 1);
     }
 
     @Test
     public void testStalemateSituation() {
         // White king is stalemated
-        GameSetting<Square, StandardPieces> endGame = ConfigurableGameSetting.builder(8, 8)
+        GameSetting.GridGame<Square, StandardPieces> endGame = ConfigurableGameSetting.builder(8, 8)
                 .piece(StandardPieces.QUEEN, Player.BLACK, "B", "3")
                 .piece(StandardPieces.KING, Player.BLACK, "D", "3")
                 .piece(StandardPieces.KING, Player.WHITE, "C", "1")

@@ -2,6 +2,7 @@ package chessgame.piece;
 
 import chessgame.board.ChessBoard;
 import chessgame.board.Coordinate;
+import chessgame.board.RectangularBoard;
 import chessgame.board.Square;
 import chessgame.game.ConfigurableGameSetting;
 import chessgame.game.PieceInformation;
@@ -19,7 +20,7 @@ import java.util.Collection;
 public final class PawnTest {
 
     private Square.Builder builder;
-    private ChessBoard testBoard;
+    private RectangularBoard<StandardPieces> testBoard;
     private PieceInformation<Square, StandardPieces> pieceInformation;
 
     @Before
@@ -34,7 +35,7 @@ public final class PawnTest {
         // white king at E1
         // black king at E8
 
-        testBoard = new ChessBoard(ConfigurableGameSetting.builder(8, 8)
+        testBoard = new RectangularBoard<>(ConfigurableGameSetting.builder(8, 8)
                 .piece(StandardPieces.PAWN, Player.WHITE, "E", "2")
                 .piece(StandardPieces.KING, Player.WHITE, "E", "1")
                 .piece(StandardPieces.KING, Player.BLACK, "E", "8")
@@ -55,6 +56,6 @@ public final class PawnTest {
 
         Collection<Square> attacked =
                 new Pawn.PawnRule<>(testBoard, pieceInformation).attacking(builder.at("D", "4"), Player.WHITE);
-        Assert.assertEquals(attacked.size(), 2);
+        Assert.assertEquals(2, attacked.size());
     }
 }

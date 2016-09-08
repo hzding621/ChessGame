@@ -2,6 +2,7 @@ package chessgame.piece;
 
 import chessgame.board.ChessBoard;
 import chessgame.board.Coordinate;
+import chessgame.board.RectangularBoard;
 import chessgame.board.Square;
 import chessgame.game.ConfigurableGameSetting;
 import chessgame.game.PieceInformation;
@@ -20,7 +21,7 @@ import java.util.Collection;
 public final class RookTest {
 
     private Square.Builder builder;
-    private ChessBoard testBoard;
+    private RectangularBoard<StandardPieces> testBoard;
     private PieceInformation<Square, StandardPieces> pieceInformation;
 
     @Before
@@ -36,7 +37,7 @@ public final class RookTest {
         // black king at A8
         // black pawn at E5
 
-        testBoard = new ChessBoard(ConfigurableGameSetting.builder(8, 8)
+        testBoard = new RectangularBoard<>(ConfigurableGameSetting.builder(8, 8)
                 .piece(StandardPieces.ROOK, Player.WHITE, "E", "2")
                 .piece(StandardPieces.KING, Player.WHITE, "E", "1")
                 .piece(StandardPieces.KING, Player.BLACK, "E", "8")
@@ -46,13 +47,13 @@ public final class RookTest {
 
         Collection<Square> attacked =
                 new Rook.RookRule<>(testBoard).attacking(builder.at("E", "2"), Player.WHITE);
-        Assert.assertEquals(attacked.size(), 11);
+        Assert.assertEquals(11, attacked.size());
 
         // after removing Pawn E5, also attacking E6, E7, E8
         testBoard.clearPiece(builder.at("E", "5"));
 
         attacked = new Rook.RookRule<>(testBoard).attacking(builder.at("E", "2"), Player.WHITE);
-        Assert.assertEquals(attacked.size(), 14);
+        Assert.assertEquals(14, attacked.size());
         Assert.assertTrue(attacked.contains(builder.at("E", "6")));
         Assert.assertTrue(attacked.contains(builder.at("E", "7")));
         Assert.assertTrue(attacked.contains(builder.at("E", "8")));
@@ -69,7 +70,7 @@ public final class RookTest {
 
         // latent attack, E7 via E5, A3 via C3
 
-        testBoard = new ChessBoard(ConfigurableGameSetting.builder(8, 8)
+        testBoard = new RectangularBoard<>(ConfigurableGameSetting.builder(8, 8)
                 .piece(StandardPieces.ROOK, Player.WHITE, "E", "3")
                 .piece(StandardPieces.PAWN, Player.WHITE, "E", "5")
                 .piece(StandardPieces.KING, Player.BLACK, "E", "7")
@@ -81,7 +82,7 @@ public final class RookTest {
 
         Collection<LatentAttack<Square>> attacked =
                 new Rook.RookRule<>(testBoard).latentAttacking(builder.at("E", "3"), Player.WHITE);
-        Assert.assertEquals(attacked.size(), 2);
+        Assert.assertEquals(2, attacked.size());
         Assert.assertTrue(attacked.stream().anyMatch(at -> at.getAttacked().equals(builder.at("E", "7"))
                 && at.getBlocker().equals(builder.at("E", "5"))));
         Assert.assertTrue(attacked.stream().anyMatch(at -> at.getAttacked().equals(builder.at("A", "3"))

@@ -18,7 +18,7 @@ public class CoordinateTest {
 
     @Test
     public void testConstructCoordinate() {
-        Assert.assertEquals(builder.at(5).getIndex(), 5);
+        Assert.assertEquals(5, builder.at(5).getIndex());
     }
 
     @Test(expected = IllegalStateException.class)

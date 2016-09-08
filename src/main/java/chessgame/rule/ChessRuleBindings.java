@@ -1,22 +1,23 @@
 package chessgame.rule;
 
 import chessgame.board.ChessBoard;
+import chessgame.board.GridViewer;
 import chessgame.board.Square;
+import chessgame.board.TwoDimension;
 import chessgame.game.PieceInformation;
 import chessgame.piece.*;
 
 /**
  * Inherit the empty rule bindings to include standard chess pieces rule mappings
  */
-public final class ChessRuleBindings extends RuleBindings<Square, StandardPieces, ChessBoard>
-implements
-        RequiresBoardView<Square, StandardPieces, ChessBoard>,
-        RequiresPieceInformation<Square, StandardPieces> {
+public final class ChessRuleBindings<B extends GridViewer<Square, TwoDimension, StandardPieces>>
+        extends RuleBindings<Square, StandardPieces, B>
+        implements RequiresBoardView<Square, StandardPieces, B>, RequiresPieceInformation<Square, StandardPieces> {
 
-    private final ChessBoard chessBoard;
+    private final B chessBoard;
     private final PieceInformation<Square, StandardPieces> pieceInformation;
 
-    public ChessRuleBindings(ChessBoard chessBoard,
+    public ChessRuleBindings(B chessBoard,
                              PieceInformation<Square, StandardPieces> pieceInformation)
     {
         this.chessBoard = chessBoard;
@@ -30,7 +31,7 @@ implements
         addRule(StandardPieces.KING, new King.KingRule<>(chessBoard, pieceInformation));
     }
 
-    public ChessBoard getBoardViewer() {
+    public B getBoardViewer() {
         return chessBoard;
     }
 

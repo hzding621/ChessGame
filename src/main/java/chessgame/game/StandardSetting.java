@@ -11,7 +11,7 @@ import java.util.*;
 /**
  * Represents a standard 8x8 chess piece set
  */
-public final class StandardSetting implements GameSetting<Square, StandardPieces> {
+public final class StandardSetting implements GameSetting.GridGame<Square, StandardPieces> {
 
     private final Map<Player, Map<StandardPieces, List<Square>>> configuration = new HashMap<>();
     private final Map<Player, Square> kingStartingPositions = new HashMap<>();
@@ -129,5 +129,15 @@ public final class StandardSetting implements GameSetting<Square, StandardPieces
                                                 + type + " at " + position[0] + "," + position[1]);
             }
         }
+    }
+
+    @Override
+    public int getRankLength() {
+        return 8;
+    }
+
+    @Override
+    public int getFileLength() {
+        return 8;
     }
 }

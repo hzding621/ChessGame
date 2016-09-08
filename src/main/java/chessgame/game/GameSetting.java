@@ -59,4 +59,11 @@ public interface GameSetting<C extends Cell, P extends PieceClass> {
      * @return The first player to make move in this game
      */
     Player starter();
+
+    interface GridGame<C extends Cell, P extends PieceClass> extends GameSetting<C, P> {
+
+        int getRankLength();
+
+        int getFileLength();
+    }
 }

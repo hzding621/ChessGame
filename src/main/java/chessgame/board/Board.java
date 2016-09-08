@@ -12,7 +12,7 @@ public interface Board<C extends Cell, P extends PieceClass> extends BoardViewer
      * Remove the piece at this position
      * @return the previous piece at this position
      */
-    Piece<P> clearPiece(C cell);
+    Piece<P> clearPiece(C position);
 
     /**
      * Move the piece from source to target
@@ -22,4 +22,9 @@ public interface Board<C extends Cell, P extends PieceClass> extends BoardViewer
      * @return The moved piece
      */
     Piece<P> movePiece(C source, C target);
+
+    /**
+     * Add a piece at the given position
+     */
+    void addPiece(C position, Piece<P> piece);
 }
