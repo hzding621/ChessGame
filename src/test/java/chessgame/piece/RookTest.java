@@ -20,7 +20,6 @@ public final class RookTest {
 
     private Square.Builder builder;
     private RectangularBoard<StandardPieces> testBoard;
-    private PieceInformation<Square, StandardPieces> pieceInformation;
 
     @Before
     public void instantiateTestPieceSet() {

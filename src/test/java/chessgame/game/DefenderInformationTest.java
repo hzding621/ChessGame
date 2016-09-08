@@ -3,11 +3,7 @@ package chessgame.game;
 import chessgame.board.*;
 import chessgame.piece.StandardPieces;
 import chessgame.player.Player;
-import chessgame.rule.BasicRuleBindings;
-import chessgame.rule.Rules;
-import com.google.common.collect.ImmutableList;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 /**

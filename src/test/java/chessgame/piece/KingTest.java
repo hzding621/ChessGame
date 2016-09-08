@@ -1,10 +1,9 @@
 package chessgame.piece;
 
+import chessgame.board.Cell;
 import chessgame.board.ChessBoard;
 import chessgame.board.Coordinate;
-import chessgame.board.RectangularBoard;
 import chessgame.board.Square;
-import chessgame.game.ConfigurableGameSetting;
 import chessgame.game.DefenderInformation;
 import chessgame.game.PieceInformation;
 import chessgame.game.StandardSetting;
@@ -12,42 +11,36 @@ import chessgame.move.Castling;
 import chessgame.move.Move;
 import chessgame.move.SimpleMove;
 import chessgame.player.Player;
-import chessgame.rule.Attack;
-import chessgame.rule.LatentAttack;
-import com.google.common.collect.ImmutableSet;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Collection;
-import java.util.Set;
+
+import static org.mockito.Matchers.any;
 
 /**
  * Contains test for King.
  * This class does NOT test check logic, which is handled by rules class
  */
+@RunWith(MockitoJUnitRunner.class)
 public class KingTest {
 
     private Square.Builder builder;
     private ChessBoard testBoard = new ChessBoard(new StandardSetting());
-    private PieceInformation<Square, StandardPieces> pieceInformation = new PieceInformation<Square, StandardPieces>() {
-        @Override
-        public int getPieceMoveCount(Piece<StandardPieces> piece) {
-            return 0;
-        }
-
-        @Override
-        public Square locateKing(Player player) {
-            return player == Player.WHITE ? builder.at("E", "1") : builder.at("E", "8");
-        }
-    };
-
-    private DefenderInformation<Square, StandardPieces, ChessBoard> defenderInformation;
+    @Mock private PieceInformation<Square, StandardPieces> pieceInformation;
+    @Mock private DefenderInformation<Square, StandardPieces, ChessBoard> defenderInformation;
 
     @Before
     public void instantiateTestPieceSet() {
         Coordinate.Builder coordinateBuilder = new Coordinate.Builder(8);
         builder = new Square.Builder(coordinateBuilder, coordinateBuilder);
+        Mockito.when(pieceInformation.locateKing(Player.WHITE)).thenReturn(builder.at("E", "1"));
+        Mockito.when(pieceInformation.locateKing(Player.BLACK)).thenReturn(builder.at("E", "8"));
     }
 
     @Test
@@ -64,20 +57,7 @@ public class KingTest {
 
     @Test
     public void testCastling() {
-        defenderInformation = new DefenderInformation<Square, StandardPieces, ChessBoard>() {
-            @Override
-            public boolean isAttacked(Square cell) {
-                return false;
-            }
-            @Override
-            public Set<Attack<Square>> getCheckers() {
-                return ImmutableSet.of();
-            }
-            @Override
-            public Set<LatentAttack<Square>> getLatentCheckersByBlocker(Square blocker) {
-                return ImmutableSet.of();
-            }
-        };
+        Mockito.when(defenderInformation.isAttacked(any(Square.class))).thenReturn(false);
 
         // Empty the spaces between king and queen-side rook
         testBoard.movePiece(builder.at("D", "1"), builder.at("D", "3"));

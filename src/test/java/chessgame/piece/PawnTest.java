@@ -11,17 +11,24 @@ import chessgame.player.Player;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Collection;
+
+import static org.mockito.Matchers.any;
 
 /**
  * Contains tests for Pawn
  */
+@RunWith(MockitoJUnitRunner.class)
 public final class PawnTest {
 
     private Square.Builder builder;
     private RectangularBoard<StandardPieces> testBoard;
-    private PieceInformation<Square, StandardPieces> pieceInformation;
+    @Mock private PieceInformation<Square, StandardPieces> pieceInformation;
 
     @Before
     public void instantiateTestPieceSet() {
@@ -42,17 +49,9 @@ public final class PawnTest {
                 .build()
         );
 
-        pieceInformation= new PieceInformation<Square, StandardPieces>() {
-            @Override
-            public int getPieceMoveCount(Piece<StandardPieces> piece) {
-                return 0;
-            }
-
-            @Override
-            public Square locateKing(Player player) {
-                return player == Player.WHITE ? builder.at("E", "1") : builder.at("E", "8");
-            }
-        };
+        Mockito.when(pieceInformation.getPieceMoveCount(any(Piece.class))).thenReturn(0);
+        Mockito.when(pieceInformation.locateKing(Player.WHITE)).thenReturn(builder.at("E", "1"));
+        Mockito.when(pieceInformation.locateKing(Player.BLACK)).thenReturn(builder.at("E", "8"));
 
         Collection<Square> attacked =
                 new Pawn.PawnRule<>(testBoard, pieceInformation).attacking(builder.at("D", "4"), Player.WHITE);

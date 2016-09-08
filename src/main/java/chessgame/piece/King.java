@@ -7,10 +7,7 @@ import chessgame.move.Castling;
 import chessgame.move.Move;
 import chessgame.move.SimpleMove;
 import chessgame.player.Player;
-import chessgame.rule.AbstractPieceRule;
-import chessgame.rule.RequiresDefenderInformation;
-import chessgame.rule.RequiresPieceInformation;
-import chessgame.rule.SpecialMovePieceRule;
+import chessgame.rule.*;
 import com.google.common.collect.ImmutableList;
 import utility.CollectionUtils;
 
