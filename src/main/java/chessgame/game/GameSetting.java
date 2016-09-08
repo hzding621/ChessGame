@@ -2,6 +2,7 @@ package chessgame.game;
 
 import chessgame.board.Cell;
 import chessgame.board.PieceLocator;
+import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 
@@ -15,34 +16,14 @@ import java.util.stream.Collectors;
 public interface GameSetting<C extends Cell, P extends PieceClass> {
 
     /**
-     * Create all pieces in this game setting. Used to populate the chess board
-     * @return all starting pieces in this game setting
+     * @return all starting pieces in this game setting by starting position
      */
-    default Collection<PieceLocator<C, P>> constructAllPieces() {
-        Collection<PieceLocator<C, P>> locators = getSupportedTypes()
-                .stream()
-                .flatMap(type -> getPlayers()
-                        .stream()
-                        .flatMap(player ->
-                                constructPiecesOfTypeAndPlayer(type, player)
-                                        .stream()
-
-                        )
-                )
-                .collect(Collectors.toList());
-        return locators;
-    }
+    Map<C, Piece<P>> constructAllPiecesByStartingPosition();
 
     /**
      * @return all supported piece types in this game
      */
     Collection<P> getSupportedTypes();
-
-    /**
-     * Create pieces of certain type and certain player in this game setting. Used to populate the chess board
-     * @return all PieceLocator of create pieces
-     */
-    Collection<PieceLocator<C, P>> constructPiecesOfTypeAndPlayer(P type, Player player);
 
     /**
      * @return starting position of kings for each player
@@ -58,7 +39,7 @@ public interface GameSetting<C extends Cell, P extends PieceClass> {
     /**
      * @return The first player to make move in this game
      */
-    Player starter();
+    Player getStarter();
 
     interface GridGame<C extends Cell, P extends PieceClass> extends GameSetting<C, P> {
 

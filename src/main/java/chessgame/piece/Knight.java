@@ -11,7 +11,11 @@ import chessgame.player.Player;
 import chessgame.rule.AbstractPieceRule;
 import com.google.common.collect.ImmutableList;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+
 
 /**
  * Class that implements Knight piece moving logic

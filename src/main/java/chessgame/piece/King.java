@@ -11,7 +11,8 @@ import chessgame.rule.*;
 import com.google.common.collect.ImmutableList;
 import utility.CollectionUtils;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**

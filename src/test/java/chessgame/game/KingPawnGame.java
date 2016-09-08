@@ -8,8 +8,13 @@ import chessgame.piece.Pawn;
 import chessgame.piece.Piece;
 import chessgame.player.Player;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.eventbus.Subscribe;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A 4x4 toy peice set that is used for testing purposes
@@ -27,35 +32,34 @@ public final class KingPawnGame implements GameSetting<Square, KingPawn> {
     }
 
     @Override
+    public Map<Square, Piece<KingPawn>> constructAllPiecesByStartingPosition() {
+        return ImmutableMap.<Square, Piece<KingPawn>>builder()
+                .put(builder.at(1, 0), whitePawn)
+                .put(builder.at(2, 0), whiteKing)
+                .put(builder.at(1, 3), blackPawn)
+                .put(builder.at(2, 3), blackKing)
+                .build();
+    }
+
+    @Override
     public Collection<KingPawn> getSupportedTypes() {
         return Collections.singleton(KingPawn.PAWN);
     }
 
     @Override
-    public Collection<PieceLocator<Square, KingPawn>>
-    constructPiecesOfTypeAndPlayer(KingPawn type, Player player) {
-        return player == Player.WHITE
-                ? ImmutableList.of(PieceLocator.of(builder.at(1,0), whitePawn),
-                PieceLocator.of(builder.at(2,0), whiteKing))
-                : ImmutableList.of(PieceLocator.of(builder.at(1,3), blackPawn),
-                PieceLocator.of(builder.at(2,3), blackKing));
-    }
-
-    @Override
     public Map<Player, Square> getKingStartingPositions() {
-        Map<Player, Square> map = new HashMap<>();
-        map.put(Player.WHITE, builder.at(2, 0));
-        map.put(Player.BLACK, builder.at(2, 3));
-        return map;
+        ImmutableMap.Builder<Player, Square> map = ImmutableMap.builder();
+        map.put(Player.WHITE, builder.at(2, 0)).put(Player.BLACK, builder.at(2, 3));
+        return map.build();
     }
 
     @Override
     public Collection<Player> getPlayers() {
-        return Arrays.asList(Player.WHITE, Player.BLACK);
+        return ImmutableList.of(Player.WHITE, Player.BLACK);
     }
 
     @Override
-    public Player starter() {
+    public Player getStarter() {
         return Player.WHITE;
     }
 };

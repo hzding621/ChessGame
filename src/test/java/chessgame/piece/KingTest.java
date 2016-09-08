@@ -1,6 +1,5 @@
 package chessgame.piece;
 
-import chessgame.board.Cell;
 import chessgame.board.ChessBoard;
 import chessgame.board.Coordinate;
 import chessgame.board.Square;
@@ -20,8 +19,6 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Collection;
-
-import static org.mockito.Matchers.any;
 
 /**
  * Contains test for King.
@@ -57,7 +54,7 @@ public class KingTest {
 
     @Test
     public void testCastling() {
-        Mockito.when(defenderInformation.isAttacked(any(Square.class))).thenReturn(false);
+        Mockito.when(defenderInformation.isAttacked(Mockito.any(Square.class))).thenReturn(false);
 
         // Empty the spaces between king and queen-side rook
         testBoard.movePiece(builder.at("D", "1"), builder.at("D", "3"));

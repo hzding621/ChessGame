@@ -9,7 +9,9 @@ import chessgame.rule.LatentAttack;
 import chessgame.rule.Rules;
 import com.google.common.collect.*;
 
-import java.util.*;
+import java.util.Set;
+import java.util.TreeSet;
+
 
 /**
  * Default implementation of DefenderInformation

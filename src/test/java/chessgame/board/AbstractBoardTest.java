@@ -1,13 +1,14 @@
 package chessgame.board;
 
 import chessgame.game.KingPawnGame;
-import chessgame.piece.*;
+import chessgame.piece.KingPawn;
+import chessgame.piece.Piece;
 import chessgame.player.Player;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.Collection;
 
 /**
  * Contains tests for AbstractBoard

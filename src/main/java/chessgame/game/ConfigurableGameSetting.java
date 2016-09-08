@@ -6,8 +6,15 @@ import chessgame.board.Square;
 import chessgame.piece.StandardPieces;
 import chessgame.piece.Piece;
 import chessgame.player.Player;
+import com.google.common.collect.ImmutableList;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 
 /**
  * Represents a customized board configuration. Used for testing purposes.
@@ -15,21 +22,20 @@ import java.util.*;
 public final class ConfigurableGameSetting implements GameSetting.GridGame<Square, StandardPieces> {
 
     private final Set<StandardPieces> supportedTypes;
-    private final Map<Player, Map<StandardPieces, Collection<PieceLocator<Square, StandardPieces>>>> locators;
+    private final Map<Square, Piece<StandardPieces>> piecesByPosition;
     private final Map<Player, Square> kingStartingPositions;
     private final Player starter;
     private final int fileLength;
     private final int rankLength;
 
     private ConfigurableGameSetting(Set<StandardPieces> supportedTypes,
-                                    Map<Player, Map<StandardPieces, Collection<PieceLocator<Square, StandardPieces
-                                            >>>> locators,
+                                    Map<Square, Piece<StandardPieces>> piecesByPosition,
                                     Map<Player, Square> kingStartingPositions,
                                     Player starter,
                                     int fileLength,
                                     int rankLength) {
         this.supportedTypes = supportedTypes;
-        this.locators = locators;
+        this.piecesByPosition = piecesByPosition;
         this.kingStartingPositions = kingStartingPositions;
         this.starter = starter;
         this.fileLength = fileLength;
@@ -37,14 +43,13 @@ public final class ConfigurableGameSetting implements GameSetting.GridGame<Squar
     }
 
     @Override
-    public Collection<StandardPieces> getSupportedTypes() {
-        return supportedTypes;
+    public Map<Square, Piece<StandardPieces>> constructAllPiecesByStartingPosition() {
+        return piecesByPosition;
     }
 
     @Override
-    public Collection<PieceLocator<Square, StandardPieces>>
-    constructPiecesOfTypeAndPlayer(StandardPieces type, Player player) {
-        return locators.getOrDefault(player, Collections.emptyMap()).getOrDefault(type, Collections.emptySet());
+    public Collection<StandardPieces> getSupportedTypes() {
+        return supportedTypes;
     }
 
     @Override
@@ -54,7 +59,7 @@ public final class ConfigurableGameSetting implements GameSetting.GridGame<Squar
 
     @Override
     public Collection<Player> getPlayers() {
-        return Arrays.asList(Player.WHITE, Player.BLACK);
+        return ImmutableList.of(Player.WHITE, Player.BLACK);
     }
 
     public static Builder builder(int fileLength, int rankLength) {
@@ -62,7 +67,7 @@ public final class ConfigurableGameSetting implements GameSetting.GridGame<Squar
     }
 
     @Override
-    public Player starter() {
+    public Player getStarter() {
         return starter;
     }
 
@@ -81,8 +86,7 @@ public final class ConfigurableGameSetting implements GameSetting.GridGame<Squar
         private final int fileLength;
         private final int rankLength;
         private final Square.Builder builder;
-        private final Map<Player, Map<StandardPieces, Collection<PieceLocator<Square,
-                StandardPieces>>>> locators = new HashMap<>();
+        private final Map<Square, Piece<StandardPieces>> piecesByPosition = new HashMap<>();
         private final Map<StandardPieces, Integer> pieceTypeCount = new HashMap<>();
         private final Map<Player, Square> kingPositions = new HashMap<>();
         private Player starter = Player.WHITE;
@@ -107,10 +111,12 @@ public final class ConfigurableGameSetting implements GameSetting.GridGame<Squar
                 kingPositions.put(player, builder.at(file, rank));
             }
             pieceTypeCount.put(type, pieceTypeCount.getOrDefault(type, 0) + 1);
+            Square position = builder.at(file, rank);
+            if (piecesByPosition.containsKey(position)) {
+                throw new IllegalStateException("Piece at " + position + " is already set!");
+            }
             Piece<StandardPieces> piece = StandardSetting.createPiece(type, player, pieceTypeCount.get(type));
-            locators.putIfAbsent(player, new HashMap<>());
-            locators.get(player).putIfAbsent(type, new HashSet<>());
-            locators.get(player).get(type).add(PieceLocator.of(builder.at(file, rank), piece));
+            piecesByPosition.put(position, piece);
             return this;
         }
 
@@ -123,7 +129,7 @@ public final class ConfigurableGameSetting implements GameSetting.GridGame<Squar
             if (!kingPositions.containsKey(Player.WHITE) || !kingPositions.containsKey(Player.BLACK)) {
                 throw new IllegalStateException("Kings must be set.");
             }
-            return new ConfigurableGameSetting(pieceTypeCount.keySet(), locators, kingPositions, starter,
+            return new ConfigurableGameSetting(pieceTypeCount.keySet(), piecesByPosition, kingPositions, starter,
                     fileLength, rankLength);
         }
     }

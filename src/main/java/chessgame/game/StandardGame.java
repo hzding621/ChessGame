@@ -14,7 +14,8 @@ import chessgame.rule.Rules;
 import chessgame.rule.StandardRuleBindings;
 import com.google.common.collect.ImmutableList;
 
-import java.util.*;
+import java.util.Collection;
+
 
 /**
  * The standard chess game

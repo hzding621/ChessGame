@@ -1,24 +1,22 @@
 package chessgame.piece;
 
-import chessgame.board.ChessBoard;
 import chessgame.board.Coordinate;
 import chessgame.board.RectangularBoard;
 import chessgame.board.Square;
 import chessgame.game.ConfigurableGameSetting;
 import chessgame.game.PieceInformation;
-import chessgame.move.MoveResult;
 import chessgame.player.Player;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Collection;
 
-import static org.mockito.Matchers.any;
 
 /**
  * Contains tests for Pawn
@@ -49,7 +47,7 @@ public final class PawnTest {
                 .build()
         );
 
-        Mockito.when(pieceInformation.getPieceMoveCount(any(Piece.class))).thenReturn(0);
+        Mockito.when(pieceInformation.getPieceMoveCount(Matchers.any())).thenReturn(0);
         Mockito.when(pieceInformation.locateKing(Player.WHITE)).thenReturn(builder.at("E", "1"));
         Mockito.when(pieceInformation.locateKing(Player.BLACK)).thenReturn(builder.at("E", "8"));
 

@@ -4,10 +4,11 @@ import chessgame.piece.Piece;
 import chessgame.game.GameSetting;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.Table;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -16,13 +17,10 @@ import java.util.stream.Collectors;
  */
 public class AbstractBoard<C extends Cell, P extends PieceClass> implements Board<C, P> {
 
-    protected final Map<C, Piece<P>> occupants;
+    protected final Map<C, Piece<P>> occupants = new TreeMap<>();
 
     protected AbstractBoard(GameSetting<C, P> gameSetting) {
-        this.occupants = new TreeMap<>(
-                gameSetting.constructAllPieces()
-                        .stream()
-                        .collect(Collectors.toMap(PieceLocator::getCell, PieceLocator::getPiece)));
+        this.occupants.putAll(gameSetting.constructAllPiecesByStartingPosition());
     }
 
     @Override

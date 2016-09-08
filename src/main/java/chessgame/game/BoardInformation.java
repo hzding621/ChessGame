@@ -26,7 +26,7 @@ public final class BoardInformation<C extends Cell, P extends PieceClass, B exte
     private final ActorInformationImpl<C, P, B> actorInformation = new ActorInformationImpl<>();
 
     public BoardInformation(GameSetting<C, P> gameSetting) {
-        playerInformation = new PlayerInformationImpl(gameSetting.starter(), gameSetting.starter().next());
+        playerInformation = new PlayerInformationImpl(gameSetting.getStarter(), gameSetting.getStarter().next());
         pieceInformation = new PieceInformationImpl<>(gameSetting.getKingStartingPositions());
     }
 
