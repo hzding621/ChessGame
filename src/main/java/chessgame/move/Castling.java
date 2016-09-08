@@ -48,4 +48,23 @@ public final class Castling<C extends Cell> implements CompositeMove<C> {
                     MoveResult.MovedPiece.of(rook, rookMove.getInitiator(), rookMove.getTarget()));
         };
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Castling<?> castling = (Castling<?>) o;
+
+        if (!kingMove.equals(castling.kingMove)) return false;
+        return rookMove.equals(castling.rookMove);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = kingMove.hashCode();
+        result = 31 * result + rookMove.hashCode();
+        return result;
+    }
 }

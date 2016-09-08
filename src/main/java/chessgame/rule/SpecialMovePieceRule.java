@@ -11,5 +11,5 @@ import java.util.Collection;
  */
 public interface SpecialMovePieceRule<C extends Cell> {
 
-    Collection<? extends Move<C>> specialMove(Player player);
+    Collection<Move<C>> specialMove(Player player);
 }

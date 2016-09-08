@@ -15,6 +15,7 @@ import com.google.common.collect.ImmutableList;
 import utility.CollectionUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Class that implements King piece moving logic. Specific rules regarding king checking is handled elsewhere
@@ -45,10 +46,10 @@ public final class King<P extends PieceClass> extends AbstractPiece<P> {
 
         @Override
         public Collection<C> attacking(C position, Player player) {
-            final List<C> targets = new ArrayList<>();
-            boardViewer.getAllDirections().stream()
-                    .forEach(direction -> boardViewer.moveSteps(position, direction, 1).ifPresent(targets::add));
-            return targets;
+            return boardViewer.getAllDirections().stream()
+                    .map(direction -> boardViewer.moveSteps(position, direction, 1))
+                    .filter(Optional::isPresent).map(Optional::get)
+                    .collect(Collectors.toList());
         }
 
         @Override
@@ -81,7 +82,7 @@ public final class King<P extends PieceClass> extends AbstractPiece<P> {
         }
 
         @Override
-        public Collection<? extends Move<Square>> specialMove(Player player) {
+        public Collection<Move<Square>> specialMove(Player player) {
             return castling(player);
         }
 
@@ -103,7 +104,7 @@ public final class King<P extends PieceClass> extends AbstractPiece<P> {
          * Castling is one of the rules of chess and is technically a king move (Hooper & Whyld 1992:71).
          * @return non-empty if a castling is valid, empty otherwise
          */
-        private Collection<Castling<Square>> castling(Player player) {
+        private Collection<Move<Square>> castling(Player player) {
             Square kingPosition = getPieceInformation().locateKing(player);
             Piece<StandardPieces> king = boardViewer.getPiece(kingPosition).get();
             if (getPieceInformation().getPieceMoveCount(king) > 0 || defenderInformation.getCheckers().size() > 0) {
@@ -113,7 +114,7 @@ public final class King<P extends PieceClass> extends AbstractPiece<P> {
             Optional<Square> leftBound = boardViewer.firstOccupant(kingPosition, TwoDimension.WEST);
             Optional<Square> rightBound = boardViewer.firstOccupant(kingPosition, TwoDimension.EAST);
 
-            final ImmutableList.Builder<Castling<Square>> builder = ImmutableList.builder();
+            final ImmutableList.Builder<Move<Square>> builder = ImmutableList.builder();
             boardViewer.getPiecesOfTypeForPlayer(StandardPieces.ROOK, player)
                     .stream()
                     .forEach(rookPosition -> {

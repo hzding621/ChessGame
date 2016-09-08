@@ -46,9 +46,9 @@ public class RectangularBoard<P extends PieceClass>
 
     @Override
     public Optional<Square> moveSteps(Square startCell, TwoDimension direction, int steps) {
-        Optional<Square> cell = Optional.empty();
+        Optional<Square> cell = Optional.of(startCell);
         while (steps > 0 && cell.isPresent()) {
-             cell =  getGridCellFactory().moveOnce(startCell, direction);
+             cell =  getGridCellFactory().moveOnce(cell.get(), direction);
             steps--;
         }
         return cell;
