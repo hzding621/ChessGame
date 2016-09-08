@@ -2,9 +2,10 @@ package chessgame.game;
 
 import chessgame.board.*;
 import chessgame.move.Move;
+import chessgame.move.SimpleMove;
 import chessgame.piece.StandardPieces;
 import chessgame.player.Player;
-import chessgame.rule.ChessRuleBindings;
+import chessgame.rule.BasicRuleBindings;
 import chessgame.rule.Rules;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.SetMultimap;
@@ -26,12 +27,15 @@ public final class ActorInformationTest {
         boardInformation = new BoardInformation<>(customizedSet);
         testBoard = new RectangularBoard<>(customizedSet);
         cell = testBoard.getGridCellFactory();
-        rules = new Rules<>(new ChessRuleBindings<>(testBoard, boardInformation));
+        rules = new Rules<>(new BasicRuleBindings<>(testBoard, boardInformation));
         boardInformation.updateInformationForThisRound(testBoard, rules, ImmutableList::of, true);
     }
 
     private static boolean checkIsValidMove(SetMultimap<Square, Move<Square>> allMoves, Square source, Square target) {
-        return allMoves.get(source).stream().anyMatch(move -> move.getTarget().equals(target));
+        return allMoves.get(source)
+                .stream()
+                .filter(move -> move instanceof SimpleMove)
+                .anyMatch(move -> (((SimpleMove<Square>)(move)).getTarget().equals(target)));
     }
 
     @Test

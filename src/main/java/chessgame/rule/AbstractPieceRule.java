@@ -1,7 +1,8 @@
-package chessgame.piece;
+package chessgame.rule;
 
 import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
+import chessgame.piece.PieceClass;
 import chessgame.rule.PieceRule;
 
 /**

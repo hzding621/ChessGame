@@ -48,7 +48,7 @@ public class DefenderInformationImpl<C extends Cell, P extends PieceClass, B ext
         Player defender = playerInformation.getDefender();
 
         // Iterate through all the pieces of the current defenders
-        board.getAllPiecesForPlayer(playerInformation.getDefender())
+        board.getPiecesForPlayer(playerInformation.getDefender())
             .stream()
             .forEach(defenderPosition -> {
                 // Get the positions a defending piece are attacking

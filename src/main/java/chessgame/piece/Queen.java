@@ -4,6 +4,7 @@ import chessgame.board.Cell;
 import chessgame.board.Direction;
 import chessgame.board.GridViewer;
 import chessgame.player.Player;
+import chessgame.rule.AbstractPieceRule;
 import chessgame.rule.RangeAttackPieceRule;
 
 import java.util.Collection;

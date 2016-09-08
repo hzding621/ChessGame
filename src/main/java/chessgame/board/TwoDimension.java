@@ -27,6 +27,10 @@ public enum TwoDimension implements Direction {
         this.y = y;
     }
 
+    public TwoDimension reverse() {
+        return VALUES[(this.ordinal() + 4) % VALUES.length];
+    }
+
     @Override
     public TwoDimension getClockwise() {
         return VALUES[(this.ordinal()+1) % VALUES.length];

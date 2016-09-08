@@ -1,12 +1,18 @@
 package chessgame.piece;
 
-import chessgame.board.Cell;
-import chessgame.board.Direction;
-import chessgame.board.GridViewer;
+import chessgame.board.*;
+import chessgame.game.DefenderInformation;
 import chessgame.game.PieceInformation;
+import chessgame.move.Castling;
+import chessgame.move.Move;
+import chessgame.move.SimpleMove;
 import chessgame.player.Player;
+import chessgame.rule.AbstractPieceRule;
+import chessgame.rule.RequiresDefenderInformation;
 import chessgame.rule.RequiresPieceInformation;
+import chessgame.rule.SpecialMovePieceRule;
 import com.google.common.collect.ImmutableList;
+import utility.CollectionUtils;
 
 import java.util.*;
 
@@ -26,9 +32,9 @@ public final class King<P extends PieceClass> extends AbstractPiece<P> {
                 ", id=" + getId() +
                 '}';
     }
-    public static final class KingRule<C extends Cell, P extends PieceClass, D extends Direction,
-            B extends GridViewer<C, D, P>> extends AbstractPieceRule<C, P, B> implements
-            RequiresPieceInformation<C, P> {
+    public static class KingRule<C extends Cell, P extends PieceClass, D extends Direction,
+            B extends GridViewer<C, D, P>> extends AbstractPieceRule<C, P, B>
+            implements RequiresPieceInformation<C, P> {
 
         private final PieceInformation<C, P> pieceInformation;
 
@@ -41,7 +47,7 @@ public final class King<P extends PieceClass> extends AbstractPiece<P> {
         public Collection<C> attacking(C position, Player player) {
             final List<C> targets = new ArrayList<>();
             boardViewer.getAllDirections().stream()
-                    .forEach(direction -> boardViewer.moveOnce(position, direction).ifPresent(targets::add));
+                    .forEach(direction -> boardViewer.moveSteps(position, direction, 1).ifPresent(targets::add));
             return targets;
         }
 
@@ -60,6 +66,69 @@ public final class King<P extends PieceClass> extends AbstractPiece<P> {
         @Override
         public PieceInformation<C, P> getPieceInformation() {
             return pieceInformation;
+        }
+    }
+
+    public static class KingRuleWithCastling extends KingRule<Square, StandardPieces, TwoDimension, ChessBoard>
+            implements SpecialMovePieceRule<Square>, RequiresDefenderInformation<Square, StandardPieces, ChessBoard> {
+
+        private final DefenderInformation<Square, StandardPieces, ChessBoard> defenderInformation;
+
+        public KingRuleWithCastling(ChessBoard gridViewer, PieceInformation<Square, StandardPieces> pieceInformation,
+                                    DefenderInformation<Square, StandardPieces, ChessBoard> defenderInformation) {
+            super(gridViewer, pieceInformation);
+            this.defenderInformation = defenderInformation;
+        }
+
+        @Override
+        public Collection<? extends Move<Square>> specialMove(Player player) {
+            return castling(player);
+        }
+
+        private Castling<Square> constructCastlingMove(Square kingPosition,
+                                                       Square rookPosition,
+                                                       TwoDimension side,
+                                                       Player player) {
+            Square kingNewPosition = boardViewer.moveSteps(kingPosition, side, 2).get();
+            Square rookNewPosition = boardViewer.moveSteps(kingNewPosition, side.reverse(), 1).get();
+            return new Castling<>(SimpleMove.of(kingPosition, kingNewPosition,player),
+                    SimpleMove.of(rookPosition, rookNewPosition,player));
+        }
+
+        /**
+         * From Wikipedia: https://en.wikipedia.org/wiki/Castling
+         * Castling may only be done if the king has never moved, the rook involved has never moved,
+         * the squares between the king and the rook involved are unoccupied, the king is not in check,
+         * and the king does not cross over or end on a square in which it would be in check.
+         * Castling is one of the rules of chess and is technically a king move (Hooper & Whyld 1992:71).
+         * @return non-empty if a castling is valid, empty otherwise
+         */
+        private Collection<Castling<Square>> castling(Player player) {
+            Square kingPosition = getPieceInformation().locateKing(player);
+            Piece<StandardPieces> king = boardViewer.getPiece(kingPosition).get();
+            if (getPieceInformation().getPieceMoveCount(king) > 0 || defenderInformation.getCheckers().size() > 0) {
+                // If King has moved or if king is under check, cannot move
+                return ImmutableList.of();
+            }
+            Optional<Square> leftBound = boardViewer.firstOccupant(kingPosition, TwoDimension.WEST);
+            Optional<Square> rightBound = boardViewer.firstOccupant(kingPosition, TwoDimension.EAST);
+
+            final ImmutableList.Builder<Castling<Square>> builder = ImmutableList.builder();
+            boardViewer.getPiecesOfTypeForPlayer(StandardPieces.ROOK, player)
+                    .stream()
+                    .forEach(rookPosition -> {
+                        if (leftBound.isPresent() && rookPosition.equals(leftBound.get())) {
+                            builder.add(constructCastlingMove(kingPosition, rookPosition, TwoDimension.WEST, player));
+                        } else if (rightBound.isPresent() && rookPosition.equals(rightBound.get())) {
+                            builder.add(constructCastlingMove(kingPosition, rookPosition, TwoDimension.EAST, player));
+                        }
+                    });
+            return builder.build();
+        }
+
+        @Override
+        public DefenderInformation<Square, StandardPieces, ChessBoard> getDefenderInformation() {
+            return defenderInformation;
         }
     }
 }

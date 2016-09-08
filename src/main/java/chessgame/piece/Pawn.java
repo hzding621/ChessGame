@@ -5,11 +5,11 @@ import chessgame.board.Direction;
 import chessgame.board.GridViewer;
 import chessgame.game.PieceInformation;
 import chessgame.player.Player;
+import chessgame.rule.AbstractPieceRule;
 import chessgame.rule.RequiresPieceInformation;
 import com.google.common.collect.ImmutableList;
 import utility.CollectionUtils;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -33,8 +33,7 @@ public final class Pawn<P extends PieceClass> extends AbstractPiece<P> {
     }
 
     public static final class PawnRule<C extends Cell, P extends PieceClass, D extends Direction,
-            B extends GridViewer<C, D, P>> extends AbstractPieceRule<C, P, B>
-            implements RequiresPieceInformation<C, P>{
+            B extends GridViewer<C, D, P>> extends AbstractPieceRule<C, P, B> implements RequiresPieceInformation<C, P>{
 
         private final PieceInformation<C, P> pieceInformation;
 

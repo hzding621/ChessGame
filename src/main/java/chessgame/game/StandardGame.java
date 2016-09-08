@@ -9,13 +9,11 @@ import chessgame.move.MoveResult;
 import chessgame.move.SimpleMove;
 import chessgame.piece.*;
 import chessgame.player.Player;
-import chessgame.rule.ChessRuleBindings;
+import chessgame.rule.BasicRuleBindings;
 import chessgame.rule.Rules;
 import com.google.common.collect.ImmutableList;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * The standard chess game
@@ -40,7 +38,7 @@ public class StandardGame implements Game<Square, StandardPieces, ChessBoard> {
         BoardInformation<Square, StandardPieces, ChessBoard> boardInformation =
                 new BoardInformation<>(pieceSet);
         ChessBoard board = new ChessBoard(pieceSet);
-        ChessRuleBindings ruleBindings = new ChessRuleBindings(board, boardInformation);
+        BasicRuleBindings ruleBindings = new BasicRuleBindings(board, boardInformation);
         return new StandardGame(board, new Rules<>(ruleBindings), boardInformation);
     }
 
@@ -89,7 +87,7 @@ public class StandardGame implements Game<Square, StandardPieces, ChessBoard> {
         if (gameStatus != GameStatus.OPEN) {
             throw new IllegalStateException("Game has ended in " + gameStatus);
         }
-        Square source = attemptedMove.getSource();
+        Square source = attemptedMove.getInitiator();
         if (!boardInformation.getAvailableMoves().get(source).contains(attemptedMove)) {
             throw new IllegalStateException("Attempted move " + attemptedMove + " is invalid!");
         }

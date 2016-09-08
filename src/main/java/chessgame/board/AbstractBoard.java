@@ -74,7 +74,7 @@ public class AbstractBoard<C extends Cell, P extends PieceClass> implements Boar
     }
 
     @Override
-    public Collection<C> getPiecesForPlayer(P type, Player player) {
+    public Collection<C> getPiecesOfTypeForPlayer(P type, Player player) {
         return occupants.entrySet()
                 .stream()
                 .filter(e -> e.getValue().getPieceClass().equals(type) && e.getValue().getPlayer().equals(player))
@@ -83,7 +83,7 @@ public class AbstractBoard<C extends Cell, P extends PieceClass> implements Boar
     }
 
     @Override
-    public Collection<C> getAllPiecesForPlayer(Player player) {
+    public Collection<C> getPiecesForPlayer(Player player) {
         return occupants.entrySet()
                 .stream()
                 .filter(e -> e.getValue().getPlayer().equals(player))

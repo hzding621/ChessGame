@@ -30,12 +30,13 @@ public interface GridViewer<C extends Cell, D extends Direction, P extends Piece
     Collection<D> getDiagonalDirections();
 
     /**
-     * Move the startCell at direction for one step
+     * Move the startCell at direction for the given number of steps
      * @param startCell starting cell
      * @param direction the direction to move
+     * @param steps the given number
      * @return non-empty value if the cell is not at the edge of the board, empty otherwise
      */
-    Optional<C> moveOnce(C startCell, D direction);
+    Optional<C> moveSteps(C startCell, D direction, int steps);
 
     /**
      * Returns a series of cell movement that starts at a cell, goes at a certain direction,
@@ -49,12 +50,25 @@ public interface GridViewer<C extends Cell, D extends Direction, P extends Piece
     List<C> furthestReach(C startCell, D direction, boolean startInclusive, boolean meetInclusive);
 
     /**
+     * @param startCell the given cell
+     * @param direction the given direction
+     * @return non-empty if moving at the given cell in the given direction will lead to this piece, empty if it will lead the edge of the board
+     */
+    Optional<C> firstOccupant(C startCell, D direction);
+
+    /**
      * Return the first and second occupant met starting at the given cell and moving toward the given direction
      * @param startCell the given cell
      * @param direction the given direction
      * @return Non-empty if there exists two such pieces
      */
-    Optional<Pair<C, C>> firstAndSecondOccupant(C startCell, D direction);
+    default Optional<Pair<C, C>> firstAndSecondOccupant(C startCell, D direction) {
+        Optional<C> firstMeet = firstOccupant(startCell, direction);
+        if (!firstMeet.isPresent()) return Optional.empty();
+        Optional<C> secondMeet = firstOccupant(firstMeet.get(), direction);
+        if (!secondMeet.isPresent()) return Optional.empty();
+        return Optional.of(Pair.of(firstMeet.get(), secondMeet.get()));
+    }
 
     /**
      * return the position where the piece starts at startCell and move toward the enemy's side by one step

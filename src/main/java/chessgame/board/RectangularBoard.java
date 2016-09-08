@@ -5,7 +5,6 @@ import chessgame.game.GameSetting;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 import utility.CollectionUtils;
-import utility.Pair;
 
 import java.util.*;
 
@@ -46,8 +45,13 @@ public class RectangularBoard<P extends PieceClass>
     }
 
     @Override
-    public Optional<Square> moveOnce(Square startCell, TwoDimension direction) {
-        return getGridCellFactory().moveOnce(startCell, direction);
+    public Optional<Square> moveSteps(Square startCell, TwoDimension direction, int steps) {
+        Optional<Square> cell = Optional.empty();
+        while (steps > 0 && cell.isPresent()) {
+             cell =  getGridCellFactory().moveOnce(startCell, direction);
+            steps--;
+        }
+        return cell;
     }
 
     @Override
@@ -56,7 +60,7 @@ public class RectangularBoard<P extends PieceClass>
         if (startInclusive) {
             cellList.add(startCell);
         }
-        Optional<Square> nextCell = moveOnce(startCell, direction);
+        Optional<Square> nextCell = moveSteps(startCell, direction, 1);
         Optional<Piece<P>> piece = Optional.empty();
         while (nextCell.isPresent()) {
             piece = getPiece(nextCell.get());
@@ -65,7 +69,7 @@ public class RectangularBoard<P extends PieceClass>
                 break;
             }
             cellList.add(nextCell.get());
-            nextCell = moveOnce(nextCell.get(), direction);
+            nextCell = moveSteps(nextCell.get(), direction, 1);
         }
         if (meetInclusive && piece.isPresent()) {
             cellList.add(nextCell.get());
@@ -73,18 +77,8 @@ public class RectangularBoard<P extends PieceClass>
         return cellList;
     }
 
-    private Optional<Square> firstOccupant(Square startCell, TwoDimension direction) {
+    public Optional<Square> firstOccupant(Square startCell, TwoDimension direction) {
         return CollectionUtils.last(furthestReach(startCell, direction, false, true)).filter(this::isOccupied);
-    }
-
-    @Override
-    public Optional<Pair<Square, Square>> firstAndSecondOccupant(Square startCell, TwoDimension direction) {
-
-        Optional<Square> firstMeet = firstOccupant(startCell, direction);
-        if (!firstMeet.isPresent()) return Optional.empty();
-        Optional<Square> secondMeet = firstOccupant(firstMeet.get(), direction);
-        if (!secondMeet.isPresent()) return Optional.empty();
-        return Optional.of(Pair.of(firstMeet.get(), secondMeet.get()));
     }
 
     @Override

@@ -1,12 +1,10 @@
 package chessgame.piece;
 
-import chessgame.board.ChessBoard;
 import chessgame.board.Coordinate;
 import chessgame.board.RectangularBoard;
 import chessgame.board.Square;
 import chessgame.game.ConfigurableGameSetting;
 import chessgame.game.PieceInformation;
-import chessgame.move.MoveResult;
 import chessgame.player.Player;
 import chessgame.rule.LatentAttack;
 import org.junit.Assert;
@@ -38,7 +36,7 @@ public final class BishopTest {
         // white king at A1
         // black king at A5
 
-        testBoard = new RectangularBoard<StandardPieces>(ConfigurableGameSetting.builder(5, 5)
+        testBoard = new RectangularBoard<>(ConfigurableGameSetting.builder(5, 5)
                 .piece(StandardPieces.BISHOP, Player.WHITE, "C", "3")
                 .piece(StandardPieces.KING, Player.WHITE, "A", "1")
                 .piece(StandardPieces.KING, Player.BLACK, "A", "5")

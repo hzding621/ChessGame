@@ -3,16 +3,11 @@ package chessgame.game;
 import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
 import chessgame.move.Move;
-import chessgame.move.SimpleMove;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
-import chessgame.rule.Attack;
-import chessgame.rule.LatentAttack;
 import chessgame.rule.Rules;
 import com.google.common.collect.MultimapBuilder;
 import com.google.common.collect.SetMultimap;
-
-import java.util.*;
 
 /**
  * Default implementation of Actor Information
@@ -34,7 +29,7 @@ public class ActorInformationImpl<C extends Cell, P extends PieceClass, B extend
         Player actor = playerInformation.getActor();
         availableMoves.clear();
 
-        board.getAllPiecesForPlayer(actor)
+        board.getPiecesForPlayer(actor)
                 .stream()
                 .forEach(sourcePosition -> availableMoves.putAll(sourcePosition,
                         rules.computeAvailableMoves(board, sourcePosition, actor, defenderInformation)));

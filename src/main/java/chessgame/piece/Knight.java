@@ -8,6 +8,7 @@ import chessgame.board.Cell;
 import chessgame.board.Direction;
 import chessgame.board.GridViewer;
 import chessgame.player.Player;
+import chessgame.rule.AbstractPieceRule;
 import com.google.common.collect.ImmutableList;
 
 import java.util.*;
@@ -37,11 +38,11 @@ public final class Knight<P extends PieceClass> extends AbstractPiece<P> {
         }
 
         private Optional<C> knightStyle(B board, C startPosition, D direction, boolean closeWise) {
-            Optional<C> middlePosition = board.moveOnce(startPosition, direction);
+            Optional<C> middlePosition = board.moveSteps(startPosition, direction, 1);
             if (!middlePosition.isPresent()) return Optional.empty();
 
             direction = closeWise ? (D) direction.getClockwise() : (D) direction.getCounterClockwise();
-            return board.moveOnce(middlePosition.get(), direction);
+            return board.moveSteps(middlePosition.get(), direction, 1);
         }
 
         @Override

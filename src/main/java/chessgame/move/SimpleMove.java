@@ -12,9 +12,9 @@ import java.util.*;
  */
 public final class SimpleMove<C extends Cell> implements Move<C>, Comparable<SimpleMove<C>> {
 
-    public final C source;
-    public final C target;
-    public final Player player;
+    private final C source;
+    private final C target;
+    private final Player player;
 
     private SimpleMove(C source, C target, Player player) {
         this.source = source;
@@ -27,11 +27,15 @@ public final class SimpleMove<C extends Cell> implements Move<C>, Comparable<Sim
     }
 
     @Override
-    public C getSource() {
+    public C getInitiator() {
         return source;
     }
 
     @Override
+    public Player getPlayer() {
+        return player;
+    }
+
     public C getTarget() {
         return target;
     }
@@ -67,7 +71,9 @@ public final class SimpleMove<C extends Cell> implements Move<C>, Comparable<Sim
         if (o == this) return 0;
         int a = this.source.compareTo(o.source);
         if (a != 0) return a;
-        return this.target.compareTo(o.target);
+        int b = this.target.compareTo(o.target);
+        if (b == 0) throw new IllegalStateException("Two identical moves performed by different players should never appear at the same time");
+        return b;
     }
 
     @Override
@@ -80,7 +86,6 @@ public final class SimpleMove<C extends Cell> implements Move<C>, Comparable<Sim
         if (!source.equals(that.source)) return false;
         if (!target.equals(that.target)) return false;
         return player == that.player;
-
     }
 
     @Override

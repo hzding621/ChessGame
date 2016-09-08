@@ -3,6 +3,7 @@ package chessgame.rule;
 import chessgame.board.Cell;
 import chessgame.board.Direction;
 import chessgame.board.GridViewer;
+import chessgame.board.TwoDimension;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 import utility.CollectionUtils;
