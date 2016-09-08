@@ -58,7 +58,7 @@ public final class SimpleMove<C extends Cell> implements Move<C>, Comparable<Sim
 
             List<MoveResult.MovedPiece<C, P>> history = new ArrayList<>();
             history.add(MoveResult.MovedPiece.of(movedPiece, source, target));
-            capturedPiece.ifPresent(p -> MoveResult.MovedPiece.of(p, target, null));
+            capturedPiece.ifPresent(p -> history.add(MoveResult.MovedPiece.of(p, target, null)));
             return () -> history;
         };
     }

@@ -8,7 +8,7 @@ import chessgame.board.Square;
 import chessgame.board.TwoDimension;
 import chessgame.game.DefenderInformation;
 import chessgame.game.PieceInformation;
-import chessgame.move.Castling;
+import chessgame.move.CastlingMove;
 import chessgame.move.Move;
 import chessgame.move.SimpleMove;
 import chessgame.player.Player;
@@ -91,13 +91,13 @@ public final class King<P extends PieceClass> extends AbstractPiece<P> {
             return castling(player);
         }
 
-        private Castling<Square> constructCastlingMove(Square kingPosition,
-                                                       Square rookPosition,
-                                                       TwoDimension side,
-                                                       Player player) {
+        private CastlingMove<Square> constructCastlingMove(Square kingPosition,
+                                                           Square rookPosition,
+                                                           TwoDimension side,
+                                                           Player player) {
             Square kingNewPosition = boardViewer.moveSteps(kingPosition, side, 2).get();
             Square rookNewPosition = boardViewer.moveSteps(kingNewPosition, side.reverse(), 1).get();
-            return new Castling<>(SimpleMove.of(kingPosition, kingNewPosition,player),
+            return new CastlingMove<>(SimpleMove.of(kingPosition, kingNewPosition,player),
                     SimpleMove.of(rookPosition, rookNewPosition,player));
         }
 

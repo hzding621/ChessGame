@@ -6,7 +6,7 @@ import chessgame.board.Square;
 import chessgame.game.DefenderInformation;
 import chessgame.game.PieceInformation;
 import chessgame.game.StandardSetting;
-import chessgame.move.Castling;
+import chessgame.move.CastlingMove;
 import chessgame.move.Move;
 import chessgame.move.SimpleMove;
 import chessgame.player.Player;
@@ -63,7 +63,7 @@ public class KingTest {
 
         Collection<Move<Square>> move = new King.KingRuleWithCastling(testBoard, pieceInformation,
                 defenderInformation).specialMove(Player.WHITE);
-        Assert.assertTrue(move.contains(new Castling<>(
+        Assert.assertTrue(move.contains(new CastlingMove<>(
                 SimpleMove.of(builder.at("E", "1"), builder.at("C", "1"), Player.WHITE),
                 SimpleMove.of(builder.at("A", "1"), builder.at("D", "1"), Player.WHITE)
                 )));

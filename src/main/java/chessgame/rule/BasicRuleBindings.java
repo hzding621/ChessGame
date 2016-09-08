@@ -15,7 +15,7 @@ import chessgame.piece.StandardPieces;
 /**
  * Inherit the empty rule bindings to include basic chess pieces rule mappings (not including castling)
  */
-public final class BasicRuleBindings<B extends GridViewer<Square, TwoDimension, StandardPieces>>
+public class BasicRuleBindings<B extends GridViewer<Square, TwoDimension, StandardPieces>>
         extends RuleBindings<Square, StandardPieces, B>
         implements RequiresBoardView<Square, StandardPieces, B>, RequiresPieceInformation<Square, StandardPieces> {
 
@@ -27,12 +27,12 @@ public final class BasicRuleBindings<B extends GridViewer<Square, TwoDimension, 
         this.gridBoard = gridBoard;
         this.pieceInformation = pieceInformation;
 
-        addRule(StandardPieces.PAWN, new Pawn.PawnRule<>(gridBoard, pieceInformation));
-        addRule(StandardPieces.KNIGHT, new Knight.KnightRule<>(gridBoard));
-        addRule(StandardPieces.BISHOP, new Bishop.BishopRule<>(gridBoard));
-        addRule(StandardPieces.ROOK, new Rook.RookRule<>(gridBoard));
-        addRule(StandardPieces.QUEEN, new Queen.QueenRule<>(gridBoard));
-        addRule(StandardPieces.KING, new King.KingRule<>(gridBoard, pieceInformation));
+        bindRule(StandardPieces.PAWN, new Pawn.PawnRule<>(gridBoard, pieceInformation));
+        bindRule(StandardPieces.KNIGHT, new Knight.KnightRule<>(gridBoard));
+        bindRule(StandardPieces.BISHOP, new Bishop.BishopRule<>(gridBoard));
+        bindRule(StandardPieces.ROOK, new Rook.RookRule<>(gridBoard));
+        bindRule(StandardPieces.QUEEN, new Queen.QueenRule<>(gridBoard));
+        bindRule(StandardPieces.KING, new King.KingRule<>(gridBoard, pieceInformation));
     }
 
     public B getBoardViewer() {

@@ -9,12 +9,12 @@ import com.google.common.collect.ImmutableList;
 /**
  * Represent the castling move in standard chess game
  */
-public final class Castling<C extends Cell> implements CompositeMove<C> {
+public final class CastlingMove<C extends Cell> implements CompositeMove<C> {
 
     private final SimpleMove<C> kingMove;
     private final SimpleMove<C> rookMove;
 
-    public Castling(SimpleMove<C> kingMove, SimpleMove<C> rookMove) {
+    public CastlingMove(SimpleMove<C> kingMove, SimpleMove<C> rookMove) {
         if (!kingMove.getPlayer().equals(rookMove.getPlayer())) {
             throw new IllegalStateException("King's move and rook's move have different players.");
         }
@@ -53,10 +53,9 @@ public final class Castling<C extends Cell> implements CompositeMove<C> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Castling<?> castling = (Castling<?>) o;
+        CastlingMove<?> castlingMove = (CastlingMove<?>) o;
 
-        if (!kingMove.equals(castling.kingMove)) return false;
-        return rookMove.equals(castling.rookMove);
+        return kingMove.equals(castlingMove.kingMove) && rookMove.equals(castlingMove.rookMove);
 
     }
 

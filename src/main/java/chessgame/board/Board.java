@@ -4,7 +4,7 @@ import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
 
 /**
- * Represents a board in a chess game, which can be quried as well as updated
+ * Represents a board in a chess game, which can be queried as well as updated
  */
 public interface Board<C extends Cell, P extends PieceClass> extends BoardViewer<C, P> {
 

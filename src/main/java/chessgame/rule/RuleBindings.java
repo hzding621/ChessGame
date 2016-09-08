@@ -14,8 +14,8 @@ public abstract class RuleBindings<C extends Cell, P extends PieceClass, B exten
 
     private final Map<P, PieceRule<C, P, B>> bindings = new HashMap<>();
 
-    public boolean addRule(P pieceType, PieceRule<C, P, B> rule) {
-        return bindings.putIfAbsent(pieceType, rule) == null;
+    public void bindRule(P pieceType, PieceRule<C, P, B> rule) {
+        bindings.put(pieceType, rule);
     }
 
     public PieceRule<C, P, B> getRule(P pieceType) {
