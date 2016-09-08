@@ -18,12 +18,7 @@ public interface GameSetting<C extends Cell, P extends PieceClass> {
     /**
      * @return all starting pieces in this game setting by starting position
      */
-    Map<C, Piece<P>> constructAllPiecesByStartingPosition();
-
-    /**
-     * @return all supported piece types in this game
-     */
-    Collection<P> getSupportedTypes();
+    Map<C, Piece<P>> constructPiecesByStartingPosition();
 
     /**
      * @return starting position of kings for each player

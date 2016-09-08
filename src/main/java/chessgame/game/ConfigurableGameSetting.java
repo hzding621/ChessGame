@@ -1,16 +1,13 @@
 package chessgame.game;
 
 import chessgame.board.Coordinate;
-import chessgame.board.PieceLocator;
 import chessgame.board.Square;
 import chessgame.piece.StandardPieces;
 import chessgame.piece.Piece;
 import chessgame.player.Player;
 import com.google.common.collect.ImmutableList;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -43,13 +40,8 @@ public final class ConfigurableGameSetting implements GameSetting.GridGame<Squar
     }
 
     @Override
-    public Map<Square, Piece<StandardPieces>> constructAllPiecesByStartingPosition() {
+    public Map<Square, Piece<StandardPieces>> constructPiecesByStartingPosition() {
         return piecesByPosition;
-    }
-
-    @Override
-    public Collection<StandardPieces> getSupportedTypes() {
-        return supportedTypes;
     }
 
     @Override

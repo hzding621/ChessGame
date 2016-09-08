@@ -20,7 +20,7 @@ public class AbstractBoard<C extends Cell, P extends PieceClass> implements Boar
     protected final Map<C, Piece<P>> occupants = new TreeMap<>();
 
     protected AbstractBoard(GameSetting<C, P> gameSetting) {
-        this.occupants.putAll(gameSetting.constructAllPiecesByStartingPosition());
+        this.occupants.putAll(gameSetting.constructPiecesByStartingPosition());
     }
 
     @Override

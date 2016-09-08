@@ -1,6 +1,5 @@
 package chessgame.game;
 
-import chessgame.board.PieceLocator;
 import chessgame.board.Square;
 import chessgame.piece.King;
 import chessgame.piece.KingPawn;
@@ -9,11 +8,8 @@ import chessgame.piece.Piece;
 import chessgame.player.Player;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.eventbus.Subscribe;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -32,18 +28,13 @@ public final class KingPawnGame implements GameSetting<Square, KingPawn> {
     }
 
     @Override
-    public Map<Square, Piece<KingPawn>> constructAllPiecesByStartingPosition() {
+    public Map<Square, Piece<KingPawn>> constructPiecesByStartingPosition() {
         return ImmutableMap.<Square, Piece<KingPawn>>builder()
                 .put(builder.at(1, 0), whitePawn)
                 .put(builder.at(2, 0), whiteKing)
                 .put(builder.at(1, 3), blackPawn)
                 .put(builder.at(2, 3), blackKing)
                 .build();
-    }
-
-    @Override
-    public Collection<KingPawn> getSupportedTypes() {
-        return Collections.singleton(KingPawn.PAWN);
     }
 
     @Override

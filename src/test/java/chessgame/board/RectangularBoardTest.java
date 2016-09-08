@@ -1,6 +1,7 @@
 package chessgame.board;
 
 import chessgame.game.StandardSetting;
+import chessgame.piece.StandardPieces;
 import chessgame.player.Player;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,16 +16,24 @@ import java.util.Optional;
 /**
  * Contains tests for ChessBoard
  */
-public final class ChessBoardTest {
+public final class RectangularBoardTest {
 
     private Square.Builder builder;
-    private ChessBoard testBoard;
+    private RectangularBoard<StandardPieces> testBoard;
 
     @Before
     public void instantiateTestPieceSet() {
         Coordinate.Builder coordinateBuilder = new Coordinate.Builder(8);
         builder = new Square.Builder(coordinateBuilder, coordinateBuilder);
         testBoard = new ChessBoard(new StandardSetting());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMovePieceOutOfBoundary() {
+
+        Coordinate.Builder builder = new Coordinate.Builder(10);
+        Square.Builder maliciousBuilder = new Square.Builder(builder, builder);
+        testBoard.movePiece(maliciousBuilder.at("E", "2"), maliciousBuilder.at("E", "9"));
     }
 
     @Test

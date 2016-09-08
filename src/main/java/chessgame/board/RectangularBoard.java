@@ -30,6 +30,43 @@ public class RectangularBoard<P extends PieceClass>
     }
 
     @Override
+    public boolean isOccupied(Square cell) {
+        validatePosition(cell);
+        return super.isOccupied(cell);
+    }
+
+    @Override
+    public boolean isEnemy(Square cell, Player player) {
+        validatePosition(cell);
+        return super.isEnemy(cell, player);
+    }
+
+    @Override
+    public Optional<Piece<P>> getPiece(Square cell) {
+        validatePosition(cell);
+        return super.getPiece(cell);
+    }
+
+    @Override
+    public Piece<P> movePiece(Square source, Square target) {
+        validatePosition(source);
+        validatePosition(target);
+        return super.movePiece(source, target);
+    }
+
+    @Override
+    public Piece<P> clearPiece(Square position) {
+        validatePosition(position);
+        return super.clearPiece(position);
+    }
+
+    @Override
+    public void addPiece(Square position, Piece<P> piece) {
+        validatePosition(position);
+        super.addPiece(position, piece);
+    }
+
+    @Override
     public Collection<TwoDimension> getAllDirections() {
         return Arrays.asList(TwoDimension.VALUES);
     }
@@ -47,11 +84,14 @@ public class RectangularBoard<P extends PieceClass>
 
     @Override
     public TwoDimension findDirection(Square startCell, Square endCell) {
+        validatePosition(startCell);
+        validatePosition(endCell);
         return Square.findDirection(startCell, endCell);
     }
 
     @Override
     public Optional<Square> moveSteps(Square startCell, TwoDimension direction, int steps) {
+        validatePosition(startCell);
         Optional<Square> cell = Optional.of(startCell);
         while (steps > 0 && cell.isPresent()) {
              cell =  getGridCellFactory().moveOnce(cell.get(), direction);
@@ -61,7 +101,11 @@ public class RectangularBoard<P extends PieceClass>
     }
 
     @Override
-    public List<Square> furthestReach(Square startCell, TwoDimension direction, boolean startInclusive, boolean meetInclusive) {
+    public List<Square> furthestReach(Square startCell,
+                                      TwoDimension direction,
+                                      boolean startInclusive,
+                                      boolean meetInclusive) {
+        validatePosition(startCell);
         List<Square> cellList = new ArrayList<>();
         if (startInclusive) {
             cellList.add(startCell);
@@ -84,11 +128,13 @@ public class RectangularBoard<P extends PieceClass>
     }
 
     public Optional<Square> firstOccupant(Square startCell, TwoDimension direction) {
+        validatePosition(startCell);
         return CollectionUtils.last(furthestReach(startCell, direction, false, true)).filter(this::isOccupied);
     }
 
     @Override
     public Optional<Square> moveForward(Square startCell, Player player) {
+        validatePosition(startCell);
         if (player == Player.WHITE) {
             return getGridCellFactory().moveOnce(startCell, TwoDimension.NORTH);
         } else {
@@ -98,6 +144,7 @@ public class RectangularBoard<P extends PieceClass>
 
     @Override
     public Collection<Square> attackPawnStyle(Square startCell, Player player) {
+        validatePosition(startCell);
         final List<Square> list = new ArrayList<>();
         TwoDimension[] dirs = player == Player.WHITE
                 ? new TwoDimension[] {TwoDimension.NORTHWEST, TwoDimension.NORTHEAST}
@@ -111,5 +158,12 @@ public class RectangularBoard<P extends PieceClass>
     @Override
     public GridCellFactory<Square, TwoDimension> getGridCellFactory() {
         return cellBuilder;
+    }
+
+    private void validatePosition(Square cell) {
+        if (!cellBuilder.withinRange(cell.getFile().getCoordinate().getIndex(),
+                cell.getRank().getCoordinate().getIndex())) {
+            throw new IllegalArgumentException("Square " + cell + " is out of boundary of this board!");
+        }
     }
 }

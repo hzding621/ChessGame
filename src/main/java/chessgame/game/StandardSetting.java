@@ -1,7 +1,6 @@
 package chessgame.game;
 
 import chessgame.board.Coordinate;
-import chessgame.board.PieceLocator;
 import chessgame.board.Square;
 import chessgame.piece.*;
 import chessgame.player.Player;
@@ -9,7 +8,6 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Table;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -74,12 +72,7 @@ public final class StandardSetting implements GameSetting.GridGame<Square, Stand
     }
 
     @Override
-    public Collection<StandardPieces> getSupportedTypes() {
-        return configuration.columnKeySet();
-    }
-
-    @Override
-    public Map<Square, Piece<StandardPieces>> constructAllPiecesByStartingPosition() {
+    public Map<Square, Piece<StandardPieces>> constructPiecesByStartingPosition() {
 
         TreeMap<Square, Piece<StandardPieces>> map = new TreeMap<>();
         configuration.cellSet().forEach(cell -> {
