@@ -11,6 +11,7 @@ import chessgame.piece.*;
 import chessgame.player.Player;
 import chessgame.rule.BasicRuleBindings;
 import chessgame.rule.Rules;
+import chessgame.rule.StandardRuleBindings;
 import com.google.common.collect.ImmutableList;
 
 import java.util.*;
@@ -38,7 +39,7 @@ public class StandardGame implements Game<Square, StandardPieces, ChessBoard> {
         BoardInformation<Square, StandardPieces, ChessBoard> boardInformation =
                 new BoardInformation<>(pieceSet);
         ChessBoard board = new ChessBoard(pieceSet);
-        BasicRuleBindings ruleBindings = new BasicRuleBindings(board, boardInformation);
+        StandardRuleBindings ruleBindings = new StandardRuleBindings(board, boardInformation, boardInformation);
         return new StandardGame(board, new Rules<>(ruleBindings), boardInformation);
     }
 
@@ -98,13 +99,4 @@ public class StandardGame implements Game<Square, StandardPieces, ChessBoard> {
     public GameStatus getGameStatus() {
         return gameStatus;
     }
-
-    private static final String[][][] testCases = {
-            {
-                    {"F", "2", "F", "3"},
-                    {"E", "7", "E", "5"},
-                    {"G", "2", "G", "4"},
-                    {"D", "8", "H", "4"},
-            },
-    };
 }
