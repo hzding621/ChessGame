@@ -49,32 +49,26 @@ public class DefenderInformationImpl<C extends Cell, P extends PieceClass, B ext
         Player defender = playerInformation.getDefender();
 
         // Iterate through all the pieces of the current defenders
-        board.getPiecesForPlayer(playerInformation.getDefender())
-            .stream()
-            .forEach(defenderPosition -> {
-                // Get the positions a defending piece are attacking
-                rules.attacking(board, defenderPosition, defender)
-                    .stream()
-                    .forEach(targetPosition -> {
-                        // Mark the position as being under attacked
-                        isAttacked.add(targetPosition);
+        board.getPiecesForPlayer(playerInformation.getDefender()).forEach(defenderPosition -> {
+            // Get the positions a defending piece are attacking
+            rules.attacking(board, defenderPosition, defender).forEach(targetPosition -> {
+                // Mark the position as being under attacked
+                isAttacked.add(targetPosition);
 
-                        // If any of the position is the current actor's king, mark the attackers as checker
-                        if (actorKingPosition.equals(targetPosition)) {
-                            checkers.add(new Attack<>(defenderPosition,
-                                    rules.attackBlockingPositions(board, defenderPosition, targetPosition, defender)));
-                        }
-                    });
-
-                // Get the positions a defending piece are latently attacking
-                rules.latentAttacking(board, defenderPosition, playerInformation.getDefender())
-                        .stream()
-                        .forEach(latentAttack -> {
-                            if (latentAttack.getAttacked().equals(actorKingPosition)) {
-                                // If the hided piece is same as actor's king, register the protecting piece in the kingDefenders
-                                latentCheckersByBlocker.put(latentAttack.getBlocker(), latentAttack);
-                            }
-                        });
+                // If any of the position is the current actor's king, mark the attackers as checker
+                if (actorKingPosition.equals(targetPosition)) {
+                    checkers.add(new Attack<>(defenderPosition,
+                            rules.attackBlockingPositions(board, defenderPosition, targetPosition, defender)));
+                }
             });
+
+            // Get the positions a defending piece are latently attacking
+            rules.latentAttacking(board, defenderPosition, playerInformation.getDefender()).forEach(latentAttack -> {
+                if (latentAttack.getAttacked().equals(actorKingPosition)) {
+                    // If the hided piece is same as actor's king, register the protecting piece in the kingDefenders
+                    latentCheckersByBlocker.put(latentAttack.getBlocker(), latentAttack);
+                }
+            });
+        });
     }
 }

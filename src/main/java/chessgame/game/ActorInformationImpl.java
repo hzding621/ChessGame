@@ -30,7 +30,7 @@ public class ActorInformationImpl<C extends Cell, P extends PieceClass, B extend
         availableMoves.clear();
 
         board.getPiecesForPlayer(actor).forEach(sourcePosition -> availableMoves.putAll(sourcePosition,
-                rules.computeAvailableMoves(board, sourcePosition, actor, defenderInformation)));
+                rules.computeAvailableMovesOptimized(board, sourcePosition, actor, defenderInformation)));
     }
 
     @Override

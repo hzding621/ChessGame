@@ -71,10 +71,10 @@ public class Rules<C extends Cell, P extends PieceClass, B extends BoardViewer<C
      * This method finds moves that only deactivate check threats and only does not put king into new check
      * @return the collection of available moves
      */
-    public Collection<Move<C>> computeAvailableMoves(B board,
-                                                     C sourcePosition,
-                                                     Player actor,
-                                                     DefenderInformation<C, P, B> defenderInformation) {
+    public Collection<Move<C>> computeAvailableMovesOptimized(B board,
+                                                              C sourcePosition,
+                                                              Player actor,
+                                                              DefenderInformation<C, P, B> defenderInformation) {
         // Get checkers
         Collection<Attack<C>> checkers = defenderInformation.getCheckers();
 
