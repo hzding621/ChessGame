@@ -2,6 +2,7 @@ package chessgame.rule;
 
 import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
+import chessgame.game.RuntimeInformation;
 import chessgame.piece.PieceClass;
 
 import java.util.HashMap;
@@ -20,5 +21,11 @@ public abstract class RuleBindings<C extends Cell, P extends PieceClass, B exten
 
     public PieceRule<C, P, B> getRule(P pieceType) {
         return bindings.get(pieceType);
+    }
+
+
+    public interface Supplier<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>, T extends RuleBindings<C, P, B>> {
+
+        T get(RuntimeInformation<C, P> runtimeInformation);
     }
 }

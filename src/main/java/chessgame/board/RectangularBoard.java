@@ -21,7 +21,7 @@ import java.util.Optional;
 public abstract class RectangularBoard<P extends PieceClass, V extends GridViewer<Square, TwoDimension, P>, T extends RectangularBoard<P, V, T>>
         extends AbstractBoard<Square, P, V, T> implements GridViewer<Square, TwoDimension, P> {
 
-    public static class Instance<P extends PieceClass> extends RectangularBoard<P, Instance<P>, Instance<P>> {
+    static class Instance<P extends PieceClass> extends RectangularBoard<P, Instance<P>, Instance<P>> {
 
         private Instance(Map<Square, Piece<P>> occupants, Square.Builder cellBuilder) {
             super(occupants, cellBuilder);

@@ -1,7 +1,7 @@
 package chessgame.piece;
 
+import chessgame.board.ChessBoard;
 import chessgame.board.Coordinate;
-import chessgame.board.RectangularBoard;
 import chessgame.board.Square;
 import chessgame.board.TwoDimension;
 import chessgame.game.ConfigurableGameSetting;
@@ -19,8 +19,8 @@ import java.util.Collection;
 public final class RookTest {
 
     private Square.Builder builder;
-    private RectangularBoard.Instance<StandardPieces> testBoard;
-    private Rook<Square, StandardPieces, TwoDimension, RectangularBoard.Instance<StandardPieces>> rule;
+    private ChessBoard<StandardPieces> testBoard;
+    private Rook<Square, StandardPieces, TwoDimension, ChessBoard<StandardPieces>> rule;
 
 
     @Before
@@ -37,7 +37,7 @@ public final class RookTest {
         // black king at A8
         // black pawn at E5
 
-        testBoard = RectangularBoard.Instance.create(ConfigurableGameSetting.builder(8, 8)
+        testBoard = ChessBoard.create(ConfigurableGameSetting.builder(8, 8)
                 .piece(StandardPieces.ROOK, Player.WHITE, "E", "2")
                 .piece(StandardPieces.KING, Player.WHITE, "E", "1")
                 .piece(StandardPieces.KING, Player.BLACK, "E", "8")
@@ -70,7 +70,7 @@ public final class RookTest {
 
         // latent attack, E7 via E5, A3 via C3
 
-        testBoard = RectangularBoard.Instance.create(ConfigurableGameSetting.builder(8, 8)
+        testBoard = ChessBoard.create(ConfigurableGameSetting.builder(8, 8)
                 .piece(StandardPieces.ROOK, Player.WHITE, "E", "3")
                 .piece(StandardPieces.PAWN, Player.WHITE, "E", "5")
                 .piece(StandardPieces.KING, Player.BLACK, "E", "7")

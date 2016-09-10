@@ -9,7 +9,7 @@ import chessgame.piece.King;
 import chessgame.piece.StandardPieces;
 
 /**
- * Inherit the empty rule bindings to include all standard chess pieces rule mappings
+ * Inherit the basic rule bindings to include every standard chess piece rule mapping, including castling, en passant, promotion, etc.
  */
 public final class StandardRuleBindings extends BasicRuleBindings<ChessBoardViewer<StandardPieces>> {
 
@@ -18,5 +18,9 @@ public final class StandardRuleBindings extends BasicRuleBindings<ChessBoardView
 
         // Overwrite King's rule with one with Castling activated
         bindRule(StandardPieces.KING, new King.WithCastling(runtimeInformation));
+
+        // TODO: pawn promotion, en passant
     }
+
+    public interface Supplier extends RuleBindings.Supplier<Square, StandardPieces, ChessBoardViewer<StandardPieces>, StandardRuleBindings> {}
 }

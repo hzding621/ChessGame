@@ -1,5 +1,7 @@
 package chessgame.game;
 
+import chessgame.board.ChessBoard;
+import chessgame.board.ChessBoardViewer;
 import chessgame.board.GridCellBuilder;
 import chessgame.board.RectangularBoard;
 import chessgame.board.Square;
@@ -15,14 +17,14 @@ import java.util.function.Consumer;
  */
 public class AbstractTest {
 
-    protected RectangularBoard.Instance<StandardPieces> testBoard;
+    protected ChessBoard<StandardPieces> testBoard;
     protected GridCellBuilder<Square, TwoDimension> cell;
-    protected Rules<Square, StandardPieces, RectangularBoard.Instance<StandardPieces>> rules;
-    protected RuntimeInformationImpl<Square, StandardPieces, RectangularBoard.Instance<StandardPieces>> runtimeInformation;
+    protected Rules<Square, StandardPieces, ChessBoardViewer<StandardPieces>> rules;
+    protected RuntimeInformationImpl<Square, StandardPieces, ChessBoardViewer<StandardPieces>> runtimeInformation;
     protected MoveFinder<Square, StandardPieces> moveFinder;
 
     protected void hydrate(GameSetting.GridGame<Square, StandardPieces> customizedSet, boolean optimizedMoveFinder) {
-        testBoard = RectangularBoard.Instance.create(customizedSet);
+        testBoard = ChessBoard.create(customizedSet);
         runtimeInformation = new RuntimeInformationImpl<>(customizedSet, testBoard);
         rules = new Rules<>(new BasicRuleBindings<>(runtimeInformation));
         if (optimizedMoveFinder) {

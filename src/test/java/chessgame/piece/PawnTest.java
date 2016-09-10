@@ -1,5 +1,6 @@
 package chessgame.piece;
 
+import chessgame.board.ChessBoard;
 import chessgame.board.Coordinate;
 import chessgame.board.RectangularBoard;
 import chessgame.board.Square;
@@ -26,8 +27,8 @@ import java.util.Collection;
 public final class PawnTest {
 
     private Square.Builder builder;
-    private RectangularBoard.Instance<StandardPieces> testBoard;
-    private Pawn<Square, StandardPieces, TwoDimension, RectangularBoard.Instance<StandardPieces>> rule;
+    private ChessBoard<StandardPieces> testBoard;
+    private Pawn<Square, StandardPieces, TwoDimension, ChessBoard<StandardPieces>> rule;
     @Mock private PieceInformation<Square, StandardPieces> pieceInformation;
     @Mock private RuntimeInformation<Square, StandardPieces> runtimeInformation;
 
@@ -44,7 +45,7 @@ public final class PawnTest {
         // white king at E1
         // black king at E8
 
-        testBoard = RectangularBoard.Instance.create(ConfigurableGameSetting.builder(8, 8)
+        testBoard = ChessBoard.create(ConfigurableGameSetting.builder(8, 8)
                 .piece(StandardPieces.PAWN, Player.WHITE, "E", "2")
                 .piece(StandardPieces.KING, Player.WHITE, "E", "1")
                 .piece(StandardPieces.KING, Player.BLACK, "E", "8")

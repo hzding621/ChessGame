@@ -6,6 +6,8 @@ import chessgame.board.TwoDimension;
 import chessgame.move.CastlingMove;
 import chessgame.move.Move;
 import chessgame.move.SimpleMove;
+import chessgame.piece.StandardPieces;
+import chessgame.rule.StandardRuleBindings;
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import org.junit.Assert;
@@ -17,14 +19,14 @@ import java.util.Collection;
 /**
  * Test the computation of available moves in a standard chess game
  */
-public class StandardGameTest {
+public class ChessGameTest {
 
-    private StandardGame game;
+    private ChessGame<StandardPieces> game;
     private GridCellBuilder<Square, TwoDimension> cell;
 
     @Before
     public void initializeGame() {
-        game = StandardGame.constructGame(new StandardSetting());
+        game = ChessGame.constructGame(new StandardSetting(), (StandardRuleBindings::new));
         cell = game.getBoard().getGridCellFactory();
     }
 

@@ -1,5 +1,6 @@
 package chessgame.piece;
 
+import chessgame.board.ChessBoard;
 import chessgame.board.Coordinate;
 import chessgame.board.RectangularBoard;
 import chessgame.board.Square;
@@ -18,8 +19,8 @@ import java.util.Collection;
 public final class KnightTest {
 
     private Square.Builder builder;
-    private RectangularBoard.Instance<StandardPieces> testBoard;
-    private Knight<Square, StandardPieces, TwoDimension, RectangularBoard.Instance<StandardPieces>> rule;
+    private ChessBoard<StandardPieces> testBoard;
+    private Knight<Square, StandardPieces, TwoDimension, ChessBoard<StandardPieces>> rule;
 
     @Before
     public void instantiateTestPieceSet() {
@@ -33,7 +34,7 @@ public final class KnightTest {
         // white knight at D4
         // white king at E1
         // black king at E8
-        testBoard = RectangularBoard.Instance.create(ConfigurableGameSetting.builder(8, 8)
+        testBoard = ChessBoard.create(ConfigurableGameSetting.builder(8, 8)
                 .piece(StandardPieces.KNIGHT, Player.WHITE, "D", "4")
                 .piece(StandardPieces.KING, Player.WHITE, "E", "1")
                 .piece(StandardPieces.KING, Player.BLACK, "E", "8")
@@ -49,7 +50,7 @@ public final class KnightTest {
         // white knight at H1
         // white king at E1
         // black king at E8
-        testBoard = RectangularBoard.Instance.create(ConfigurableGameSetting.builder(8, 8)
+        testBoard = ChessBoard.create(ConfigurableGameSetting.builder(8, 8)
                 .piece(StandardPieces.KNIGHT, Player.WHITE, "H", "1")
                 .piece(StandardPieces.KING, Player.WHITE, "E", "1")
                 .piece(StandardPieces.KING, Player.BLACK, "E", "8")
@@ -65,7 +66,7 @@ public final class KnightTest {
         // white knight at F6
         // white king at E1
         // black king at E8
-        testBoard = RectangularBoard.Instance.create(ConfigurableGameSetting.builder(8, 8)
+        testBoard = ChessBoard.create(ConfigurableGameSetting.builder(8, 8)
                 .piece(StandardPieces.KNIGHT, Player.WHITE, "F", "6")
                 .piece(StandardPieces.KING, Player.WHITE, "E", "1")
                 .piece(StandardPieces.KING, Player.BLACK, "E", "8")

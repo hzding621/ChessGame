@@ -68,7 +68,7 @@ public class King<C extends Cell, P extends PieceClass, D extends Direction<D>, 
         }
 
         @Override
-        public Collection<Move<Square>> specialMove(ChessBoardViewer board, Player player) {
+        public Collection<Move<Square>> specialMove(ChessBoardViewer<StandardPieces> board, Player player) {
             return castling(board, player);
         }
 
