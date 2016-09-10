@@ -96,18 +96,18 @@ public final class ChessBoard implements
     }
 
     @Override
-    public Optional<Square> moveSteps(Square startCell, TwoDimension direction, int steps, Vector vector) {
-        return delegate.moveSteps(startCell, direction, steps, vector);
+    public Optional<Square> moveSteps(Square startCell, TwoDimension direction, int steps, Projection projection) {
+        return delegate.moveSteps(startCell, direction, steps, projection);
     }
 
     @Override
-    public List<Square> furthestReach(Square startCell, TwoDimension direction, Vector vector, boolean startInclusive, boolean meetInclusive) {
-        return delegate.furthestReach(startCell, direction, vector, startInclusive, meetInclusive);
+    public List<Square> furthestReach(Square startCell, TwoDimension direction, Projection projection, boolean startInclusive, boolean meetInclusive) {
+        return delegate.furthestReach(startCell, direction, projection, startInclusive, meetInclusive);
     }
 
     @Override
-    public Optional<Square> firstOccupant(Square startCell, TwoDimension direction, Vector vector) {
-        return delegate.firstOccupant(startCell, direction, vector);
+    public Optional<Square> firstOccupant(Square startCell, TwoDimension direction, Projection projection) {
+        return delegate.firstOccupant(startCell, direction, projection);
     }
 
     @Override

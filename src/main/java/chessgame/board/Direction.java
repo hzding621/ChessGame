@@ -6,12 +6,12 @@ package chessgame.board;
 public interface Direction<T extends Direction<T>> {
 
     /**
-     * @return the next direction clockwise, counting both diagonal and orthogonal!
+     * @return rotate to the next clockwise direction by a unit (e.g. a unit in TwoDimension is 45 degree).
      */
     T nextClockWise();
 
     /**
-     * @return the next direction counterclockwise, , counting both diagonal and orthogonal!
+     * @return rotate to the next counter clockwise direction by a unit (e.g. a unit in TwoDimension is 45 degree).
      */
     T nextCounterClockWise();
 

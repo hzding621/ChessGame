@@ -3,7 +3,7 @@ package chessgame.piece;
 import chessgame.board.Cell;
 import chessgame.board.Direction;
 import chessgame.board.GridViewer;
-import chessgame.board.Vector;
+import chessgame.board.Projection;
 import chessgame.rule.Leaper;
 import chessgame.rule.OptimizedPiece;
 import chessgame.rule.PieceRule;
@@ -17,7 +17,7 @@ public final class Knight<C extends Cell, P extends PieceClass, D extends Direct
         implements Leaper<C, P, D, B>, OptimizedPiece<C, P, B>, PieceRule<C,P,B> {
 
     @Override
-    public Vector getAttackDirection() {
-        return Vector.of(1, 2);
+    public Projection getAttackProjection() {
+        return Projection.of(1, 2);
     }
 }

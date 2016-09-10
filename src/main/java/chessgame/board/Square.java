@@ -100,28 +100,28 @@ public final class Square implements Cell {
         }
 
         @Override
-        public Optional<Square> moveOnce(Square cell, TwoDimension direction, Vector vector) {
+        public Optional<Square> moveOnce(Square cell, TwoDimension direction, Projection projection) {
 
-            if (vector.getX() < 0) {
+            if (projection.getForward() < 0) {
                 direction = direction.reverse();
             }
             int fileIndex = cell.file.getCoordinate().getIndex();
             int rankIndex = cell.rank.getCoordinate().getIndex();
             int xDelta = direction.getX(), yDelta = direction.getY();
-            for (int i = 0; i < Math.abs(vector.getX()); i++) {
+            for (int i = 0; i < Math.abs(projection.getForward()); i++) {
                 fileIndex += xDelta;
                 rankIndex += yDelta;
                 if (!withinRange(fileIndex, rankIndex)) {
                     return Optional.empty();
                 }
             }
-            if (vector.getY() > 0) {
+            if (projection.getRotate() > 0) {
                 direction = direction.nextClockWise().nextClockWise();
             } else {
                 direction = direction.nextCounterClockWise().nextCounterClockWise();
             }
             xDelta = direction.getX(); yDelta = direction.getY();
-            for (int j = 0; j < Math.abs(vector.getY()); j++) {
+            for (int j = 0; j < Math.abs(projection.getRotate()); j++) {
                 fileIndex += xDelta;
                 rankIndex += yDelta;
                 if (!withinRange(fileIndex, rankIndex)) {
