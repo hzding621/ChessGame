@@ -1,20 +1,18 @@
 package chessgame.piece;
 
 import chessgame.board.Cell;
-import chessgame.board.ChessBoard;
+import chessgame.board.ChessBoardViewer;
 import chessgame.board.Direction;
 import chessgame.board.GridViewer;
 import chessgame.board.Square;
 import chessgame.board.TwoDimension;
-import chessgame.game.DefenderInformation;
-import chessgame.game.PieceInformation;
+import chessgame.game.RuntimeInformation;
 import chessgame.move.CastlingMove;
 import chessgame.move.Move;
 import chessgame.move.SimpleMove;
 import chessgame.player.Player;
 import chessgame.rule.AbstractPieceRule;
-import chessgame.rule.RequiresDefenderInformation;
-import chessgame.rule.RequiresPieceInformation;
+import chessgame.rule.RequiresRuntimeInformation;
 import chessgame.rule.SpecialMovePieceRule;
 import com.google.common.collect.ImmutableList;
 
@@ -38,30 +36,29 @@ public final class King<P extends PieceClass> extends AbstractPiece<P> {
                 ", id=" + getId() +
                 '}';
     }
-    public static class KingRule<C extends Cell, P extends PieceClass, D extends Direction,
+    public static class KingRule<C extends Cell, P extends PieceClass, D extends Direction<D>,
             B extends GridViewer<C, D, P>> extends AbstractPieceRule<C, P, B>
-            implements RequiresPieceInformation<C, P> {
+            implements RequiresRuntimeInformation<C, P> {
 
-        private final PieceInformation<C, P> pieceInformation;
+        private final RuntimeInformation<C, P> runtimeInformation;
 
-        public KingRule(B gridViewer, PieceInformation<C, P> pieceInformation) {
-            super(gridViewer);
-            this.pieceInformation = pieceInformation;
+        public KingRule(RuntimeInformation<C, P> runtimeInformation) {
+            this.runtimeInformation = runtimeInformation;
         }
 
         @Override
-        public Collection<C> attacking(C position, Player player) {
-            return boardViewer.getAllDirections().stream()
-                    .map(direction -> boardViewer.moveSteps(position, direction, 1))
+        public Collection<C> attacking(B board, C position, Player player) {
+            return board.getAllDirections().stream()
+                    .map(direction -> board.moveSteps(position, direction, 1))
                     .filter(Optional::isPresent).map(Optional::get)
                     .collect(Collectors.toList());
         }
 
         @Override
-        public Collection<C> attackBlockingPositions(C sourcePosition,
+        public Collection<C> attackBlockingPositions(B board, C sourcePosition,
                                                      C targetPosition,
                                                      Player player) {
-            if (!attacking(sourcePosition, player).contains(targetPosition)) {
+            if (!attacking(board, sourcePosition, player).contains(targetPosition)) {
                 throw new IllegalArgumentException(sourcePosition + " cannot attack " + targetPosition + " !");
             }
 
@@ -70,35 +67,35 @@ public final class King<P extends PieceClass> extends AbstractPiece<P> {
         }
 
         @Override
-        public PieceInformation<C, P> getPieceInformation() {
-            return pieceInformation;
+        public RuntimeInformation<C, P> getRuntimeInformation() {
+            return runtimeInformation;
         }
     }
 
-    public static class KingRuleWithCastling extends KingRule<Square, StandardPieces, TwoDimension, ChessBoard>
-            implements SpecialMovePieceRule<Square>, RequiresDefenderInformation<Square, StandardPieces, ChessBoard> {
+    public static class KingRuleWithCastling extends KingRule<Square, StandardPieces, TwoDimension, ChessBoardViewer>
+            implements SpecialMovePieceRule<Square, StandardPieces, ChessBoardViewer> {
 
-        private final DefenderInformation<Square, StandardPieces, ChessBoard> defenderInformation;
-
-        public KingRuleWithCastling(ChessBoard gridViewer, PieceInformation<Square, StandardPieces> pieceInformation,
-                                    DefenderInformation<Square, StandardPieces, ChessBoard> defenderInformation) {
-            super(gridViewer, pieceInformation);
-            this.defenderInformation = defenderInformation;
+        public KingRuleWithCastling(RuntimeInformation<Square, StandardPieces> runtimeInformation) {
+            super(runtimeInformation);
         }
 
         @Override
-        public Collection<Move<Square>> specialMove(Player player) {
-            return castling(player);
+        public Collection<Move<Square>> specialMove(ChessBoardViewer board, Player player) {
+            return castling(board, player);
         }
 
-        private CastlingMove<Square> constructCastlingMove(Square kingPosition,
-                                                           Square rookPosition,
-                                                           TwoDimension side,
-                                                           Player player) {
-            Square kingNewPosition = boardViewer.moveSteps(kingPosition, side, 2).get();
-            Square rookNewPosition = boardViewer.moveSteps(kingNewPosition, side.reverse(), 1).get();
-            return new CastlingMove<>(SimpleMove.of(kingPosition, kingNewPosition,player),
-                    SimpleMove.of(rookPosition, rookNewPosition,player));
+        private Optional<CastlingMove<Square>> constructCastlingMove(ChessBoardViewer board,
+                                                                     Square kingPosition,
+                                                                     Square rookPosition,
+                                                                     TwoDimension side,
+                                                                     Player player) {
+            Square kingNewPosition = board.moveSteps(kingPosition, side, 2).get();
+            if (getRuntimeInformation().getAttackInformation().isAttacked(kingNewPosition)) {
+                return Optional.empty();
+            }
+            Square rookNewPosition = board.moveSteps(kingNewPosition, side.reverse(), 1).get();
+            return Optional.of(new CastlingMove<>(SimpleMove.of(kingPosition, kingNewPosition,player),
+                    SimpleMove.of(rookPosition, rookNewPosition,player)));
         }
 
         /**
@@ -109,22 +106,25 @@ public final class King<P extends PieceClass> extends AbstractPiece<P> {
          * Castling is one of the rules of chess and is technically a king move (Hooper & Whyld 1992:71).
          * @return non-empty if a castling is valid, empty otherwise
          */
-        private Collection<Move<Square>> castling(Player player) {
-            Square kingPosition = getPieceInformation().locateKing(player);
-            Piece<StandardPieces> king = boardViewer.getPiece(kingPosition).get();
-            if (getPieceInformation().getPieceMoveCount(king) > 0 || defenderInformation.getCheckers().size() > 0) {
+        private Collection<Move<Square>> castling(ChessBoardViewer board, Player player) {
+            Square kingPosition = getRuntimeInformation().getPieceInformation().locateKing(player);
+            Piece<StandardPieces> king = board.getPiece(kingPosition).get();
+            if (getRuntimeInformation().getPieceInformation().getPieceMoveCount(king) > 0
+                    || getRuntimeInformation().getAttackInformation().getCheckers().size() > 0) {
                 // If King has moved or if king is under check, cannot move
                 return ImmutableList.of();
             }
-            Optional<Square> leftBound = boardViewer.firstOccupant(kingPosition, TwoDimension.WEST);
-            Optional<Square> rightBound = boardViewer.firstOccupant(kingPosition, TwoDimension.EAST);
+            Optional<Square> leftBound = board.firstOccupant(kingPosition, TwoDimension.WEST);
+            Optional<Square> rightBound = board.firstOccupant(kingPosition, TwoDimension.EAST);
 
             final ImmutableList.Builder<Move<Square>> builder = ImmutableList.builder();
-            boardViewer.getPiecesOfTypeForPlayer(StandardPieces.ROOK, player).forEach(rookPosition -> {
+            board.getPiecesOfTypeForPlayer(StandardPieces.ROOK, player).forEach(rookPosition -> {
                 if (leftBound.isPresent() && rookPosition.equals(leftBound.get())) {
-                    builder.add(constructCastlingMove(kingPosition, rookPosition, TwoDimension.WEST, player));
+                    constructCastlingMove(board, kingPosition, rookPosition, TwoDimension.WEST, player)
+                            .ifPresent(builder::add);
                 } else if (rightBound.isPresent() && rookPosition.equals(rightBound.get())) {
-                    builder.add(constructCastlingMove(kingPosition, rookPosition, TwoDimension.EAST, player));
+                    constructCastlingMove(board, kingPosition, rookPosition, TwoDimension.EAST, player)
+                            .ifPresent(builder::add);
                 }
             });
 
@@ -133,11 +133,6 @@ public final class King<P extends PieceClass> extends AbstractPiece<P> {
              * does not expose king
              */
             return builder.build();
-        }
-
-        @Override
-        public DefenderInformation<Square, StandardPieces, ChessBoard> getDefenderInformation() {
-            return defenderInformation;
         }
     }
 }

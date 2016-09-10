@@ -3,10 +3,16 @@ package chessgame.game;
 import chessgame.board.GridCellBuilder;
 import chessgame.board.Square;
 import chessgame.board.TwoDimension;
+import chessgame.move.CastlingMove;
+import chessgame.move.Move;
 import chessgame.move.SimpleMove;
+import com.google.common.base.Optional;
+import com.google.common.collect.Iterables;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Collection;
 
 /**
  * Test the computation of available moves in a standard chess game
@@ -25,6 +31,8 @@ public class StandardGameTest {
     @Test
     public void testEscapingCheck() {
 
+        int moves = 0;
+
         for (String[] move: new String[][] {
                 {"D", "2", "D", "4"},
                 {"D", "7", "D", "5"},
@@ -33,6 +41,7 @@ public class StandardGameTest {
                 {"F", "1", "B", "5"},
 
         }) {
+            moves++;
             game.move(SimpleMove.of(cell.at(move[0], move[1]), cell.at(move[2], move[3]), game.getActor()));
         }
 
@@ -86,5 +95,30 @@ public class StandardGameTest {
         }
 
         Assert.assertTrue(game.availableMoves().isEmpty());
+    }
+
+    @Test
+    public void testCastling() {
+        for (String[] move: new String[][] {
+                {"E", "2", "E", "4"},
+                {"E", "7", "E", "5"},
+                {"G", "1", "F", "3"},
+                {"G", "8", "F", "6"},
+                {"F", "1", "C", "4"},
+                {"B", "8", "C", "6"},
+        }) {
+            game.move(SimpleMove.of(cell.at(move[0], move[1]), cell.at(move[2], move[3]), game.getActor()));
+        }
+
+        Collection<Move<Square>> moves = game.availableMovesFrom(cell.at("E", "1"));
+        Assert.assertEquals(3, moves.size());
+
+        Optional<Move<Square>> castling = Iterables.tryFind(moves, m -> m instanceof CastlingMove);
+        Assert.assertTrue(castling.isPresent());
+
+        game.move(castling.get());
+
+        Assert.assertTrue(game.getBoard().isOccupied(cell.at("G", "1")));
+        Assert.assertTrue(game.getBoard().isOccupied(cell.at("F", "1")));
     }
 }

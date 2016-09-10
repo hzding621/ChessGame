@@ -3,9 +3,9 @@ package chessgame.board;
 /**
  * Represents a direction any piece can move on a board
  */
-public interface Direction {
+public interface Direction<T extends Direction<T>> {
 
-    Direction getClockwise();
+    T getClockwise();
 
-    Direction getCounterClockwise();
+    T getCounterClockwise();
 }

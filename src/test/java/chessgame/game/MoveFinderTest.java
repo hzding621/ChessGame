@@ -10,10 +10,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Contains tests for ActorInformation
+ * Contains tests for MoveFinder
  * Mainly tests for Available Moves computation
  */
-public final class ActorInformationTest extends InformationAbstractTest{
+public final class MoveFinderTest extends InformationAbstractTest{
 
     private static boolean checkIsValidMove(SetMultimap<Square, Move<Square>> allMoves, Square source, Square target) {
         return allMoves.get(source)
@@ -25,7 +25,7 @@ public final class ActorInformationTest extends InformationAbstractTest{
     @Test
     public void testAvailableMovesOpeningPosition() {
         hydrate(new StandardSetting());
-        SetMultimap<Square, Move<Square>> allMoves = boardInformation.getAvailableMoves();
+        SetMultimap<Square, Move<Square>> allMoves = moveFinder.getAvailableMoves();
 
         // All pawns can move one or two cells upwards
         for (int i = 0; i < 8; i++) {
@@ -52,10 +52,10 @@ public final class ActorInformationTest extends InformationAbstractTest{
                 .build();
         hydrate(config);
 
-        SetMultimap<Square, Move<Square>> allMoves = boardInformation.getAvailableMoves();
+        SetMultimap<Square, Move<Square>> allMoves = moveFinder.getAvailableMoves();
 
         Assert.assertTrue(allMoves.isEmpty());
-        Assert.assertEquals(1,boardInformation.getCheckers().size(), 1);
+        Assert.assertEquals(1, runtimeInformation.getAttackInformation().getCheckers().size(), 1);
     }
 
     @Test
@@ -69,9 +69,9 @@ public final class ActorInformationTest extends InformationAbstractTest{
                 .build();
         hydrate(config);
 
-        SetMultimap<Square, Move<Square>> allMoves = boardInformation.getAvailableMoves();
+        SetMultimap<Square, Move<Square>> allMoves = moveFinder.getAvailableMoves();
 
         Assert.assertTrue(allMoves.isEmpty());
-        Assert.assertTrue(boardInformation.getCheckers().isEmpty());
+        Assert.assertTrue(runtimeInformation.getAttackInformation().getCheckers().isEmpty());
     }
 }

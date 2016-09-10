@@ -1,14 +1,14 @@
 package chessgame.game;
 
 import chessgame.board.ChessBoard;
+import chessgame.board.ChessBoardViewer;
 import chessgame.board.Square;
 import chessgame.move.Move;
-import chessgame.move.MoveResult;
+import chessgame.move.TransitionResult;
 import chessgame.piece.StandardPieces;
 import chessgame.player.Player;
 import chessgame.rule.Rules;
 import chessgame.rule.StandardRuleBindings;
-import com.google.common.collect.ImmutableList;
 
 import java.util.Collection;
 
@@ -17,26 +17,33 @@ import java.util.Collection;
  */
 public class StandardGame implements Game<Square, StandardPieces, ChessBoard> {
     private final ChessBoard chessBoard;
-    private final Rules<Square, StandardPieces, ChessBoard> chessRules;
-    private final BoardInformation<Square, StandardPieces, ChessBoard> boardInformation;
+    private final Rules<Square, StandardPieces, ChessBoardViewer> chessRules;
+    private final RuntimeInformationImpl<Square, StandardPieces, ChessBoardViewer> runtimeInformation;
+    private final MoveFinder<Square, StandardPieces> moveFinder;
     private GameStatus gameStatus = GameStatus.OPEN;
 
+
     private StandardGame(ChessBoard chessBoard,
-                         Rules<Square, StandardPieces, ChessBoard> chessRules,
-                         BoardInformation<Square, StandardPieces, ChessBoard> boardInformation) {
+                         Rules<Square, StandardPieces, ChessBoardViewer> chessRules,
+                         RuntimeInformationImpl<Square, StandardPieces, ChessBoardViewer> runtimeInformation,
+                         MoveFinder<Square, StandardPieces> moveFinder) {
         this.chessBoard = chessBoard;
         this.chessRules = chessRules;
-        this.boardInformation = boardInformation;
-        updateInformationForThisRound(ImmutableList::of, true);
+        this.runtimeInformation = runtimeInformation;
+        this.moveFinder = moveFinder;
+        runtimeInformation.initializeInformation(chessRules);
+        moveFinder.recompute();
     }
 
     public static StandardGame constructGame() {
         StandardSetting pieceSet = new StandardSetting();
-        BoardInformation<Square, StandardPieces, ChessBoard> boardInformation =
-                new BoardInformation<>(pieceSet);
-        ChessBoard board = new ChessBoard(pieceSet);
-        StandardRuleBindings ruleBindings = new StandardRuleBindings(board, boardInformation, boardInformation);
-        return new StandardGame(board, new Rules<>(ruleBindings), boardInformation);
+        ChessBoard board = ChessBoard.create(pieceSet);
+        RuntimeInformationImpl<Square, StandardPieces, ChessBoardViewer> runtimeInformation =
+                new RuntimeInformationImpl<>(pieceSet, board);
+        Rules<Square, StandardPieces, ChessBoardViewer> rules =
+                new Rules<>(new StandardRuleBindings(runtimeInformation));
+        MoveFinder<Square, StandardPieces> moveFinder = new BasicMoveFinder<>(board, rules, runtimeInformation);
+        return new StandardGame(board, rules, runtimeInformation, moveFinder);
     }
 
     @Override
@@ -45,38 +52,39 @@ public class StandardGame implements Game<Square, StandardPieces, ChessBoard> {
     }
 
     @Override
-    public BoardInformation<Square, StandardPieces, ChessBoard> getBoardInformation() {
-        return boardInformation;
-    }
-
-    @Override
-    public Rules<Square, StandardPieces, ChessBoard> getRule() {
-        return chessRules;
-    }
-
-    @Override
     public Player getActor() {
-        return boardInformation.getActor();
+        return runtimeInformation.getPlayerInformation().getActor();
     }
 
     @Override
     public Player getDefender() {
-        return boardInformation.getDefender();
+        return runtimeInformation.getPlayerInformation().getDefender();
     }
 
     @Override
     public Collection<Move<Square>> availableMoves() {
-        return boardInformation.getAvailableMoves().values();
+        return moveFinder.getAvailableMoves().values();
     }
 
     @Override
     public Collection<Move<Square>> availableMovesFrom(Square square) {
-        return boardInformation.getAvailableMoves().get(square);
+        return moveFinder.getAvailableMoves().get(square);
     }
 
-    private void updateInformationForThisRound(MoveResult<Square, StandardPieces> history, boolean opening) {
-        // Update everthing in board information
-        gameStatus = boardInformation.updateInformationForThisRound(chessBoard, chessRules, history, opening);
+    private void updateInformationForThisRound(TransitionResult<Square, StandardPieces> history) {
+        // Update everything in runtime information
+        runtimeInformation.updateInformationForThisRound(chessRules, history);
+        moveFinder.recompute();
+
+        // Update Checkmate/Stalemate situation
+        if (moveFinder.getAvailableMoves().isEmpty()) {
+            if (runtimeInformation.getAttackInformation().getCheckers().isEmpty()) {
+                gameStatus = GameStatus.STALEMATE;
+            } else {
+                gameStatus =  GameStatus.CHECKMATE;
+            }
+        }
+        gameStatus = GameStatus.OPEN;
     }
 
     @Override
@@ -85,10 +93,11 @@ public class StandardGame implements Game<Square, StandardPieces, ChessBoard> {
             throw new IllegalStateException("Game has ended in " + gameStatus);
         }
         Square source = attemptedMove.getInitiator();
-        if (!boardInformation.getAvailableMoves().get(source).contains(attemptedMove)) {
+        if (!moveFinder.getAvailableMoves().get(source).contains(attemptedMove)) {
             throw new IllegalStateException("Attempted move " + attemptedMove + " is invalid!");
         }
-        updateInformationForThisRound(attemptedMove.<StandardPieces>getTransition().apply(chessBoard), false);
+        updateInformationForThisRound(chessBoard.apply(attemptedMove.getTransition()));
+        moveFinder.recompute();
     }
 
     @Override

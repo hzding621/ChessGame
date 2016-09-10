@@ -10,21 +10,24 @@ import chessgame.rule.Rules;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Contains some shared codes across ActorInformationTest and DefenderInformationTest
+ * Contains some shared codes across MoveFinderTest and AttackInformationTest
  */
 public class InformationAbstractTest {
 
-    protected RectangularBoard<StandardPieces> testBoard;
+    protected RectangularBoard.Instance<StandardPieces> testBoard;
     protected GridCellBuilder<Square, TwoDimension> cell;
-    protected Rules<Square, StandardPieces, RectangularBoard<StandardPieces>> rules;
-    protected BoardInformation<Square, StandardPieces, RectangularBoard<StandardPieces>> boardInformation;
+    protected Rules<Square, StandardPieces, RectangularBoard.Instance<StandardPieces>> rules;
+    protected RuntimeInformationImpl<Square, StandardPieces, RectangularBoard.Instance<StandardPieces>> runtimeInformation;
+    protected MoveFinder<Square, StandardPieces> moveFinder;
 
     protected void hydrate(GameSetting.GridGame<Square, StandardPieces> customizedSet) {
-        boardInformation = new BoardInformation<>(customizedSet);
-        testBoard = new RectangularBoard<>(customizedSet);
+        testBoard = RectangularBoard.Instance.create(customizedSet);
+        runtimeInformation = new RuntimeInformationImpl<>(customizedSet, testBoard);
+        rules = new Rules<>(new BasicRuleBindings<>(runtimeInformation));
+        moveFinder = new OptimizedMoveFinder<>(testBoard, rules, runtimeInformation);
         cell = testBoard.getGridCellFactory();
-        rules = new Rules<>(new BasicRuleBindings<>(testBoard, boardInformation));
-        boardInformation.updateInformationForThisRound(testBoard, rules, ImmutableList::of, true);
+        runtimeInformation.initializeInformation(rules);
+        moveFinder.recompute();
     }
 
 }

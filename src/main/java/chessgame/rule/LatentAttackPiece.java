@@ -15,9 +15,11 @@ public interface LatentAttackPiece<C extends Cell, P extends PieceClass, B exten
 
     /**
      * Find pieces that form a pinning attack, both the protecting and protected pieces should belong to opponent
+     *
+     * @param board the given board
      * @param position the position of player's piece
      * @param player the player
      * @return The set of pinning attack the piece is making at position
      */
-    Collection<LatentAttack<C>> latentAttacking(C position, Player player);
+    Collection<LatentAttack<C>> latentAttacking(B board, C position, Player player);
 }

@@ -1,30 +1,59 @@
 package chessgame.board;
 
+import chessgame.move.BoardTransition;
+import chessgame.move.TransitionResult;
 import chessgame.piece.Piece;
 import chessgame.game.GameSetting;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
+import fj.data.TreeMap;
 import utility.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
  * Represents an abstract rectangular board
  */
-public class RectangularBoard<P extends PieceClass>
-        extends AbstractBoard<Square, P> implements GridViewer<Square, TwoDimension, P> {
+public abstract class RectangularBoard<P extends PieceClass, V extends GridViewer<Square, TwoDimension, P>, T extends RectangularBoard<P, V, T>>
+        extends AbstractBoard<Square, P, V, T> implements GridViewer<Square, TwoDimension, P> {
 
-    private final Square.Builder cellBuilder;
+    public static class Instance<P extends PieceClass> extends RectangularBoard<P, Instance<P>, Instance<P>> {
 
-    public RectangularBoard(GameSetting.GridGame<Square, P> gameSetting) {
-        super(gameSetting);
-        final Coordinate.Builder fileBuilder = new Coordinate.Builder(gameSetting.getFileLength());
-        final Coordinate.Builder rankBuilder = new Coordinate.Builder(gameSetting.getRankLength());
-        this.cellBuilder = new Square.Builder(fileBuilder, rankBuilder);
+        private Instance(Map<Square, Piece<P>> occupants, Square.Builder cellBuilder) {
+            super(occupants, cellBuilder);
+        }
+
+        public static <P extends PieceClass> RectangularBoard.Instance<P> create(
+                GameSetting.GridGame<Square, P> gameSetting) {
+            final Coordinate.Builder fileBuilder = new Coordinate.Builder(gameSetting.getFileLength());
+            final Coordinate.Builder rankBuilder = new Coordinate.Builder(gameSetting.getRankLength());
+            return new RectangularBoard.Instance<>(gameSetting.constructPiecesByStartingPosition(),
+                    new Square.Builder(fileBuilder, rankBuilder));
+        }
+
+        @Override
+        public TransitionResult<Square, P> apply(BoardTransition<Square, P, RectangularBoard.Instance<P>> boardTransition) {
+            return boardTransition.apply(this);
+        }
+
+        @Override
+        public RectangularBoard.Instance<P> preview(BoardTransition<Square, P, RectangularBoard.Instance<P>> transition) {
+            RectangularBoard.Instance<P> newInstance = new RectangularBoard.Instance<P>(occupants, cellBuilder);
+            newInstance.apply(transition);
+            return newInstance;
+        }
+    }
+
+    protected final Square.Builder cellBuilder;
+
+    protected RectangularBoard(Map<Square, Piece<P>> occupants, Square.Builder cellBuilder) {
+        super(occupants);
+        this.cellBuilder = cellBuilder;
     }
 
     @Override
@@ -92,7 +121,7 @@ public class RectangularBoard<P extends PieceClass>
         validatePosition(startCell);
         Optional<Square> cell = Optional.of(startCell);
         while (steps > 0 && cell.isPresent()) {
-             cell =  getGridCellFactory().moveOnce(cell.get(), direction);
+            cell =  getGridCellFactory().moveOnce(cell.get(), direction);
             steps--;
         }
         return cell;

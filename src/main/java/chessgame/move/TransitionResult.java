@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * Represents the change a move has made
  */
-public interface MoveResult<C extends Cell, P extends PieceClass> {
+public interface TransitionResult<C extends Cell, P extends PieceClass> {
 
     /**
      * @return all moved pieces as a result of this move

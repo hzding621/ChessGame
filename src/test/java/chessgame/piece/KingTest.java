@@ -2,9 +2,12 @@ package chessgame.piece;
 
 import chessgame.board.ChessBoard;
 import chessgame.board.Coordinate;
+import chessgame.board.RectangularBoard;
 import chessgame.board.Square;
-import chessgame.game.DefenderInformation;
+import chessgame.board.TwoDimension;
+import chessgame.game.AttackInformation;
 import chessgame.game.PieceInformation;
+import chessgame.game.RuntimeInformation;
 import chessgame.game.StandardSetting;
 import chessgame.move.CastlingMove;
 import chessgame.move.Move;
@@ -28,9 +31,12 @@ import java.util.Collection;
 public class KingTest {
 
     private Square.Builder builder;
-    private ChessBoard testBoard = new ChessBoard(new StandardSetting());
+    private ChessBoard testBoard = ChessBoard.create(new StandardSetting());
+    private King.KingRule<Square, StandardPieces, TwoDimension, ChessBoard> rule;
+
     @Mock private PieceInformation<Square, StandardPieces> pieceInformation;
-    @Mock private DefenderInformation<Square, StandardPieces, ChessBoard> defenderInformation;
+    @Mock private AttackInformation<Square> attackInformation;
+    @Mock private RuntimeInformation<Square, StandardPieces> runtimeInformation;
 
     @Before
     public void instantiateTestPieceSet() {
@@ -38,31 +44,33 @@ public class KingTest {
         builder = new Square.Builder(coordinateBuilder, coordinateBuilder);
         Mockito.when(pieceInformation.locateKing(Player.WHITE)).thenReturn(builder.at("E", "1"));
         Mockito.when(pieceInformation.locateKing(Player.BLACK)).thenReturn(builder.at("E", "8"));
+        Mockito.when(runtimeInformation.getPieceInformation()).thenReturn(pieceInformation);
+        Mockito.when(runtimeInformation.getAttackInformation()).thenReturn(attackInformation);
+        rule = new King.KingRule<>(runtimeInformation);
     }
 
     @Test
     public void testAttacking() {
 
         Collection<Square> attacked =
-                new King.KingRule<>(testBoard, pieceInformation).attacking(builder.at("E", "1"), Player.WHITE);
+                rule.attacking(testBoard, builder.at("E", "1"), Player.WHITE);
         Assert.assertEquals(5, attacked.size());
 
         testBoard.movePiece(builder.at("E", "1"), builder.at("E", "4"));
-        attacked = new King.KingRule<>(testBoard, pieceInformation).attacking(builder.at("E", "4"), Player.WHITE);
+        attacked = rule.attacking(testBoard, builder.at("E", "4"), Player.WHITE);
         Assert.assertEquals(8, attacked.size());
     }
 
     @Test
     public void testCastling() {
-        Mockito.when(defenderInformation.isAttacked(Mockito.any(Square.class))).thenReturn(false);
+        Mockito.when(attackInformation.isAttacked(Mockito.any(Square.class))).thenReturn(false);
 
         // Empty the spaces between king and queen-side rook
         testBoard.movePiece(builder.at("D", "1"), builder.at("D", "3"));
         testBoard.movePiece(builder.at("C", "1"), builder.at("C", "3"));
         testBoard.movePiece(builder.at("B", "1"), builder.at("B", "3"));
 
-        Collection<Move<Square>> move = new King.KingRuleWithCastling(testBoard, pieceInformation,
-                defenderInformation).specialMove(Player.WHITE);
+        Collection<Move<Square>> move = new King.KingRuleWithCastling(runtimeInformation).specialMove(testBoard, Player.WHITE);
         Assert.assertTrue(move.contains(new CastlingMove<>(
                 SimpleMove.of(builder.at("E", "1"), builder.at("C", "1"), Player.WHITE),
                 SimpleMove.of(builder.at("A", "1"), builder.at("D", "1"), Player.WHITE)

@@ -1,8 +1,10 @@
 package chessgame.piece;
 
+import chessgame.board.ChessBoard;
 import chessgame.board.Coordinate;
 import chessgame.board.RectangularBoard;
 import chessgame.board.Square;
+import chessgame.board.TwoDimension;
 import chessgame.game.ConfigurableGameSetting;
 import chessgame.player.Player;
 import chessgame.rule.LatentAttack;
@@ -18,7 +20,8 @@ import java.util.Collection;
 public class QueenTest {
 
     private Square.Builder builder;
-    private RectangularBoard<StandardPieces> testBoard;
+    private RectangularBoard.Instance<StandardPieces> testBoard;
+    private Queen.QueenRule<Square, StandardPieces, TwoDimension, RectangularBoard.Instance<StandardPieces>> rule;
 
     @Before
     public void instantiateTestPieceSet() {
@@ -26,6 +29,7 @@ public class QueenTest {
 
         Coordinate.Builder coordinateBuilder = new Coordinate.Builder(3);
         builder = new Square.Builder(coordinateBuilder, coordinateBuilder);
+        rule = new Queen.QueenRule<>();
     }
 
     @Test
@@ -34,7 +38,7 @@ public class QueenTest {
         // white king at A1
         // black king at A3
 
-        testBoard = new RectangularBoard<>(ConfigurableGameSetting.builder(3, 3)
+        testBoard = RectangularBoard.Instance.create(ConfigurableGameSetting.builder(3, 3)
                 .piece(StandardPieces.QUEEN, Player.WHITE, "B", "2")
                 .piece(StandardPieces.KING, Player.WHITE, "A", "1")
                 .piece(StandardPieces.KING, Player.BLACK, "A", "3")
@@ -42,7 +46,7 @@ public class QueenTest {
         );
 
         Collection<Square> attacked =
-                new Queen.QueenRule<>(testBoard).attacking(builder.at("B", "2"), Player.WHITE);
+                rule.attacking(testBoard, builder.at("B", "2"), Player.WHITE);
         Assert.assertEquals(8, attacked.size());
     }
 
@@ -51,7 +55,7 @@ public class QueenTest {
 
         // K p Q p k
 
-        testBoard = new RectangularBoard<>(ConfigurableGameSetting.builder(5, 1)
+        testBoard = RectangularBoard.Instance.create(ConfigurableGameSetting.builder(5, 1)
                 .piece(StandardPieces.KING, Player.BLACK, "A", "1")
                 .piece(StandardPieces.PAWN, Player.BLACK, "B", "1")
                 .piece(StandardPieces.QUEEN, Player.WHITE, "C", "1")
@@ -60,7 +64,7 @@ public class QueenTest {
                 .build()
         );
         Collection<LatentAttack<Square>> attacked =
-                new Queen.QueenRule<>(testBoard).latentAttacking(builder.at("C", "1"), Player.WHITE);
+                rule.latentAttacking(testBoard, builder.at("C", "1"), Player.WHITE);
         Assert.assertEquals(1, attacked.size());
         Assert.assertTrue(attacked.stream().anyMatch(at -> at.getAttacked().equals(builder.at("A", "1"))
                 && at.getBlocker().equals(builder.at("B", "1"))));

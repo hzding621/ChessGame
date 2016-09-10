@@ -1,6 +1,7 @@
 package chessgame.move;
 
 import chessgame.board.Cell;
+import chessgame.board.MutableBoard;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
@@ -38,13 +39,13 @@ public final class CastlingMove<C extends Cell> implements CompositeMove<C> {
     }
 
     @Override
-    public <P extends PieceClass> BoardTransition<C, P> getTransition() {
+    public <P extends PieceClass, M extends MutableBoard<C, P, M>> BoardTransition<C, P, M> getTransition() {
         return board -> {
             Piece<P> king = board.movePiece(kingMove.getInitiator(), kingMove.getTarget());
             Piece<P> rook = board.movePiece(rookMove.getInitiator(), rookMove.getTarget());
             return () -> ImmutableList.of(
-                    MoveResult.MovedPiece.of(king, kingMove.getInitiator(), kingMove.getTarget()),
-                    MoveResult.MovedPiece.of(rook, rookMove.getInitiator(), rookMove.getTarget()));
+                    TransitionResult.MovedPiece.of(king, kingMove.getInitiator(), kingMove.getTarget()),
+                    TransitionResult.MovedPiece.of(rook, rookMove.getInitiator(), rookMove.getTarget()));
         };
     }
 

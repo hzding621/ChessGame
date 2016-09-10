@@ -9,14 +9,4 @@ import chessgame.piece.PieceClass;
  */
 public abstract class AbstractPieceRule<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
     implements PieceRule<C, P, B> {
-
-    protected final B boardViewer;
-
-    public AbstractPieceRule(B boardViewer) {
-       this.boardViewer = boardViewer;
-    }
-
-    public B getBoardViewer() {
-        return boardViewer;
-    }
 }

@@ -1,6 +1,7 @@
 package chessgame.move;
 
 import chessgame.board.Cell;
+import chessgame.board.MutableBoard;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
@@ -43,7 +44,7 @@ public final class SimpleMove<C extends Cell> implements Move<C>, Comparable<Sim
     }
 
     @Override
-    public <P extends PieceClass> BoardTransition<C, P> getTransition() {
+    public <P extends PieceClass, M extends MutableBoard<C, P, M>> BoardTransition<C, P, M> getTransition() {
         return board -> {
             if (!board.getPiece(source).isPresent()) {
                 throw new IllegalStateException("Invalid move. Source cell " + source + " is empty!");
@@ -56,9 +57,9 @@ public final class SimpleMove<C extends Cell> implements Move<C>, Comparable<Sim
             Optional<Piece<P>> capturedPiece = board.getPiece(target).map(t -> board.clearPiece(target));
             Piece<P> movedPiece = board.movePiece(source, target);
 
-            List<MoveResult.MovedPiece<C, P>> history = new ArrayList<>();
-            history.add(MoveResult.MovedPiece.of(movedPiece, source, target));
-            capturedPiece.ifPresent(p -> history.add(MoveResult.MovedPiece.of(p, target, null)));
+            List<TransitionResult.MovedPiece<C, P>> history = new ArrayList<>();
+            history.add(TransitionResult.MovedPiece.of(movedPiece, source, target));
+            capturedPiece.ifPresent(p -> history.add(TransitionResult.MovedPiece.of(p, target, null)));
             return () -> history;
         };
     }

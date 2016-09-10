@@ -26,17 +26,13 @@ public final class Bishop<P extends PieceClass> extends AbstractPiece<P> {
                 '}';
     }
 
-    public static final class BishopRule<C extends Cell, P extends PieceClass, D extends Direction,
+    public static final class BishopRule<C extends Cell, P extends PieceClass, D extends Direction<D>,
             B extends GridViewer<C, D, P>> extends AbstractPieceRule<C, P, B>
             implements RangeAttackPieceRule<C, P, D, B> {
 
-        public BishopRule(B gridViewer) {
-            super(gridViewer);
-        }
-
         @Override
-        public Collection<D> getAttackingDirections() {
-            return boardViewer.getDiagonalDirections();
+        public Collection<D> getAttackingDirections(B board) {
+            return board.getDiagonalDirections();
         }
     }
 }

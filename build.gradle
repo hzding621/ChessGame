@@ -26,11 +26,13 @@ dependencies {
     compile 'com.google.guava:guava:19.0'
     compile 'com.google.code.findbugs:jsr305:3.0.1'
     compile 'org.slf4j:slf4j-api:1.7.21'
-    compile 'org.mockito:mockito-all:2.0.2-beta'
+
+    compile 'org.functionaljava:functionaljava:4.5'
 
     // Declare the dependency for your favourite test framework you want to use in your tests.
     // TestNG is also supported by the Gradle Test task. Just change the
     // testCompile dependency to testCompile 'org.testng:testng:6.8.1' and add
     // 'test.useTestNG()' to your build script.
     testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-all:2.0.2-beta'
 }

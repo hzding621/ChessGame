@@ -19,13 +19,13 @@ import java.util.Optional;
 public final class RectangularBoardTest {
 
     private Square.Builder builder;
-    private RectangularBoard<StandardPieces> testBoard;
+    private RectangularBoard.Instance<StandardPieces> testBoard;
 
     @Before
     public void instantiateTestPieceSet() {
         Coordinate.Builder coordinateBuilder = new Coordinate.Builder(8);
         builder = new Square.Builder(coordinateBuilder, coordinateBuilder);
-        testBoard = new ChessBoard(new StandardSetting());
+        testBoard = RectangularBoard.Instance.create(new StandardSetting());
     }
 
     @Test(expected = IllegalArgumentException.class)

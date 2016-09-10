@@ -1,6 +1,7 @@
 package chessgame.move;
 
 import chessgame.board.Cell;
+import chessgame.board.MutableBoard;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 
@@ -13,5 +14,5 @@ public interface Move<C extends Cell>  {
 
     Player getPlayer();
 
-    <P extends PieceClass> BoardTransition<C, P> getTransition();
+    <P extends PieceClass, M extends MutableBoard<C, P, M>> BoardTransition<C, P, M> getTransition();
 }

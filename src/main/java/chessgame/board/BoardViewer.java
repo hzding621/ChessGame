@@ -41,4 +41,8 @@ public interface BoardViewer<C extends Cell, P extends PieceClass> {
      * @return whether the cell on board is occupied by an enemy piece
      */
     boolean isEnemy(C cell, Player player);
+
+
+
+
 }

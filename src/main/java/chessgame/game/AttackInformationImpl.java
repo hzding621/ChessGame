@@ -5,22 +5,27 @@ import chessgame.board.Cell;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 import chessgame.rule.Attack;
-import chessgame.rule.LatentAttack;
 import chessgame.rule.Rules;
-import com.google.common.collect.*;
 
 import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * Default implementation of DefenderInformation
+ * Default implementation of AttackInformation
  */
-public class DefenderInformationImpl<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
-        implements DefenderInformation<C, P, B> {
+public class AttackInformationImpl<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
+        implements AttackInformation<C> {
 
     private final Set<C> isAttacked = new TreeSet<>();
     private final Set<Attack<C>> checkers = new TreeSet<>();
-    private final SetMultimap<C, LatentAttack<C>> latentCheckersByBlocker = MultimapBuilder.treeKeys().hashSetValues().build();
+
+    private final B board;
+    private final RuntimeInformation<C, P> runtimeInformation;
+
+    public AttackInformationImpl(B board, RuntimeInformation<C, P> runtimeInformation) {
+        this.board = board;
+        this.runtimeInformation = runtimeInformation;
+    }
 
     @Override
     public boolean isAttacked(C cell) {
@@ -32,41 +37,29 @@ public class DefenderInformationImpl<C extends Cell, P extends PieceClass, B ext
         return checkers;
     }
 
-    @Override
-    public Set<LatentAttack<C>> getLatentCheckersByBlocker(C blocker) {
-        return latentCheckersByBlocker.get(blocker);
-    }
-
     /**
      * This method recompute the entire defender information, which includes what pieces are currently under attack
      * which pieces are king-defenders (cannot move unless the move invalidates the pinning), and opponent pieces that
      * are checking the current king. This method runs after every move is made
      */
-    public void refresh(B board, Rules<C, P, B> rules, PlayerInformation playerInformation, C actorKingPosition) {
+    public void update(Rules<C, P, B> rules) {
         isAttacked.clear();
         checkers.clear();
-        latentCheckersByBlocker.clear();
-        Player defender = playerInformation.getDefender();
+
+        Player actor = runtimeInformation.getPlayerInformation().getActor();
+        Player defender = runtimeInformation.getPlayerInformation().getDefender();
 
         // Iterate through all the pieces of the current defenders
-        board.getPiecesForPlayer(playerInformation.getDefender()).forEach(defenderPosition -> {
+        board.getPiecesForPlayer(defender).forEach(defenderPosition -> {
             // Get the positions a defending piece are attacking
             rules.attacking(board, defenderPosition, defender).forEach(targetPosition -> {
                 // Mark the position as being under attacked
                 isAttacked.add(targetPosition);
 
                 // If any of the position is the current actor's king, mark the attackers as checker
-                if (actorKingPosition.equals(targetPosition)) {
+                if (runtimeInformation.getPieceInformation().locateKing(actor).equals(targetPosition)) {
                     checkers.add(new Attack<>(defenderPosition,
                             rules.attackBlockingPositions(board, defenderPosition, targetPosition, defender)));
-                }
-            });
-
-            // Get the positions a defending piece are latently attacking
-            rules.latentAttacking(board, defenderPosition, playerInformation.getDefender()).forEach(latentAttack -> {
-                if (latentAttack.getAttacked().equals(actorKingPosition)) {
-                    // If the hided piece is same as actor's king, register the protecting piece in the kingDefenders
-                    latentCheckersByBlocker.put(latentAttack.getBlocker(), latentAttack);
                 }
             });
         });

@@ -1,12 +1,15 @@
 package chessgame.board;
 
+import chessgame.move.BoardTransition;
+import chessgame.move.TransitionResult;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
 
 /**
  * Represents a board in a chess game, which can be quried as well as updated
  */
-public interface Board<C extends Cell, P extends PieceClass> extends BoardViewer<C, P> {
+public interface MutableBoard<C extends Cell, P extends PieceClass, T extends MutableBoard<C, P, T>>
+        extends BoardViewer<C, P> {
 
     /**
      * Remove the piece at this position
@@ -27,4 +30,10 @@ public interface Board<C extends Cell, P extends PieceClass> extends BoardViewer
      * Add a piece at the given position
      */
     void addPiece(C position, Piece<P> piece);
+
+    /**
+     * @param boardTransition the board transition function
+     * @return apply the board transition and return the transition result
+     */
+    TransitionResult<C, P> apply(BoardTransition<C, P, T> boardTransition);
 }

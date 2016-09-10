@@ -1,7 +1,7 @@
 package chessgame.game;
 
 import chessgame.board.Cell;
-import chessgame.move.MoveResult;
+import chessgame.move.TransitionResult;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
@@ -21,8 +21,8 @@ public final class PieceInformationImpl<C extends Cell, P extends PieceClass> im
         kingPosition.putAll(kingStartingPosition);
     }
 
-    public void updateInformation(MoveResult<C, P> history) {
-        history.getMovedPieces().stream().forEach(movedPiece -> {
+    public void updateInformation(TransitionResult<C, P> history) {
+        history.getMovedPieces().forEach(movedPiece -> {
             moveCounts.put(movedPiece.getPiece(), moveCounts.getOrDefault(movedPiece.getPiece(), 0) + 1);
             if (movedPiece.getPiece().getPieceClass().isKing()) {
                 if (!movedPiece.getTarget().isPresent()) {

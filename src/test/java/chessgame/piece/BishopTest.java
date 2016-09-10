@@ -3,9 +3,11 @@ package chessgame.piece;
 import chessgame.board.Coordinate;
 import chessgame.board.RectangularBoard;
 import chessgame.board.Square;
+import chessgame.board.TwoDimension;
 import chessgame.game.ConfigurableGameSetting;
 import chessgame.player.Player;
 import chessgame.rule.LatentAttack;
+import chessgame.rule.PieceRule;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +20,8 @@ import java.util.Collection;
 public final class BishopTest {
 
     private Square.Builder builder;
-    private RectangularBoard<StandardPieces> testBoard;
+    private RectangularBoard.Instance<StandardPieces> testBoard;
+    private Bishop.BishopRule<Square, StandardPieces, TwoDimension, RectangularBoard.Instance<StandardPieces>> rule;
 
     @Before
     public void instantiateTestPieceSet() {
@@ -26,6 +29,7 @@ public final class BishopTest {
 
         Coordinate.Builder coordinateBuilder = new Coordinate.Builder(5);
         builder = new Square.Builder(coordinateBuilder, coordinateBuilder);
+        rule = new Bishop.BishopRule<>();
     }
 
     @Test
@@ -34,7 +38,7 @@ public final class BishopTest {
         // white king at A1
         // black king at A5
 
-        testBoard = new RectangularBoard<>(ConfigurableGameSetting.builder(5, 5)
+        testBoard = RectangularBoard.Instance.create(ConfigurableGameSetting.builder(5, 5)
                 .piece(StandardPieces.BISHOP, Player.WHITE, "C", "3")
                 .piece(StandardPieces.KING, Player.WHITE, "A", "1")
                 .piece(StandardPieces.KING, Player.BLACK, "A", "5")
@@ -42,14 +46,14 @@ public final class BishopTest {
         );
 
         Collection<Square> attacked =
-                new Bishop.BishopRule<>(testBoard).attacking(builder.at("C", "3"), Player.WHITE);
+                rule.attacking(testBoard, builder.at("C", "3"), Player.WHITE);
         Assert.assertEquals(8, attacked.size());
 
         // after add Pawn B2, B4, no longer attack A1, A5
         testBoard.addPiece(builder.at("B", "2"), new Pawn<>(StandardPieces.PAWN, Player.WHITE, 0));
         testBoard.addPiece(builder.at("B", "4"), new Pawn<>(StandardPieces.PAWN, Player.WHITE, 1));
 
-        attacked = new Bishop.BishopRule<>(testBoard).attacking(builder.at("C", "3"), Player.WHITE);
+        attacked = rule.attacking(testBoard, builder.at("C", "3"), Player.WHITE);
         Assert.assertEquals(6, attacked.size());
     }
 
@@ -62,7 +66,7 @@ public final class BishopTest {
 
         // latent attack A5 king
 
-        testBoard = new RectangularBoard<>(ConfigurableGameSetting.builder(8, 8)
+        testBoard = RectangularBoard.Instance.create(ConfigurableGameSetting.builder(8, 8)
                 .piece(StandardPieces.BISHOP, Player.WHITE, "C", "3")
                 .piece(StandardPieces.KING, Player.WHITE, "A", "1")
                 .piece(StandardPieces.KING, Player.BLACK, "A", "5")
@@ -71,7 +75,7 @@ public final class BishopTest {
         );
 
         Collection<LatentAttack<Square>> attacked =
-                new Bishop.BishopRule<>(testBoard).latentAttacking(builder.at("C", "3"), Player.WHITE);
+                rule.latentAttacking(testBoard, builder.at("C", "3"), Player.WHITE);
         Assert.assertEquals(1, attacked.size());
         Assert.assertTrue(attacked.stream().anyMatch(at -> at.getAttacked().equals(builder.at("A", "5"))
                 && at.getBlocker().equals(builder.at("B", "4"))));

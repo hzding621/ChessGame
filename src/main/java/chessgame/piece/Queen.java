@@ -25,17 +25,13 @@ public final class Queen<P extends PieceClass> extends AbstractPiece<P> {
                 ", id=" + getId() +
                 '}';
     }
-    public static final class QueenRule<C extends Cell, P extends PieceClass, D extends Direction,
+    public static final class QueenRule<C extends Cell, P extends PieceClass, D extends Direction<D>,
             B extends GridViewer<C, D, P>> extends AbstractPieceRule<C, P, B>
             implements RangeAttackPieceRule<C, P, D, B> {
 
-        public QueenRule(B gridViewer) {
-            super(gridViewer);
-        }
-
         @Override
-        public Collection<D> getAttackingDirections() {
-            return boardViewer.getAllDirections();
+        public Collection<D> getAttackingDirections(B board) {
+            return board.getAllDirections();
         }
     }
 }
