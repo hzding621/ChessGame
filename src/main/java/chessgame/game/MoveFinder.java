@@ -12,6 +12,11 @@ import com.google.common.collect.SetMultimap;
  */
 public interface MoveFinder<C extends Cell, P extends PieceClass> {
 
+    /**
+     * Recompute the available moves. Should be triggered after each move has been made.
+     * It should check whether the actor has been checkmated, i.e. there are no valid moves for the actor
+     * And any valid move it returns should not put king into a directly attacked position.
+     */
     void recompute();
 
     /**

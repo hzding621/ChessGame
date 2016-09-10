@@ -21,7 +21,7 @@ public final class PieceInformationImpl<C extends Cell, P extends PieceClass> im
         kingPosition.putAll(kingStartingPosition);
     }
 
-    public void updateInformation(TransitionResult<C, P> history) {
+    public void update(TransitionResult<C, P> history) {
         history.getMovedPieces().forEach(movedPiece -> {
             moveCounts.put(movedPiece.getPiece(), moveCounts.getOrDefault(movedPiece.getPiece(), 0) + 1);
             if (movedPiece.getPiece().getPieceClass().isKing()) {

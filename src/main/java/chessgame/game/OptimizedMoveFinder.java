@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 /**
- * Default implementation of Actor Information
+ * Optimized move finder by utilizing mainly latent attacks information. Not applicable for non-standard chess pieces
  */
 public class OptimizedMoveFinder<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
         implements MoveFinder<C, P> {
@@ -34,11 +34,6 @@ public class OptimizedMoveFinder<C extends Cell, P extends PieceClass, B extends
         this.runtimeInformation = runtimeInformation;
     }
 
-    /**
-     * This method recompute the entire actor information, which includes all available moves for the actor.
-     * This also allows to check whether the actor has been checkmated, i.e. there are no valid moves for the actor
-     * This method runs after every move is made and the defender information has been updated.
-     */
     @Override
     public void recompute() {
 

@@ -27,9 +27,7 @@ public final class RuntimeInformationImpl<C extends Cell, P extends PieceClass, 
 
     public void updateInformationForThisRound(Rules<C, P, B> rules, TransitionResult<C, P> history) {
         playerInformation.nextRound();
-        pieceInformation.updateInformation(history);
-
-        // Defender information is used to compute actor information so must be computed earlier
+        pieceInformation.update(history);
         attackInformation.update(rules);
     }
 

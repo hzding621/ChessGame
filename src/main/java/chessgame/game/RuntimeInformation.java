@@ -6,7 +6,7 @@ import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 
 /**
- * Contains useful information during the game
+ * Stub class for different types of runtime information
  */
 public interface RuntimeInformation<C extends Cell, P extends PieceClass> {
 

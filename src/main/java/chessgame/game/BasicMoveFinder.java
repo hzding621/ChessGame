@@ -8,6 +8,8 @@ import chessgame.move.SimpleMove;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 import chessgame.rule.Rules;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.collect.MultimapBuilder;
 import com.google.common.collect.SetMultimap;
 
@@ -33,11 +35,6 @@ public final class BasicMoveFinder<C extends Cell, P extends PieceClass, M exten
         this.runtimeInformation = runtimeInformation;
     }
 
-    /**
-     * This method recompute the entire actor information, which includes all available moves for the actor.
-     * This also allows to check whether the actor has been checkmated, i.e. there are no valid moves for the actor
-     * This method runs after every move is made and the defender information has been updated.
-     */
     @Override
     public void recompute() {
 
