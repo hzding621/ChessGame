@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * Optimized move finder by utilizing mainly latent attacks information. Not applicable for non-standard chess pieces
  */
-public class OptimizedMoveFinder<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
+public final class OptimizedMoveFinder<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
         implements MoveFinder<C, P> {
 
     private final SetMultimap<C, Move<C>> availableMoves = MultimapBuilder.treeKeys().hashSetValues().build();

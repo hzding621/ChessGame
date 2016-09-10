@@ -6,12 +6,12 @@ import chessgame.board.Direction;
 import chessgame.board.GridViewer;
 import chessgame.board.Square;
 import chessgame.board.TwoDimension;
+import chessgame.board.Vector;
 import chessgame.game.RuntimeInformation;
 import chessgame.move.CastlingMove;
 import chessgame.move.Move;
 import chessgame.move.SimpleMove;
 import chessgame.player.Player;
-import chessgame.rule.AbstractPieceRule;
 import chessgame.rule.OptimizedPiece;
 import chessgame.rule.RequiresRuntimeInformation;
 import chessgame.rule.SpecialMovePiece;
@@ -24,59 +24,45 @@ import java.util.stream.Collectors;
 /**
  * Class that implements King piece moving logic. Specific rules regarding king checking is handled elsewhere
  */
-public final class King<P extends PieceClass> extends AbstractPiece<P> {
+public class King<C extends Cell, P extends PieceClass, D extends Direction<D>, B extends GridViewer<C, D, P>>
+        implements OptimizedPiece<C, P, B>, RequiresRuntimeInformation<C, P>, chessgame.rule.PieceRule<C,P,B> {
 
-    public King(P pieceClass, Player player, int id) {
-        super(pieceClass, player, id);
+    private final RuntimeInformation<C, P> runtimeInformation;
+
+    public King(RuntimeInformation<C, P> runtimeInformation) {
+        this.runtimeInformation = runtimeInformation;
     }
 
     @Override
-    public String toString() {
-        return "King{" +
-                "player=" + getPlayer() +
-                ", id=" + getId() +
-                '}';
-    }
-    public static class KingRule<C extends Cell, P extends PieceClass, D extends Direction<D>,
-            B extends GridViewer<C, D, P>> extends AbstractPieceRule<C, P, B>
-            implements OptimizedPiece<C, P, B>, RequiresRuntimeInformation<C, P> {
-
-        private final RuntimeInformation<C, P> runtimeInformation;
-
-        public KingRule(RuntimeInformation<C, P> runtimeInformation) {
-            this.runtimeInformation = runtimeInformation;
-        }
-
-        @Override
-        public Collection<C> attacking(B board, C position, Player player) {
-            return board.getAllDirections().stream()
-                    .map(direction -> board.moveSteps(position, direction, 1))
-                    .filter(Optional::isPresent).map(Optional::get)
-                    .collect(Collectors.toList());
-        }
-
-        @Override
-        public Collection<C> attackBlockingPositions(B board, C sourcePosition,
-                                                     C targetPosition,
-                                                     Player player) {
-            if (!attacking(board, sourcePosition, player).contains(targetPosition)) {
-                throw new IllegalArgumentException(sourcePosition + " cannot attack " + targetPosition + " !");
-            }
-
-            // King's attack can't be blocked!
-            return ImmutableList.of(sourcePosition);
-        }
-
-        @Override
-        public RuntimeInformation<C, P> getRuntimeInformation() {
-            return runtimeInformation;
-        }
+    public Collection<C> attacking(B board, C position, Player player) {
+        return board.getAllDirections().stream()
+                .map(direction -> board.moveSteps(position, direction, 1, Vector.of(1, 0)))
+                .filter(Optional::isPresent).map(Optional::get)
+                .collect(Collectors.toList());
     }
 
-    public static class KingRuleWithCastling extends KingRule<Square, StandardPieces, TwoDimension, ChessBoardViewer>
+    @Override
+    public Collection<C> attackBlockingPositions(B board, C sourcePosition,
+                                                 C targetPosition,
+                                                 Player player) {
+        if (!attacking(board, sourcePosition, player).contains(targetPosition)) {
+            throw new IllegalArgumentException(sourcePosition + " cannot attack " + targetPosition + " !");
+        }
+
+        // King's attack can't be blocked!
+        return ImmutableList.of(sourcePosition);
+    }
+
+    @Override
+    public RuntimeInformation<C, P> getRuntimeInformation() {
+        return runtimeInformation;
+    }
+
+
+    public static class WithCastling extends King<Square, StandardPieces, TwoDimension, ChessBoardViewer>
             implements SpecialMovePiece<Square, StandardPieces, ChessBoardViewer> {
 
-        public KingRuleWithCastling(RuntimeInformation<Square, StandardPieces> runtimeInformation) {
+        public WithCastling(RuntimeInformation<Square, StandardPieces> runtimeInformation) {
             super(runtimeInformation);
         }
 
@@ -90,11 +76,11 @@ public final class King<P extends PieceClass> extends AbstractPiece<P> {
                                                                      Square rookPosition,
                                                                      TwoDimension side,
                                                                      Player player) {
-            Square kingNewPosition = board.moveSteps(kingPosition, side, 2).get();
+            Square kingNewPosition = board.moveSteps(kingPosition, side, 2, Vector.of(1, 0)).get();
             if (getRuntimeInformation().getAttackInformation().isAttacked(kingNewPosition)) {
                 return Optional.empty();
             }
-            Square rookNewPosition = board.moveSteps(kingNewPosition, side.reverse(), 1).get();
+            Square rookNewPosition = board.moveSteps(kingNewPosition, side.reverse(), 1, Vector.of(1, 0)).get();
             return Optional.of(new CastlingMove<>(SimpleMove.of(kingPosition, kingNewPosition,player),
                     SimpleMove.of(rookPosition, rookNewPosition,player)));
         }
@@ -115,8 +101,8 @@ public final class King<P extends PieceClass> extends AbstractPiece<P> {
                 // If King has moved or if king is under check, cannot move
                 return ImmutableList.of();
             }
-            Optional<Square> leftBound = board.firstOccupant(kingPosition, TwoDimension.WEST);
-            Optional<Square> rightBound = board.firstOccupant(kingPosition, TwoDimension.EAST);
+            Optional<Square> leftBound = board.firstOccupant(kingPosition, TwoDimension.WEST, Vector.of(1,0));
+            Optional<Square> rightBound = board.firstOccupant(kingPosition, TwoDimension.EAST, Vector.of(1,0));
 
             final ImmutableList.Builder<Move<Square>> builder = ImmutableList.builder();
             board.getPiecesOfTypeForPlayer(StandardPieces.ROOK, player).forEach(rookPosition -> {

@@ -20,11 +20,11 @@ public class BasicRuleBindings<B extends GridViewer<Square, TwoDimension, Standa
         extends RuleBindings<Square, StandardPieces, B> {
 
     public BasicRuleBindings(RuntimeInformation<Square, StandardPieces> runtimeInformation) {
-        bindRule(StandardPieces.PAWN, new Pawn.PawnRule<>(runtimeInformation));
-        bindRule(StandardPieces.KNIGHT, new Knight.KnightRule<>());
-        bindRule(StandardPieces.BISHOP, new Bishop.BishopRule<>());
-        bindRule(StandardPieces.ROOK, new Rook.RookRule<>());
-        bindRule(StandardPieces.QUEEN, new Queen.QueenRule<>());
-        bindRule(StandardPieces.KING, new King.KingRule<>(runtimeInformation));
+        bindRule(StandardPieces.PAWN, new Pawn<>(runtimeInformation));
+        bindRule(StandardPieces.KNIGHT, new Knight<>());
+        bindRule(StandardPieces.BISHOP, new Bishop<>());
+        bindRule(StandardPieces.ROOK, new Rook<>());
+        bindRule(StandardPieces.QUEEN, new Queen<>());
+        bindRule(StandardPieces.KING, new King<>(runtimeInformation));
     }
 }

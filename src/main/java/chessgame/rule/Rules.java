@@ -13,7 +13,7 @@ import java.util.Collection;
 /**
  * Represents a set of rules associated with an instance of game
  */
-public class Rules<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>> {
+public final class Rules<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>> {
 
     private final RuleBindings<C, P, B> ruleBindings;
 

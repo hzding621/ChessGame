@@ -5,6 +5,7 @@ import chessgame.piece.King;
 import chessgame.piece.KingPawn;
 import chessgame.piece.Pawn;
 import chessgame.piece.Piece;
+import chessgame.piece.PieceImpl;
 import chessgame.player.Player;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -18,10 +19,10 @@ import java.util.Map;
 public final class KingPawnGame implements GameSetting<Square, KingPawn> {
 
     private final Square.Builder builder;
-    private final Piece<KingPawn> whitePawn = new Pawn<>(KingPawn.PAWN, Player.WHITE, 0);
-    private final Piece<KingPawn> blackPawn = new Pawn<>(KingPawn.PAWN, Player.BLACK, 0);
-    private final Piece<KingPawn> whiteKing = new King<>(KingPawn.KING, Player.WHITE, 0);
-    private final Piece<KingPawn> blackKing = new King<>(KingPawn.KING, Player.BLACK, 0);
+    private final Piece<KingPawn> whitePawn = new PieceImpl<>(KingPawn.PAWN, Player.WHITE, 0);
+    private final Piece<KingPawn> blackPawn = new PieceImpl<>(KingPawn.PAWN, Player.BLACK, 0);
+    private final Piece<KingPawn> whiteKing = new PieceImpl<>(KingPawn.KING, Player.WHITE, 0);
+    private final Piece<KingPawn> blackKing = new PieceImpl<>(KingPawn.KING, Player.BLACK, 0);
 
     public KingPawnGame(Square.Builder builder) {
         this.builder = builder;

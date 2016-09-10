@@ -21,7 +21,7 @@ public class QueenTest {
 
     private Square.Builder builder;
     private RectangularBoard.Instance<StandardPieces> testBoard;
-    private Queen.QueenRule<Square, StandardPieces, TwoDimension, RectangularBoard.Instance<StandardPieces>> rule;
+    private Queen<Square, StandardPieces, TwoDimension, RectangularBoard.Instance<StandardPieces>> rule;
 
     @Before
     public void instantiateTestPieceSet() {
@@ -29,7 +29,7 @@ public class QueenTest {
 
         Coordinate.Builder coordinateBuilder = new Coordinate.Builder(3);
         builder = new Square.Builder(coordinateBuilder, coordinateBuilder);
-        rule = new Queen.QueenRule<>();
+        rule = new Queen<>();
     }
 
     @Test

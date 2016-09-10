@@ -21,7 +21,7 @@ public final class BishopTest {
 
     private Square.Builder builder;
     private RectangularBoard.Instance<StandardPieces> testBoard;
-    private Bishop.BishopRule<Square, StandardPieces, TwoDimension, RectangularBoard.Instance<StandardPieces>> rule;
+    private Bishop<Square, StandardPieces, TwoDimension, RectangularBoard.Instance<StandardPieces>> rule;
 
     @Before
     public void instantiateTestPieceSet() {
@@ -29,7 +29,7 @@ public final class BishopTest {
 
         Coordinate.Builder coordinateBuilder = new Coordinate.Builder(5);
         builder = new Square.Builder(coordinateBuilder, coordinateBuilder);
-        rule = new Bishop.BishopRule<>();
+        rule = new Bishop<>();
     }
 
     @Test
@@ -50,8 +50,8 @@ public final class BishopTest {
         Assert.assertEquals(8, attacked.size());
 
         // after add Pawn B2, B4, no longer attack A1, A5
-        testBoard.addPiece(builder.at("B", "2"), new Pawn<>(StandardPieces.PAWN, Player.WHITE, 0));
-        testBoard.addPiece(builder.at("B", "4"), new Pawn<>(StandardPieces.PAWN, Player.WHITE, 1));
+        testBoard.addPiece(builder.at("B", "2"), new PieceImpl<>(StandardPieces.PAWN, Player.WHITE, 0));
+        testBoard.addPiece(builder.at("B", "4"), new PieceImpl<>(StandardPieces.PAWN, Player.WHITE, 1));
 
         attacked = rule.attacking(testBoard, builder.at("C", "3"), Player.WHITE);
         Assert.assertEquals(6, attacked.size());

@@ -3,6 +3,7 @@ package chessgame.rule;
 import chessgame.board.Cell;
 import chessgame.board.Direction;
 import chessgame.board.GridViewer;
+import chessgame.board.Vector;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 
@@ -26,7 +27,7 @@ public interface Rider<C extends Cell, P extends PieceClass, D extends Direction
     @Override
     default Collection<C> attacking(B board, C position, Player player) {
         Collection<C> u = getAttackingDirections(board).stream()
-                .flatMap(direction -> board.furthestReach(position, direction, false, true).stream())
+                .flatMap(direction -> board.furthestReach(position, direction, Vector.of(1, 0), false, true).stream())
                 .collect(Collectors.toList());
         return u;
     }
@@ -34,10 +35,10 @@ public interface Rider<C extends Cell, P extends PieceClass, D extends Direction
     @Override
     default Collection<LatentAttack<C>> latentAttacking(B board, C position, Player player) {
         return getAttackingDirections(board).stream()
-                .map(direction -> board.firstAndSecondOccupant(position, direction)
+                .map(direction -> board.firstAndSecondOccupant(position, direction, Vector.of(1,0))
                         .filter(pair -> board.isEnemy(pair.second(), player))
                         .map(pair -> new LatentAttack<>(position, pair.first(), pair.second(),
-                                board.furthestReach(position, direction, true, false))))
+                                board.furthestReach(position, direction, Vector.of(1, 0), true, false))))
                 .filter(Optional::isPresent).map(Optional::get)
                 .collect(Collectors.toList());
     }
@@ -50,6 +51,6 @@ public interface Rider<C extends Cell, P extends PieceClass, D extends Direction
             throw new IllegalArgumentException(sourcePosition + " is not attacking " + targetPosition + " !");
         }
         D direction = board.findDirection(sourcePosition, targetPosition);
-        return board.furthestReach(sourcePosition, direction, true, false);
+        return board.furthestReach(sourcePosition, direction, Vector.of(1, 0), true, false);
     }
 }

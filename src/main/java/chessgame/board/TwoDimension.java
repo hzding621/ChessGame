@@ -32,12 +32,12 @@ public enum TwoDimension implements Direction<TwoDimension> {
     }
 
     @Override
-    public TwoDimension nextCloseWise() {
+    public TwoDimension nextClockWise() {
         return VALUES[(this.ordinal()+1) % VALUES.length];
     }
 
     @Override
-    public TwoDimension nextCounterCloseWise() {
+    public TwoDimension nextCounterClockWise() {
         return VALUES[(this.ordinal()+ VALUES.length-1) % VALUES.length];
     }
 }

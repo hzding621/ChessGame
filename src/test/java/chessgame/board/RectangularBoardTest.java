@@ -39,19 +39,19 @@ public final class RectangularBoardTest {
     @Test
     public void testFurthestReach() {
         // (B2) [B3 -> B7]
-        List<Square> path = testBoard.furthestReach(builder.at("B", "2"), TwoDimension.NORTH, false, true);
+        List<Square> path = testBoard.furthestReach(builder.at("B", "2"), TwoDimension.NORTH, Vector.of(1, 0), false, true);
         Assert.assertEquals(5, path.size());
         Assert.assertEquals(builder.at("B", "3"), path.get(0));
         Assert.assertEquals(builder.at("B", "7"), CollectionUtils.last(path).get());
 
         // (B2) [C3 -> G7]
-        path = testBoard.furthestReach(builder.at("B", "2"), TwoDimension.NORTHEAST, false, true);
+        path = testBoard.furthestReach(builder.at("B", "2"), TwoDimension.NORTHEAST, Vector.of(1, 0), false, true);
         Assert.assertEquals(5, path.size());
         Assert.assertEquals(builder.at("C", "3"), path.get(0));
         Assert.assertEquals(builder.at("G", "7"), CollectionUtils.last(path).get());
 
         // (B2) [B1]
-        path = testBoard.furthestReach(builder.at("B", "2"), TwoDimension.SOUTH, false, true);
+        path = testBoard.furthestReach(builder.at("B", "2"), TwoDimension.SOUTH, Vector.of(1, 0), false, true);
         Assert.assertEquals(1, path.size());
         Assert.assertEquals(builder.at("B", "1"), path.get(0));
     }
@@ -64,12 +64,12 @@ public final class RectangularBoardTest {
         // - pinning black Pawn at B7, black Rook at A8
         testBoard.movePiece(builder.at("D", "1"), builder.at("E", "4"));
 
-        Optional<Pair<Square, Square>> pin = testBoard.firstAndSecondOccupant(builder.at("E", "4"), TwoDimension.NORTH);
+        Optional<Pair<Square, Square>> pin = testBoard.firstAndSecondOccupant(builder.at("E", "4"), TwoDimension.NORTH, Vector.of(1,0));
         Assert.assertTrue(pin.isPresent());
         Assert.assertEquals(builder.at("E", "7"), pin.get().first());
         Assert.assertEquals(builder.at("E", "8"), pin.get().second());
 
-        pin = testBoard.firstAndSecondOccupant(builder.at("E", "4"), TwoDimension.NORTHWEST);
+        pin = testBoard.firstAndSecondOccupant(builder.at("E", "4"), TwoDimension.NORTHWEST, Vector.of(1,0));
         Assert.assertTrue(pin.isPresent());
         Assert.assertEquals(builder.at("B", "7"), pin.get().first());
         Assert.assertEquals(builder.at("A", "8"), pin.get().second());

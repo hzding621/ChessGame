@@ -2,14 +2,8 @@ package chessgame.game;
 
 import chessgame.board.Coordinate;
 import chessgame.board.Square;
-import chessgame.piece.AbstractPiece;
-import chessgame.piece.Bishop;
-import chessgame.piece.King;
-import chessgame.piece.Knight;
-import chessgame.piece.Pawn;
+import chessgame.piece.PieceImpl;
 import chessgame.piece.Piece;
-import chessgame.piece.Queen;
-import chessgame.piece.Rook;
 import chessgame.piece.StandardPieces;
 import chessgame.player.Player;
 import com.google.common.collect.HashBasedTable;
@@ -93,17 +87,17 @@ public final class StandardSetting implements GameSetting.GridGame<Square, Stand
     public static Piece<StandardPieces> createPiece(StandardPieces type, Player player, int id) {
         switch (type) {
             case PAWN:
-                return new AbstractPiece<>(type, player, id);
+                return new PieceImpl<>(type, player, id);
             case KNIGHT:
-                return new AbstractPiece<>(type, player, id);
+                return new PieceImpl<>(type, player, id);
             case BISHOP:
-                return new AbstractPiece<>(type, player, id);
+                return new PieceImpl<>(type, player, id);
             case ROOK:
-                return new AbstractPiece<>(type, player, id);
+                return new PieceImpl<>(type, player, id);
             case QUEEN:
-                return new AbstractPiece<>(type, player, id);
+                return new PieceImpl<>(type, player, id);
             case KING:
-                return new AbstractPiece<>(type, player, id);
+                return new PieceImpl<>(type, player, id);
         }
         throw new IllegalStateException("Reach unexpected value " + type);
     }

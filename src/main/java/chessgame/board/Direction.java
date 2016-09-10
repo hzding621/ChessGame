@@ -8,10 +8,16 @@ public interface Direction<T extends Direction<T>> {
     /**
      * @return the next direction clockwise, counting both diagonal and orthogonal!
      */
-    T nextCloseWise();
+    T nextClockWise();
 
     /**
      * @return the next direction counterclockwise, , counting both diagonal and orthogonal!
      */
-    T nextCounterCloseWise();
+    T nextCounterClockWise();
+
+
+    /**
+     * @return the reverse of the current direction
+     */
+    T reverse();
 }

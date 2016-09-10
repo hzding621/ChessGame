@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+
 /**
  * Represents a regular 8x8 chess board
  */
@@ -95,18 +96,18 @@ public final class ChessBoard implements
     }
 
     @Override
-    public Optional<Square> moveSteps(Square startCell, TwoDimension direction, int steps) {
-        return delegate.moveSteps(startCell, direction, steps);
+    public Optional<Square> moveSteps(Square startCell, TwoDimension direction, int steps, Vector vector) {
+        return delegate.moveSteps(startCell, direction, steps, vector);
     }
 
     @Override
-    public List<Square> furthestReach(Square startCell, TwoDimension direction, boolean startInclusive, boolean meetInclusive) {
-        return delegate.furthestReach(startCell, direction, startInclusive, meetInclusive);
+    public List<Square> furthestReach(Square startCell, TwoDimension direction, Vector vector, boolean startInclusive, boolean meetInclusive) {
+        return delegate.furthestReach(startCell, direction, vector, startInclusive, meetInclusive);
     }
 
     @Override
-    public Optional<Square> firstOccupant(Square startCell, TwoDimension direction) {
-        return delegate.firstOccupant(startCell, direction);
+    public Optional<Square> firstOccupant(Square startCell, TwoDimension direction, Vector vector) {
+        return delegate.firstOccupant(startCell, direction, vector);
     }
 
     @Override

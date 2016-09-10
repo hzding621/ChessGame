@@ -1,7 +1,11 @@
 package chessgame.board;
 
 /**
- * Represents a 2D vector on a grid board
+ * Represents a modifier to the a direction
+ * X represents a magnification of current direction
+ * Y represents a rotation and a maginification of the current direction
+ *
+ * e.g. NORTH with (1,2) becomes go north 1 step, then go east 2 steps
  */
 public final class Vector {
 

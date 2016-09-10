@@ -17,6 +17,6 @@ public final class StandardRuleBindings extends BasicRuleBindings<ChessBoardView
         super(runtimeInformation);
 
         // Overwrite King's rule with one with Castling activated
-        bindRule(StandardPieces.KING, new King.KingRuleWithCastling(runtimeInformation));
+        bindRule(StandardPieces.KING, new King.WithCastling(runtimeInformation));
     }
 }

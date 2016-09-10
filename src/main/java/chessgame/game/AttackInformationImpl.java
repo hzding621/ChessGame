@@ -13,7 +13,7 @@ import java.util.TreeSet;
 /**
  * Default implementation of AttackInformation
  */
-public class AttackInformationImpl<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
+public final class AttackInformationImpl<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
         implements AttackInformation<C> {
 
     private final Set<C> isAttacked = new TreeSet<>();

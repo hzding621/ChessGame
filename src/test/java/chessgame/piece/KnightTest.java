@@ -19,13 +19,13 @@ public final class KnightTest {
 
     private Square.Builder builder;
     private RectangularBoard.Instance<StandardPieces> testBoard;
-    private Knight.KnightRule<Square, StandardPieces, TwoDimension, RectangularBoard.Instance<StandardPieces>> rule;
+    private Knight<Square, StandardPieces, TwoDimension, RectangularBoard.Instance<StandardPieces>> rule;
 
     @Before
     public void instantiateTestPieceSet() {
         Coordinate.Builder coordinateBuilder = new Coordinate.Builder(8);
         builder = new Square.Builder(coordinateBuilder, coordinateBuilder);
-        rule = new Knight.KnightRule<>();
+        rule = new Knight<>();
     }
 
     @Test

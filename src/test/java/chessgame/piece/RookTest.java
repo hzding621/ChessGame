@@ -20,14 +20,14 @@ public final class RookTest {
 
     private Square.Builder builder;
     private RectangularBoard.Instance<StandardPieces> testBoard;
-    private Rook.RookRule<Square, StandardPieces, TwoDimension, RectangularBoard.Instance<StandardPieces>> rule;
+    private Rook<Square, StandardPieces, TwoDimension, RectangularBoard.Instance<StandardPieces>> rule;
 
 
     @Before
     public void instantiateTestPieceSet() {
         Coordinate.Builder coordinateBuilder = new Coordinate.Builder(8);
         builder = new Square.Builder(coordinateBuilder, coordinateBuilder);
-        rule = new Rook.RookRule<>();
+        rule = new Rook<>();
     }
 
     @Test

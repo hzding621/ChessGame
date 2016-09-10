@@ -7,12 +7,12 @@ import chessgame.board.Vector;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 import com.google.common.collect.ImmutableList;
-import utility.Pair;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 /**
  * A (mxn) Leaper moves a fixed type of vector between its start and arrival
@@ -22,20 +22,19 @@ public interface Leaper<C extends Cell, P extends PieceClass, D extends Directio
         B extends GridViewer<C, D, P>> extends OptimizedPiece<C, P, B> {
 
     /**
-     * @return the vector by which the leaper attacks
+     * @return the absolute vector by which the leaper attacks
      */
     Vector getAttackDirection();
 
     @Override
     default Collection<C> attacking(B board, C position, Player player) {
-        final List<C> targets = new ArrayList<>();
+        final Set<C> targets = new HashSet<>();
         board.getOrthogonalDirections().forEach(direction -> {
-            Optional<C> intermediate = board.moveSteps(position, direction, getAttackDirection().getX());
-            if (!intermediate.isPresent()) return;
-            board.moveSteps(intermediate.get(), direction.nextCloseWise().nextCloseWise(), getAttackDirection()
-                    .getY()).ifPresent(targets::add);
-            board.moveSteps(intermediate.get(), direction.nextCounterCloseWise().nextCounterCloseWise(), getAttackDirection()
-                    .getY()).ifPresent(targets::add);
+            int x = getAttackDirection().getX(), y = getAttackDirection().getY();
+            board.moveSteps(position, direction, 1, Vector.of(x, y)).ifPresent(targets::add);
+            board.moveSteps(position, direction, 1, Vector.of(x, -y)).ifPresent(targets::add);
+            board.moveSteps(position, direction, 1, Vector.of(-x, y)).ifPresent(targets::add);
+            board.moveSteps(position, direction, 1, Vector.of(-x, -y)).ifPresent(targets::add);
         });
         return targets;
     }

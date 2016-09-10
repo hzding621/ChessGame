@@ -15,7 +15,7 @@ import java.util.Collection;
 /**
  * The standard chess game
  */
-public class StandardGame implements Game<Square, StandardPieces, ChessBoard> {
+public final class StandardGame implements Game<Square, StandardPieces, ChessBoard> {
     private final ChessBoard chessBoard;
     private final Rules<Square, StandardPieces, ChessBoardViewer> chessRules;
     private final RuntimeInformationImpl<Square, StandardPieces, ChessBoardViewer> runtimeInformation;

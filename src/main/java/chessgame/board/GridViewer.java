@@ -1,13 +1,13 @@
 package chessgame.board;
 
 import chessgame.piece.PieceClass;
-import chessgame.piece.StandardPieces;
 import chessgame.player.Player;
 import utility.Pair;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+
 
 /**
  * A GridViewer is a BoardViewer that supports the notion of orthogonal and diagonal directions.
@@ -35,38 +35,41 @@ public interface GridViewer<C extends Cell, D extends Direction<D>, P extends Pi
      * @param startCell starting cell
      * @param direction the direction to move
      * @param steps the given number
+     * @param vector
      * @return non-empty value if the cell is not at the edge of the board, empty otherwise
      */
-    Optional<C> moveSteps(C startCell, D direction, int steps);
+    Optional<C> moveSteps(C startCell, D direction, int steps, Vector vector);
 
     /**
      * Returns a series of cell movement that starts at a cell, goes at a certain direction,
      * and either stops at first occupant or at the edge of board
-     *
-     * @param startCell the cell the movement starts at
+     *  @param startCell the cell the movement starts at
      * @param direction the direction the movement goes at
+     * @param vector
      * @param startInclusive whether or not to include the startCell
      * @param meetInclusive whether or not to include the occupant if there exists  @return the list of movement
      */
-    List<C> furthestReach(C startCell, D direction, boolean startInclusive, boolean meetInclusive);
+    List<C> furthestReach(C startCell, D direction, Vector vector, boolean startInclusive, boolean meetInclusive);
 
     /**
      * @param startCell the given cell
      * @param direction the given direction
+     * @param vector
      * @return non-empty if moving at the given cell in the given direction will lead to this piece, empty if it will lead the edge of the board
      */
-    Optional<C> firstOccupant(C startCell, D direction);
+    Optional<C> firstOccupant(C startCell, D direction, Vector vector);
 
     /**
      * Return the first and second occupant met starting at the given cell and moving toward the given direction
      * @param startCell the given cell
      * @param direction the given direction
+     * @param vector
      * @return Non-empty if there exists two such pieces
      */
-    default Optional<Pair<C, C>> firstAndSecondOccupant(C startCell, D direction) {
-        Optional<C> firstMeet = firstOccupant(startCell, direction);
+    default Optional<Pair<C, C>> firstAndSecondOccupant(C startCell, D direction, Vector vector) {
+        Optional<C> firstMeet = firstOccupant(startCell, direction, vector);
         if (!firstMeet.isPresent()) return Optional.empty();
-        Optional<C> secondMeet = firstOccupant(firstMeet.get(), direction);
+        Optional<C> secondMeet = firstOccupant(firstMeet.get(), direction, vector);
         if (!secondMeet.isPresent()) return Optional.empty();
         return Optional.of(Pair.of(firstMeet.get(), secondMeet.get()));
     }

@@ -28,7 +28,7 @@ public final class PawnTest {
 
     private Square.Builder builder;
     private RectangularBoard.Instance<StandardPieces> testBoard;
-    private Pawn.PawnRule<Square, StandardPieces, TwoDimension, RectangularBoard.Instance<StandardPieces>> rule;
+    private Pawn<Square, StandardPieces, TwoDimension, RectangularBoard.Instance<StandardPieces>> rule;
     @Mock private PieceInformation<Square, StandardPieces> pieceInformation;
     @Mock private RuntimeInformation<Square, StandardPieces> runtimeInformation;
 
@@ -36,7 +36,7 @@ public final class PawnTest {
     public void instantiateTestPieceSet() {
         Coordinate.Builder coordinateBuilder = new Coordinate.Builder(8);
         builder = new Square.Builder(coordinateBuilder, coordinateBuilder);
-        rule = new Pawn.PawnRule<>(runtimeInformation);
+        rule = new Pawn<>(runtimeInformation);
     }
 
     @Test

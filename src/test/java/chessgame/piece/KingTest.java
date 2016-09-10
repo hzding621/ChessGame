@@ -32,7 +32,7 @@ public class KingTest {
 
     private Square.Builder builder;
     private ChessBoard testBoard = ChessBoard.create(new StandardSetting());
-    private King.KingRule<Square, StandardPieces, TwoDimension, ChessBoard> rule;
+    private King<Square, StandardPieces, TwoDimension, ChessBoard> rule;
 
     @Mock private PieceInformation<Square, StandardPieces> pieceInformation;
     @Mock private AttackInformation<Square> attackInformation;
@@ -46,7 +46,7 @@ public class KingTest {
         Mockito.when(pieceInformation.locateKing(Player.BLACK)).thenReturn(builder.at("E", "8"));
         Mockito.when(runtimeInformation.getPieceInformation()).thenReturn(pieceInformation);
         Mockito.when(runtimeInformation.getAttackInformation()).thenReturn(attackInformation);
-        rule = new King.KingRule<>(runtimeInformation);
+        rule = new King<>(runtimeInformation);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class KingTest {
         testBoard.movePiece(builder.at("C", "1"), builder.at("C", "3"));
         testBoard.movePiece(builder.at("B", "1"), builder.at("B", "3"));
 
-        Collection<Move<Square>> move = new King.KingRuleWithCastling(runtimeInformation).specialMove(testBoard, Player.WHITE);
+        Collection<Move<Square>> move = new King.WithCastling(runtimeInformation).specialMove(testBoard, Player.WHITE);
         Assert.assertTrue(move.contains(new CastlingMove<>(
                 SimpleMove.of(builder.at("E", "1"), builder.at("C", "1"), Player.WHITE),
                 SimpleMove.of(builder.at("A", "1"), builder.at("D", "1"), Player.WHITE)

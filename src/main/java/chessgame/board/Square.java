@@ -5,7 +5,7 @@ import java.util.Optional;
 /**
  * Immutable class that represents a single cell on a two dimensional chess board
  */
-public class Square implements Cell {
+public final class Square implements Cell {
 
     private final File file;
     private final Rank rank;
@@ -100,12 +100,33 @@ public class Square implements Cell {
         }
 
         @Override
-        public Optional<Square> moveOnce(Square cell, TwoDimension direction) {
+        public Optional<Square> moveOnce(Square cell, TwoDimension direction, Vector vector) {
+
+            if (vector.getX() < 0) {
+                direction = direction.reverse();
+            }
+            int fileIndex = cell.file.getCoordinate().getIndex();
+            int rankIndex = cell.rank.getCoordinate().getIndex();
             int xDelta = direction.getX(), yDelta = direction.getY();
-            int fileIndex = cell.file.getCoordinate().getIndex() + xDelta;
-            int rankIndex = cell.rank.getCoordinate().getIndex() + yDelta;
-            if (!withinRange(fileIndex, rankIndex)) {
-                return Optional.empty();
+            for (int i = 0; i < Math.abs(vector.getX()); i++) {
+                fileIndex += xDelta;
+                rankIndex += yDelta;
+                if (!withinRange(fileIndex, rankIndex)) {
+                    return Optional.empty();
+                }
+            }
+            if (vector.getY() > 0) {
+                direction = direction.nextClockWise().nextClockWise();
+            } else {
+                direction = direction.nextCounterClockWise().nextCounterClockWise();
+            }
+            xDelta = direction.getX(); yDelta = direction.getY();
+            for (int j = 0; j < Math.abs(vector.getY()); j++) {
+                fileIndex += xDelta;
+                rankIndex += yDelta;
+                if (!withinRange(fileIndex, rankIndex)) {
+                    return Optional.empty();
+                }
             }
             return Optional.of(at(fileIndex, rankIndex));
         }
