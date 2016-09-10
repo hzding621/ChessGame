@@ -2,6 +2,7 @@ package chessgame.game;
 
 import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
+import chessgame.board.Square;
 import chessgame.move.Move;
 import chessgame.move.SimpleMove;
 import chessgame.piece.PieceClass;
@@ -79,7 +80,7 @@ public class OptimizedMoveFinder<C extends Cell, P extends PieceClass, B extends
         Collection<LatentAttack<C>> latentCheckers = latentCheckersByBlocker.get(sourcePosition);
 
         // Get all potential moves for the actor piece
-        return rules.basicMoves(board, sourcePosition, actor)
+        Collection<Move<C>> moves = rules.basicMoves(board, sourcePosition, actor)
                 .stream()
                 .filter(targetPosition ->
 
@@ -105,6 +106,11 @@ public class OptimizedMoveFinder<C extends Cell, P extends PieceClass, B extends
 
                 .map(targetPosition -> SimpleMove.of(sourcePosition, targetPosition, actor))
                 .collect(Collectors.toList());
+
+        // Add special moves as well. Checking validity is up to the special move implementation
+        moves.addAll(rules.specialMove(board, sourcePosition, actor));
+
+        return moves;
     }
 
     @Override

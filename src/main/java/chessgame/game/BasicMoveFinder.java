@@ -73,7 +73,9 @@ public final class BasicMoveFinder<C extends Cell, P extends PieceClass, M exten
                     return result;
                 })
                 .collect(Collectors.toList());
+
         moves.addAll(rules.specialMove(board, sourcePosition, actor));
+
         return moves;
     }
 
