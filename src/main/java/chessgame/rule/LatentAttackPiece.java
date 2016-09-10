@@ -11,7 +11,7 @@ import java.util.Collection;
  * This interface exposes additional rule associated with pieces capable of making pinning/discovered attacks
  */
 public interface LatentAttackPiece<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
-        extends PieceRule<C, P, B> {
+        extends OptimizedPieceRule<C, P, B> {
 
     /**
      * Find pieces that form a pinning attack, both the protecting and protected pieces should belong to opponent

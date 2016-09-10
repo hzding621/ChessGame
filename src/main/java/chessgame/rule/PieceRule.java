@@ -17,7 +17,7 @@ public interface PieceRule<C extends Cell, P extends PieceClass, B extends Board
     /**
      * Find all position on the board the piece is attacking, including position occupied by my own piece
      *
-     * @param board
+     * @param board the given board
      * @param position the position of player's piece
      * @return all attacking positions
      */
@@ -25,7 +25,7 @@ public interface PieceRule<C extends Cell, P extends PieceClass, B extends Board
 
     /**
      * Check whether the given piece is current attacking the target, but does not consider check-escapes
-     * @param board
+     * @param board the given board
      * @param position the position of player's piece
      * @param target the target position
      * @param player the player the piece belongs to
@@ -39,7 +39,7 @@ public interface PieceRule<C extends Cell, P extends PieceClass, B extends Board
      * The default implementation filter all the attacking positions of piece with the condition that the occupant is an enemy
      * (This is not the case for some pieces, such as Pawn, whose attacking rule and moving rule are different)
      *
-     * @param board
+     * @param board the given board
      * @param position the position of the piece
      * @param player the player the piece belongs to
      * @return all possible moves
@@ -51,16 +51,4 @@ public interface PieceRule<C extends Cell, P extends PieceClass, B extends Board
                 .collect(Collectors.toList());
         return u;
     }
-
-    /**
-     * Finds all positions the opponent can move to to block the attacking
-     * including the position of the attacking piece itself
-     *
-     * @param board
-     * @param sourcePosition the position of the piece
-     * @param targetPosition the position of the target piece the piece it is attacking
-     * @param player the player the piece belongs to
-     * @return all positions the opponent can move to to block the attacking
-     */
-    Collection<C> attackBlockingPositions(B board, C sourcePosition, C targetPosition, Player player);
 }

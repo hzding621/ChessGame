@@ -1,10 +1,6 @@
 package chessgame.game;
 
-import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
-import chessgame.piece.PieceClass;
-import chessgame.rule.Attack;
-import chessgame.rule.LatentAttack;
 
 import java.util.Set;
 
@@ -21,7 +17,7 @@ public interface AttackInformation<C extends Cell> {
     /**
      * @return the checkers information
      */
-    Set<Attack<C>> getCheckers();
+    Set<C> getCheckers();
 
 //    /**
 //     * @return all pinning situation wherein the input piece is the protecting piece

@@ -37,8 +37,12 @@ public class Rules<C extends Cell, P extends PieceClass, B extends BoardViewer<C
         throwUnlessPieceExistsAndBelongsToPlayer(board, source, pinner);
         Piece<P> piece = board.getPiece(source).get();
         PieceRule<C, P, B> rule = ruleBindings.getRule(piece.getPieceClass());
+
+        if (!(rule instanceof OptimizedPieceRule)) {
+            throw new IllegalStateException("This game contains pieces that is not optimized: " + piece.getPieceClass());
+        }
         if (!(rule instanceof LatentAttackPiece)) {
-            return Collections.emptyList();
+            return ImmutableList.of();
         }
         LatentAttackPiece<C, P, B> latentAttack = (LatentAttackPiece<C, P, B>) rule;
         return latentAttack.latentAttacking(board, source, pinner);
@@ -50,13 +54,13 @@ public class Rules<C extends Cell, P extends PieceClass, B extends BoardViewer<C
         return ruleBindings.getRule(piece.getPieceClass()).attacking(board, source, attacker);
     }
 
-    @SuppressWarnings(value = "unchecked")
     public Collection<Move<C>> specialMove(B board, C source, Player actor) {
         throwUnlessPieceExistsAndBelongsToPlayer(board, source, actor);
         Piece<P> piece = board.getPiece(source).get();
         PieceRule<C, P, B> rule = ruleBindings.getRule(piece.getPieceClass());
         if (rule instanceof SpecialMovePieceRule) {
-            return ((SpecialMovePieceRule) rule).specialMove(board, actor);
+            SpecialMovePieceRule<C, P, B> specialRule = (SpecialMovePieceRule<C, P, B>) rule;
+            return specialRule.specialMove(board, actor);
         } else {
             return ImmutableList.of();
         }
@@ -73,6 +77,11 @@ public class Rules<C extends Cell, P extends PieceClass, B extends BoardViewer<C
         throwUnlessPieceExistsAndBelongsToPlayer(board, source, attacker);
 
         Piece<P> piece = board.getPiece(source).get();
-        return ruleBindings.getRule(piece.getPieceClass()).attackBlockingPositions(board, source, target, attacker);
+        PieceRule<C, P, B> rule = ruleBindings.getRule(piece.getPieceClass());
+        if (!(rule instanceof OptimizedPieceRule)) {
+            throw new IllegalStateException("This game contains pieces that is not optimized: " + piece.getPieceClass());
+        }
+        OptimizedPieceRule<C, P, B> optimizedRule = (OptimizedPieceRule<C, P, B>) rule;
+        return optimizedRule.attackBlockingPositions(board, source, target, attacker);
     }
 }

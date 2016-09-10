@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
  */
 public class OptimizedMoveFinder<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
         implements MoveFinder<C, P> {
+
     private final SetMultimap<C, Move<C>> availableMoves = MultimapBuilder.treeKeys().hashSetValues().build();
     private final SetMultimap<C, LatentAttack<C>> latentCheckersByBlocker = MultimapBuilder.treeKeys().hashSetValues().build();
 
@@ -67,9 +68,15 @@ public class OptimizedMoveFinder<C extends Cell, P extends PieceClass, B extends
     private Collection<Move<C>> computeAvailableMoves(C sourcePosition) {
 
         Player actor = runtimeInformation.getPlayerInformation().getActor();
+        Player defender = runtimeInformation.getPlayerInformation().getDefender();
 
-        // Get checkers
-        Collection<Attack<C>> checkers = runtimeInformation.getAttackInformation().getCheckers();
+        // Get checkers, and compute its blocking positions
+        // At this point all pieces involved will be checked if they implemented the OptimizedPieceRule interface
+        // If not then this game should not have used OptimizedMoveFinder, and the rules dispatcher will throw
+        Collection<Attack<C>> checkers = runtimeInformation.getAttackInformation().getCheckers().stream()
+                .map(checker -> new Attack<>(checker, rules.attackBlockingPositions(board, checker,
+                        runtimeInformation.getPieceInformation().locateKing(actor), defender)))
+                .collect(Collectors.toList());
 
         // Get latent checkers contingent on the actor piece moving
         Collection<LatentAttack<C>> latentCheckers = latentCheckersByBlocker.get(sourcePosition);

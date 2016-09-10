@@ -5,6 +5,7 @@ import chessgame.board.Direction;
 import chessgame.board.GridViewer;
 import chessgame.player.Player;
 import chessgame.rule.AbstractPieceRule;
+import chessgame.rule.OptimizedPieceRule;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
@@ -30,7 +31,8 @@ public final class Knight<P extends PieceClass> extends AbstractPiece<P> {
     }
 
     public static final class KnightRule<C extends Cell, P extends PieceClass, D extends Direction<D>,
-            B extends GridViewer<C, D, P>> extends AbstractPieceRule<C, P, B> {
+            B extends GridViewer<C, D, P>> extends AbstractPieceRule<C, P, B>
+            implements OptimizedPieceRule<C, P, B> {
 
         private Optional<C> knightStyle(B board, C startPosition, D direction, boolean closeWise) {
             Optional<C> middlePosition = board.moveSteps(startPosition, direction, 1);

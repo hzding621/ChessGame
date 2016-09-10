@@ -17,7 +17,7 @@ public class AttackInformationImpl<C extends Cell, P extends PieceClass, B exten
         implements AttackInformation<C> {
 
     private final Set<C> isAttacked = new TreeSet<>();
-    private final Set<Attack<C>> checkers = new TreeSet<>();
+    private final Set<C> checkers = new TreeSet<>();
 
     private final B board;
     private final RuntimeInformation<C, P> runtimeInformation;
@@ -33,7 +33,7 @@ public class AttackInformationImpl<C extends Cell, P extends PieceClass, B exten
     }
 
     @Override
-    public Set<Attack<C>> getCheckers() {
+    public Set<C> getCheckers() {
         return checkers;
     }
 
@@ -58,8 +58,7 @@ public class AttackInformationImpl<C extends Cell, P extends PieceClass, B exten
 
                 // If any of the position is the current actor's king, mark the attackers as checker
                 if (runtimeInformation.getPieceInformation().locateKing(actor).equals(targetPosition)) {
-                    checkers.add(new Attack<>(defenderPosition,
-                            rules.attackBlockingPositions(board, defenderPosition, targetPosition, defender)));
+                    checkers.add(defenderPosition);
                 }
             });
         });

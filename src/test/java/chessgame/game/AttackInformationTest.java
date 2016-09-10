@@ -46,7 +46,7 @@ public class AttackInformationTest extends AbstractTest {
 
             // white queen checking
             Assert.assertEquals(1, runtimeInformation.getAttackInformation().getCheckers().size());
-            Assert.assertTrue(runtimeInformation.getAttackInformation().getCheckers().stream().anyMatch(attack -> attack.getAttacker().equals(cell.at("B", "3"))));
+            Assert.assertTrue(runtimeInformation.getAttackInformation().getCheckers().contains(cell.at("B", "3")));
         });
     }
 }

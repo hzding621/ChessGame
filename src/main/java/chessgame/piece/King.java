@@ -12,6 +12,7 @@ import chessgame.move.Move;
 import chessgame.move.SimpleMove;
 import chessgame.player.Player;
 import chessgame.rule.AbstractPieceRule;
+import chessgame.rule.OptimizedPieceRule;
 import chessgame.rule.RequiresRuntimeInformation;
 import chessgame.rule.SpecialMovePieceRule;
 import com.google.common.collect.ImmutableList;
@@ -38,7 +39,7 @@ public final class King<P extends PieceClass> extends AbstractPiece<P> {
     }
     public static class KingRule<C extends Cell, P extends PieceClass, D extends Direction<D>,
             B extends GridViewer<C, D, P>> extends AbstractPieceRule<C, P, B>
-            implements RequiresRuntimeInformation<C, P> {
+            implements OptimizedPieceRule<C, P, B>, RequiresRuntimeInformation<C, P> {
 
         private final RuntimeInformation<C, P> runtimeInformation;
 
