@@ -5,7 +5,13 @@ package chessgame.board;
  */
 public interface Direction<T extends Direction<T>> {
 
-    T getClockwise();
+    /**
+     * @return the next direction clockwise, counting both diagonal and orthogonal!
+     */
+    T nextCloseWise();
 
-    T getCounterClockwise();
+    /**
+     * @return the next direction counterclockwise, , counting both diagonal and orthogonal!
+     */
+    T nextCounterCloseWise();
 }

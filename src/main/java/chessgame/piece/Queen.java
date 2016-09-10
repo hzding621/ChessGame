@@ -5,7 +5,7 @@ import chessgame.board.Direction;
 import chessgame.board.GridViewer;
 import chessgame.player.Player;
 import chessgame.rule.AbstractPieceRule;
-import chessgame.rule.RangeAttackPieceRule;
+import chessgame.rule.Rider;
 
 import java.util.Collection;
 
@@ -27,7 +27,7 @@ public final class Queen<P extends PieceClass> extends AbstractPiece<P> {
     }
     public static final class QueenRule<C extends Cell, P extends PieceClass, D extends Direction<D>,
             B extends GridViewer<C, D, P>> extends AbstractPieceRule<C, P, B>
-            implements RangeAttackPieceRule<C, P, D, B> {
+            implements Rider<C, P, D, B> {
 
         @Override
         public Collection<D> getAttackingDirections(B board) {

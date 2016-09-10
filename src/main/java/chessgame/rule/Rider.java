@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * This type of piece attack in symmetric directions, such as Rook, Bishop, Queen
  * Such pieces must be associated with GridViewer
  */
-public interface RangeAttackPieceRule<C extends Cell, P extends PieceClass, D extends Direction<D>,
+public interface Rider<C extends Cell, P extends PieceClass, D extends Direction<D>,
         B extends GridViewer<C, D, P>> extends LatentAttackPiece<C, P, B> {
 
     /**

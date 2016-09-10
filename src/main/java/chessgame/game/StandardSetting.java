@@ -2,6 +2,7 @@ package chessgame.game;
 
 import chessgame.board.Coordinate;
 import chessgame.board.Square;
+import chessgame.piece.AbstractPiece;
 import chessgame.piece.Bishop;
 import chessgame.piece.King;
 import chessgame.piece.Knight;
@@ -92,17 +93,17 @@ public final class StandardSetting implements GameSetting.GridGame<Square, Stand
     public static Piece<StandardPieces> createPiece(StandardPieces type, Player player, int id) {
         switch (type) {
             case PAWN:
-                return new Pawn<>(type, player, id);
+                return new AbstractPiece<>(type, player, id);
             case KNIGHT:
-                return new Knight<>(type, player, id);
+                return new AbstractPiece<>(type, player, id);
             case BISHOP:
-                return new Bishop<>(type, player, id);
+                return new AbstractPiece<>(type, player, id);
             case ROOK:
-                return new Rook<>(type, player, id);
+                return new AbstractPiece<>(type, player, id);
             case QUEEN:
-                return new Queen<>(type, player, id);
+                return new AbstractPiece<>(type, player, id);
             case KING:
-                return new King<>(type, player, id);
+                return new AbstractPiece<>(type, player, id);
         }
         throw new IllegalStateException("Reach unexpected value " + type);
     }

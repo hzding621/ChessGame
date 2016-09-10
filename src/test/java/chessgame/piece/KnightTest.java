@@ -74,8 +74,7 @@ public final class KnightTest {
         Collection<Square> blockingPositionsWhenAttacking =
                 rule.attackBlockingPositions(
                         testBoard, builder.at("F", "6"), builder.at("E", "8"), Player.WHITE);
-        Assert.assertEquals(2, blockingPositionsWhenAttacking.size());
+        Assert.assertEquals(1, blockingPositionsWhenAttacking.size());
         Assert.assertTrue(blockingPositionsWhenAttacking.contains(builder.at("F", "6")));
-        Assert.assertTrue(blockingPositionsWhenAttacking.contains(builder.at("E", "8")));
     }
 }

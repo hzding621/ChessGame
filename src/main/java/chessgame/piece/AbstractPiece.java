@@ -5,7 +5,7 @@ import chessgame.player.Player;
 /**
  * Abstract class for piece implementation to extend from. Contains basic information that are shared by all pieces.
  */
-public abstract class AbstractPiece<P extends PieceClass>
+public class AbstractPiece<P extends PieceClass>
         implements Piece<P> {
 
     private final P pieceClass;
@@ -31,6 +31,13 @@ public abstract class AbstractPiece<P extends PieceClass>
     @Override
     public int getId() {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        // e.g. WHITE[KNIGHT,1]
+
+        return player + "[" + pieceClass + "," + id + "]";
     }
 
     @Override

@@ -3,9 +3,11 @@ package chessgame.piece;
 import chessgame.board.Cell;
 import chessgame.board.Direction;
 import chessgame.board.GridViewer;
+import chessgame.board.Vector;
 import chessgame.player.Player;
 import chessgame.rule.AbstractPieceRule;
-import chessgame.rule.OptimizedPieceRule;
+import chessgame.rule.Leaper;
+import chessgame.rule.OptimizedPiece;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
@@ -32,34 +34,11 @@ public final class Knight<P extends PieceClass> extends AbstractPiece<P> {
 
     public static final class KnightRule<C extends Cell, P extends PieceClass, D extends Direction<D>,
             B extends GridViewer<C, D, P>> extends AbstractPieceRule<C, P, B>
-            implements OptimizedPieceRule<C, P, B> {
-
-        private Optional<C> knightStyle(B board, C startPosition, D direction, boolean closeWise) {
-            Optional<C> middlePosition = board.moveSteps(startPosition, direction, 1);
-            if (!middlePosition.isPresent()) return Optional.empty();
-
-            direction = closeWise ? direction.getClockwise() : (D) direction.getCounterClockwise();
-            return board.moveSteps(middlePosition.get(), direction, 1);
-        }
+            implements Leaper<C, P, D, B>, OptimizedPiece<C, P, B> {
 
         @Override
-        public Collection<C> attacking(B board, C position, Player player) {
-            final List<C> targets = new ArrayList<>();
-            board.getOrthogonalDirections().forEach(direction -> {
-                knightStyle(board, position, direction, true).ifPresent(targets::add);
-                knightStyle(board, position, direction, false).ifPresent(targets::add);
-            });
-            return targets;
-        }
-
-        @Override
-        public Collection<C> attackBlockingPositions(B board, C sourcePosition, C targetPosition, Player player) {
-            if (!attacking(board, sourcePosition, player).contains(targetPosition)) {
-                throw new IllegalArgumentException(sourcePosition + " cannot attack " + targetPosition + " !");
-            }
-
-            // To block a pawn attack, can only capture pawn (or move away attacked piece)
-            return ImmutableList.of(sourcePosition, targetPosition);
+        public Vector getAttackDirection() {
+            return Vector.of(1, 2);
         }
     }
 }

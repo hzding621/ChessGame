@@ -6,7 +6,7 @@ import chessgame.board.GridViewer;
 import chessgame.game.RuntimeInformation;
 import chessgame.player.Player;
 import chessgame.rule.AbstractPieceRule;
-import chessgame.rule.OptimizedPieceRule;
+import chessgame.rule.OptimizedPiece;
 import chessgame.rule.RequiresRuntimeInformation;
 import com.google.common.collect.ImmutableList;
 import utility.CollectionUtils;
@@ -35,7 +35,7 @@ public final class Pawn<P extends PieceClass> extends AbstractPiece<P> {
 
     public static final class PawnRule<C extends Cell, P extends PieceClass, D extends Direction<D>,
             B extends GridViewer<C, D, P>> extends AbstractPieceRule<C, P, B>
-            implements OptimizedPieceRule<C, P, B>, RequiresRuntimeInformation<C, P> {
+            implements OptimizedPiece<C, P, B>, RequiresRuntimeInformation<C, P> {
 
         private final RuntimeInformation<C, P> runtimeInformation;
 
@@ -76,7 +76,7 @@ public final class Pawn<P extends PieceClass> extends AbstractPiece<P> {
             }
 
             // To block a pawn attack, can only capture pawn (or move away attacked piece)
-            return ImmutableList.of(sourcePosition, targetPosition);
+            return ImmutableList.of(sourcePosition);
         }
 
         @Override

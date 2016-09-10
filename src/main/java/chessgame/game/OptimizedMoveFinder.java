@@ -71,7 +71,7 @@ public class OptimizedMoveFinder<C extends Cell, P extends PieceClass, B extends
         Player defender = runtimeInformation.getPlayerInformation().getDefender();
 
         // Get checkers, and compute its blocking positions
-        // At this point all pieces involved will be checked if they implemented the OptimizedPieceRule interface
+        // At this point all pieces involved will be checked if they implemented the OptimizedPiece interface
         // If not then this game should not have used OptimizedMoveFinder, and the rules dispatcher will throw
         Collection<Attack<C>> checkers = runtimeInformation.getAttackInformation().getCheckers().stream()
                 .map(checker -> new Attack<>(checker, rules.attackBlockingPositions(board, checker,

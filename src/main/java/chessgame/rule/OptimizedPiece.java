@@ -10,7 +10,7 @@ import java.util.Collection;
 /**
  * Chess pieces implementing this rule can be optimized in move finding
  */
-public interface OptimizedPieceRule<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
+public interface OptimizedPiece<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
         extends PieceRule<C, P, B> {
 
     /**

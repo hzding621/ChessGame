@@ -12,9 +12,9 @@ import chessgame.move.Move;
 import chessgame.move.SimpleMove;
 import chessgame.player.Player;
 import chessgame.rule.AbstractPieceRule;
-import chessgame.rule.OptimizedPieceRule;
+import chessgame.rule.OptimizedPiece;
 import chessgame.rule.RequiresRuntimeInformation;
-import chessgame.rule.SpecialMovePieceRule;
+import chessgame.rule.SpecialMovePiece;
 import com.google.common.collect.ImmutableList;
 
 import java.util.Collection;
@@ -39,7 +39,7 @@ public final class King<P extends PieceClass> extends AbstractPiece<P> {
     }
     public static class KingRule<C extends Cell, P extends PieceClass, D extends Direction<D>,
             B extends GridViewer<C, D, P>> extends AbstractPieceRule<C, P, B>
-            implements OptimizedPieceRule<C, P, B>, RequiresRuntimeInformation<C, P> {
+            implements OptimizedPiece<C, P, B>, RequiresRuntimeInformation<C, P> {
 
         private final RuntimeInformation<C, P> runtimeInformation;
 
@@ -63,8 +63,8 @@ public final class King<P extends PieceClass> extends AbstractPiece<P> {
                 throw new IllegalArgumentException(sourcePosition + " cannot attack " + targetPosition + " !");
             }
 
-            // To block a pawn attack, can only capture pawn (or move away attacked piece)
-            return ImmutableList.of(sourcePosition, targetPosition);
+            // King's attack can't be blocked!
+            return ImmutableList.of(sourcePosition);
         }
 
         @Override
@@ -74,7 +74,7 @@ public final class King<P extends PieceClass> extends AbstractPiece<P> {
     }
 
     public static class KingRuleWithCastling extends KingRule<Square, StandardPieces, TwoDimension, ChessBoardViewer>
-            implements SpecialMovePieceRule<Square, StandardPieces, ChessBoardViewer> {
+            implements SpecialMovePiece<Square, StandardPieces, ChessBoardViewer> {
 
         public KingRuleWithCastling(RuntimeInformation<Square, StandardPieces> runtimeInformation) {
             super(runtimeInformation);
