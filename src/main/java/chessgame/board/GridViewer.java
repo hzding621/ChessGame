@@ -35,41 +35,41 @@ public interface GridViewer<C extends Cell, D extends Direction<D>, P extends Pi
      * @param startCell starting cell
      * @param direction the direction to move
      * @param steps the given number
-     * @param projection
+     * @param distance
      * @return non-empty value if the cell is not at the edge of the board, empty otherwise
      */
-    Optional<C> moveSteps(C startCell, D direction, int steps, Projection projection);
+    Optional<C> moveSteps(C startCell, D direction, int steps, Distance distance);
 
     /**
      * Returns a series of cell movement that starts at a cell, goes at a certain direction,
      * and either stops at first occupant or at the edge of board
      *  @param startCell the cell the movement starts at
      * @param direction the direction the movement goes at
-     * @param projection
+     * @param distance
      * @param startInclusive whether or not to include the startCell
      * @param meetInclusive whether or not to include the occupant if there exists  @return the list of movement
      */
-    List<C> furthestReach(C startCell, D direction, Projection projection, boolean startInclusive, boolean meetInclusive);
+    List<C> furthestReach(C startCell, D direction, Distance distance, boolean startInclusive, boolean meetInclusive);
 
     /**
      * @param startCell the given cell
      * @param direction the given direction
-     * @param projection
+     * @param distance
      * @return non-empty if moving at the given cell in the given direction will lead to this piece, empty if it will lead the edge of the board
      */
-    Optional<C> firstOccupant(C startCell, D direction, Projection projection);
+    Optional<C> firstOccupant(C startCell, D direction, Distance distance);
 
     /**
      * Return the first and second occupant met starting at the given cell and moving toward the given direction
      * @param startCell the given cell
      * @param direction the given direction
-     * @param projection
+     * @param distance
      * @return Non-empty if there exists two such pieces
      */
-    default Optional<Pair<C, C>> firstAndSecondOccupant(C startCell, D direction, Projection projection) {
-        Optional<C> firstMeet = firstOccupant(startCell, direction, projection);
+    default Optional<Pair<C, C>> firstAndSecondOccupant(C startCell, D direction, Distance distance) {
+        Optional<C> firstMeet = firstOccupant(startCell, direction, distance);
         if (!firstMeet.isPresent()) return Optional.empty();
-        Optional<C> secondMeet = firstOccupant(firstMeet.get(), direction, projection);
+        Optional<C> secondMeet = firstOccupant(firstMeet.get(), direction, distance);
         if (!secondMeet.isPresent()) return Optional.empty();
         return Optional.of(Pair.of(firstMeet.get(), secondMeet.get()));
     }

@@ -3,7 +3,7 @@ package chessgame.rule;
 import chessgame.board.Cell;
 import chessgame.board.Direction;
 import chessgame.board.GridViewer;
-import chessgame.board.Projection;
+import chessgame.board.Distance;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 import com.google.common.collect.ImmutableList;
@@ -20,19 +20,19 @@ public interface Leaper<C extends Cell, P extends PieceClass, D extends Directio
         B extends GridViewer<C, D, P>> extends OptimizedPiece<C, P, B> {
 
     /**
-     * @return the absolute vector by which the leaper attacks
+     * @return the distance by which the leaper attacks
      */
-    Projection getAttackProjection();
+    Distance getProjection();
 
     @Override
     default Collection<C> attacking(B board, C position, Player player) {
         final Set<C> targets = new HashSet<>();
         board.getOrthogonalDirections().forEach(direction -> {
-            int x = getAttackProjection().getForward(), y = getAttackProjection().getRotate();
-            board.moveSteps(position, direction, 1, Projection.of(x, y)).ifPresent(targets::add);
-            board.moveSteps(position, direction, 1, Projection.of(x, -y)).ifPresent(targets::add);
-            board.moveSteps(position, direction, 1, Projection.of(-x, y)).ifPresent(targets::add);
-            board.moveSteps(position, direction, 1, Projection.of(-x, -y)).ifPresent(targets::add);
+            int x = getProjection().getForward(), y = getProjection().getRotate();
+            board.moveSteps(position, direction, 1, Distance.of(x, y)).ifPresent(targets::add);
+            board.moveSteps(position, direction, 1, Distance.of(x, -y)).ifPresent(targets::add);
+            board.moveSteps(position, direction, 1, Distance.of(-x, y)).ifPresent(targets::add);
+            board.moveSteps(position, direction, 1, Distance.of(-x, -y)).ifPresent(targets::add);
         });
         return targets;
     }

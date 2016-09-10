@@ -15,7 +15,7 @@ public final class Queen<C extends Cell, P extends PieceClass, D extends Directi
         implements Rider<C, P, D, B>, chessgame.rule.PieceRule<C,P,B> {
 
     @Override
-    public Collection<D> getAttackingDirections(B board) {
+    public Collection<D> getDirections(B board) {
         return board.getAllDirections();
     }
 }
