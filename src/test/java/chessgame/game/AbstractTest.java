@@ -7,12 +7,13 @@ import chessgame.board.TwoDimension;
 import chessgame.piece.StandardPieces;
 import chessgame.rule.BasicRuleBindings;
 import chessgame.rule.Rules;
-import com.google.common.collect.ImmutableList;
+
+import java.util.function.Consumer;
 
 /**
  * Contains some shared codes across MoveFinderTest and AttackInformationTest
  */
-public class InformationAbstractTest {
+public class AbstractTest {
 
     protected RectangularBoard.Instance<StandardPieces> testBoard;
     protected GridCellBuilder<Square, TwoDimension> cell;
@@ -20,14 +21,24 @@ public class InformationAbstractTest {
     protected RuntimeInformationImpl<Square, StandardPieces, RectangularBoard.Instance<StandardPieces>> runtimeInformation;
     protected MoveFinder<Square, StandardPieces> moveFinder;
 
-    protected void hydrate(GameSetting.GridGame<Square, StandardPieces> customizedSet) {
+    protected void hydrate(GameSetting.GridGame<Square, StandardPieces> customizedSet, boolean optimizedMoveFinder) {
         testBoard = RectangularBoard.Instance.create(customizedSet);
         runtimeInformation = new RuntimeInformationImpl<>(customizedSet, testBoard);
         rules = new Rules<>(new BasicRuleBindings<>(runtimeInformation));
-        moveFinder = new OptimizedMoveFinder<>(testBoard, rules, runtimeInformation);
+        if (optimizedMoveFinder) {
+            moveFinder = new OptimizedMoveFinder<>(testBoard, rules, runtimeInformation);
+        } else {
+            moveFinder = new BasicMoveFinder<>(testBoard, rules, runtimeInformation);
+        }
         cell = testBoard.getGridCellFactory();
         runtimeInformation.initializeInformation(rules);
         moveFinder.recompute();
     }
+
+    protected void testBoth(Consumer<Boolean> checker) {
+        checker.accept(true);
+        checker.accept(false);
+    }
+
 
 }
