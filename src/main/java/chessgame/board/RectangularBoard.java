@@ -193,4 +193,9 @@ public abstract class RectangularBoard<P extends PieceClass, V extends GridViewe
             throw new IllegalArgumentException("Square " + cell + " is out of boundary of this board!");
         }
     }
+
+    @Override
+    public Collection<Square> getAllPositions() {
+        return getGridCellFactory().getAllPositions();
+    }
 }

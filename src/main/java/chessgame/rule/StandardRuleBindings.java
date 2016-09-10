@@ -11,7 +11,7 @@ import chessgame.piece.StandardPieces;
 /**
  * Inherit the empty rule bindings to include all standard chess pieces rule mappings
  */
-public final class StandardRuleBindings extends BasicRuleBindings<ChessBoardViewer> {
+public final class StandardRuleBindings extends BasicRuleBindings<ChessBoardViewer<StandardPieces>> {
 
     public StandardRuleBindings(RuntimeInformation<Square, StandardPieces> runtimeInformation) {
         super(runtimeInformation);

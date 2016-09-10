@@ -12,7 +12,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * This type of piece attack takes unlimited number of moves in certain directions, such as Rook, Bishop, Queen
+ * This type of piece attack takes unlimited number of moves in certain directions with certain step size,
+ * e.g.  Rook, Bishop, Queen
  */
 public interface Rider<C extends Cell, P extends PieceClass, D extends Direction<D>,
         B extends GridViewer<C, D, P>> extends LatentAttackPiece<C, P, B> {
@@ -23,20 +24,27 @@ public interface Rider<C extends Cell, P extends PieceClass, D extends Direction
      */
     Collection<D> getDirections(B board);
 
+    /**
+     * @return the distance by which the rider attacks
+     */
+    default Distance getDistance() {
+        return Distance.of(1, 0);
+    }
+
     @Override
     default Collection<C> attacking(B board, C position, Player player) {
         return getDirections(board).stream()
-                .flatMap(direction -> board.furthestReach(position, direction, Distance.of(1, 0), false, true).stream())
+                .flatMap(direction -> board.furthestReach(position, direction, getDistance(), false, true).stream())
                 .collect(Collectors.toList());
     }
 
     @Override
     default Collection<LatentAttack<C>> latentAttacking(B board, C position, Player player) {
         return getDirections(board).stream()
-                .map(direction -> board.firstAndSecondOccupant(position, direction, Distance.of(1,0))
+                .map(direction -> board.firstAndSecondOccupant(position, direction, getDistance())
                         .filter(pair -> board.isEnemy(pair.second(), player))
                         .map(pair -> new LatentAttack<>(position, pair.first(), pair.second(),
-                                board.furthestReach(position, direction, Distance.of(1, 0), true, false))))
+                                board.furthestReach(position, direction, getDistance(), true, false))))
                 .filter(Optional::isPresent).map(Optional::get)
                 .collect(Collectors.toList());
     }
@@ -49,6 +57,6 @@ public interface Rider<C extends Cell, P extends PieceClass, D extends Direction
             throw new IllegalArgumentException(sourcePosition + " is not attacking " + targetPosition + " !");
         }
         D direction = board.findDirection(sourcePosition, targetPosition);
-        return board.furthestReach(sourcePosition, direction, Distance.of(1, 0), true, false);
+        return board.furthestReach(sourcePosition, direction, getDistance(), true, false);
     }
 }

@@ -1,19 +1,17 @@
 package chessgame.board;
 
 import chessgame.game.StandardSetting;
+import chessgame.piece.StandardPieces;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Contains tests for ChessBoard
  */
 public final class ChessBoardTest {
 
-    private ChessBoard chessBoard;
+    private ChessBoard<StandardPieces> chessBoard;
     private Square.Builder tile;
 
 
@@ -25,7 +23,7 @@ public final class ChessBoardTest {
 
     @Test
     public void testPreview() {
-        ChessBoardViewer preivew = chessBoard.preview(mutableBoard -> {
+        ChessBoardViewer<StandardPieces> preivew = chessBoard.preview(mutableBoard -> {
             mutableBoard.movePiece(tile.at("E", "2"), tile.at("E", "4"));
             return null;
         });

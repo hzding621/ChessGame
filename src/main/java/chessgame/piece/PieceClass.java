@@ -10,4 +10,9 @@ public interface PieceClass {
      * @return whether this piece should be recognized as King in this game
      */
     boolean isKing();
+    
+    /**
+     * @return whether this type of piece can be captured
+     */
+    boolean canCapture();
 }

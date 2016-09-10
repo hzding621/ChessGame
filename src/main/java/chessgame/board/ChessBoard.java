@@ -1,10 +1,10 @@
 package chessgame.board;
 
-import chessgame.game.StandardSetting;
+import chessgame.game.GameSetting;
 import chessgame.move.BoardTransition;
 import chessgame.move.TransitionResult;
 import chessgame.piece.Piece;
-import chessgame.piece.StandardPieces;
+import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 
 import java.util.Collection;
@@ -12,36 +12,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-
 /**
  * Represents a regular 8x8 chess board
  */
-public final class ChessBoard implements
-        MutableBoard<Square, StandardPieces, ChessBoard>,
-        ChessBoardViewer,
-        Previewer<Square, StandardPieces, ChessBoardViewer, ChessBoard>
+public final class ChessBoard<P extends PieceClass> implements
+        MutableBoard<Square, P, ChessBoard<P>>,
+        ChessBoardViewer<P>,
+        Previewer<Square, P, ChessBoardViewer<P>, ChessBoard<P>>
     {
 
 
-    private ChessBoardImpl delegate;
-    private ChessBoard(ChessBoardImpl delegate) {
+    private ChessBoardImpl<P> delegate;
+    private ChessBoard(ChessBoardImpl<P> delegate) {
         this.delegate = delegate;
     }
 
-    public static ChessBoard create(StandardSetting gameSetting) {
+    public static <P extends PieceClass> ChessBoard<P> create(GameSetting.GridGame<Square, P> gameSetting) {
         final Coordinate.Builder fileBuilder = new Coordinate.Builder(gameSetting.getFileLength());
         final Coordinate.Builder rankBuilder = new Coordinate.Builder(gameSetting.getRankLength());
-        return new ChessBoard(new ChessBoardImpl(gameSetting.constructPiecesByStartingPosition(),
+        return new ChessBoard<P>(new ChessBoardImpl<P>(gameSetting.constructPiecesByStartingPosition(),
                 new Square.Builder(fileBuilder, rankBuilder)));
     }
 
     @Override
-    public Optional<Piece<StandardPieces>> getPiece(Square cell) {
+    public Optional<Piece<P>> getPiece(Square cell) {
         return delegate.getPiece(cell);
     }
 
     @Override
-    public Collection<Square> getPiecesOfTypeForPlayer(StandardPieces type, Player player) {
+    public Collection<Square> getPiecesOfTypeForPlayer(P type, Player player) {
         return delegate.getPiecesOfTypeForPlayer(type, player);
     }
 
@@ -61,22 +60,22 @@ public final class ChessBoard implements
     }
 
     @Override
-    public Piece<StandardPieces> clearPiece(Square position) {
+    public Piece<P> clearPiece(Square position) {
         return delegate.clearPiece(position);
     }
 
     @Override
-    public Piece<StandardPieces> movePiece(Square source, Square target) {
+    public Piece<P> movePiece(Square source, Square target) {
         return delegate.movePiece(source, target);
     }
 
     @Override
-    public void addPiece(Square position, Piece<StandardPieces> piece) {
+    public void addPiece(Square position, Piece<P> piece) {
         delegate.addPiece(position, piece);
     }
 
     @Override
-    public TransitionResult<Square, StandardPieces> apply(BoardTransition<Square, StandardPieces, ChessBoard> boardTransition) {
+    public TransitionResult<Square, P> apply(BoardTransition<Square, P, ChessBoard<P>> boardTransition) {
         return boardTransition.apply(this);
     }
 
@@ -131,26 +130,31 @@ public final class ChessBoard implements
     }
 
     @Override
-    public ChessBoardViewer preview(BoardTransition<Square, StandardPieces, ChessBoard> transition) {
-        ChessBoard newBoard = new ChessBoard(new ChessBoardImpl(delegate.occupants, delegate.cellBuilder));
+    public Collection<Square> getAllPositions() {
+        return delegate.getAllPositions();
+    }
+
+    @Override
+    public ChessBoardViewer<P> preview(BoardTransition<Square, P, ChessBoard<P>> transition) {
+        ChessBoard<P> newBoard = new ChessBoard<P>(new ChessBoardImpl(delegate.occupants, delegate.cellBuilder));
         newBoard.apply(transition);
         return newBoard;
     }
 
-    private static final class ChessBoardImpl extends RectangularBoard<StandardPieces, GridViewer<Square, TwoDimension, StandardPieces>, ChessBoardImpl> {
+    private static final class ChessBoardImpl<P extends PieceClass> extends RectangularBoard<P, GridViewer<Square, TwoDimension, P>, ChessBoardImpl<P>> {
 
-        private ChessBoardImpl(Map<Square, Piece<StandardPieces>> occupants, Square.Builder cellBuilder) {
+        private ChessBoardImpl(Map<Square, Piece<P>> occupants, Square.Builder cellBuilder) {
             super(occupants, cellBuilder);
         }
 
         @Override
-        public TransitionResult<Square, StandardPieces> apply(BoardTransition<Square, StandardPieces, ChessBoardImpl> boardTransition) {
+        public TransitionResult<Square, P> apply(BoardTransition<Square, P, ChessBoardImpl<P>> boardTransition) {
             return boardTransition.apply(this);
         }
 
         @Override
-        public GridViewer<Square, TwoDimension, StandardPieces> preview(BoardTransition<Square, StandardPieces, ChessBoardImpl> transition) {
-            ChessBoardImpl chessBoard = new ChessBoardImpl(occupants, cellBuilder);
+        public GridViewer<Square, TwoDimension, P> preview(BoardTransition<Square, P, ChessBoardImpl<P>> transition) {
+            ChessBoardImpl<P> chessBoard = new ChessBoardImpl<P>(occupants, cellBuilder);
             chessBoard.apply(transition);
             return chessBoard;
         }

@@ -15,17 +15,17 @@ import java.util.Collection;
 /**
  * The standard chess game
  */
-public final class StandardGame implements Game<Square, StandardPieces, ChessBoard> {
-    private final ChessBoard chessBoard;
-    private final Rules<Square, StandardPieces, ChessBoardViewer> chessRules;
-    private final RuntimeInformationImpl<Square, StandardPieces, ChessBoardViewer> runtimeInformation;
+public final class StandardGame implements Game<Square, StandardPieces, ChessBoard<StandardPieces>> {
+    private final ChessBoard<StandardPieces> chessBoard;
+    private final Rules<Square, StandardPieces, ChessBoardViewer<StandardPieces>> chessRules;
+    private final RuntimeInformationImpl<Square, StandardPieces, ChessBoardViewer<StandardPieces>> runtimeInformation;
     private final MoveFinder<Square, StandardPieces> moveFinder;
     private GameStatus gameStatus = GameStatus.OPEN;
 
 
-    private StandardGame(ChessBoard chessBoard,
-                         Rules<Square, StandardPieces, ChessBoardViewer> chessRules,
-                         RuntimeInformationImpl<Square, StandardPieces, ChessBoardViewer> runtimeInformation,
+    private StandardGame(ChessBoard<StandardPieces> chessBoard,
+                         Rules<Square, StandardPieces, ChessBoardViewer<StandardPieces>> chessRules,
+                         RuntimeInformationImpl<Square, StandardPieces, ChessBoardViewer<StandardPieces>> runtimeInformation,
                          MoveFinder<Square, StandardPieces> moveFinder) {
         this.chessBoard = chessBoard;
         this.chessRules = chessRules;
@@ -35,19 +35,18 @@ public final class StandardGame implements Game<Square, StandardPieces, ChessBoa
         moveFinder.recompute();
     }
 
-    public static StandardGame constructGame() {
-        StandardSetting pieceSet = new StandardSetting();
-        ChessBoard board = ChessBoard.create(pieceSet);
-        RuntimeInformationImpl<Square, StandardPieces, ChessBoardViewer> runtimeInformation =
-                new RuntimeInformationImpl<>(pieceSet, board);
-        Rules<Square, StandardPieces, ChessBoardViewer> rules =
+    public static StandardGame constructGame(StandardSetting setting) {
+        ChessBoard<StandardPieces> board = ChessBoard.create(setting);
+        RuntimeInformationImpl<Square, StandardPieces, ChessBoardViewer<StandardPieces>> runtimeInformation =
+                new RuntimeInformationImpl<>(setting, board);
+        Rules<Square, StandardPieces, ChessBoardViewer<StandardPieces>> rules =
                 new Rules<>(new StandardRuleBindings(runtimeInformation));
         MoveFinder<Square, StandardPieces> moveFinder = new BasicMoveFinder<>(board, rules, runtimeInformation);
         return new StandardGame(board, rules, runtimeInformation, moveFinder);
     }
 
     @Override
-    public ChessBoard getBoard() {
+    public ChessBoard<StandardPieces> getBoard() {
         return chessBoard;
     }
 

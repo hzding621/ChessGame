@@ -1,6 +1,9 @@
 package chessgame.board;
 
+import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Immutable class that represents a single cell on a two dimensional chess board
@@ -146,7 +149,13 @@ public final class Square implements Cell {
             return fileBuilder.withinRange(fileIndex) && rankBuilder.withinRange(rankIndex);
         }
 
-
+        @Override
+        public Collection<Square> getAllPositions() {
+            return IntStream.range(0, fileBuilder.getUpperBound()).boxed().flatMap(i ->
+                            IntStream.range(0, rankBuilder.getUpperBound()).boxed().map(j ->
+                                    at(i, j)))
+                    .collect(Collectors.toList());
+        }
     }
 
     @Override

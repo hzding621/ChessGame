@@ -45,10 +45,9 @@ public interface PieceRule<C extends Cell, P extends PieceClass, B extends Board
      * @return all possible moves
      */
     default Collection<C> basicMoves(B board, C position, Player player) {
-        Collection<C> u = attacking(board, position, player)
+        return attacking(board, position, player)
                 .stream()
-                .filter(c -> !board.isOccupied(c) || board.isEnemy(c, player))
+                .filter(c -> board.isEmpty(c) || board.isEnemy(c, player))
                 .collect(Collectors.toList());
-        return u;
     }
 }

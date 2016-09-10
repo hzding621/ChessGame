@@ -17,7 +17,7 @@ public final class Knight<C extends Cell, P extends PieceClass, D extends Direct
         implements Leaper<C, P, D, B>, OptimizedPiece<C, P, B>, PieceRule<C,P,B> {
 
     @Override
-    public Distance getProjection() {
+    public Distance getDistance() {
         return Distance.of(1, 2);
     }
 }

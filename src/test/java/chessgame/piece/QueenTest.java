@@ -1,6 +1,5 @@
 package chessgame.piece;
 
-import chessgame.board.ChessBoard;
 import chessgame.board.Coordinate;
 import chessgame.board.RectangularBoard;
 import chessgame.board.Square;

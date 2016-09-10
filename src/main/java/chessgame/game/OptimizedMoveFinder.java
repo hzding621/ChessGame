@@ -85,6 +85,8 @@ public final class OptimizedMoveFinder<C extends Cell, P extends PieceClass, B e
         Collection<Move<C>> moves = rules.basicMoves(board, sourcePosition, actor)
                 .stream()
                 .filter(targetPosition ->
+                        board.getPiece(targetPosition).map(p -> p.getPieceClass().canCapture()).orElse(true))
+                .filter(targetPosition ->
 
                         /*
                          * Either the piece is King and it is moving to a non-attacked position (can always do that)

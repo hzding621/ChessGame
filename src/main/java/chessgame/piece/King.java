@@ -13,6 +13,7 @@ import chessgame.move.Move;
 import chessgame.move.SimpleMove;
 import chessgame.player.Player;
 import chessgame.rule.OptimizedPiece;
+import chessgame.rule.PieceRule;
 import chessgame.rule.RequiresRuntimeInformation;
 import chessgame.rule.SpecialMovePiece;
 import com.google.common.collect.ImmutableList;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
  * Class that implements King piece moving logic. Specific rules regarding king checking is handled elsewhere
  */
 public class King<C extends Cell, P extends PieceClass, D extends Direction<D>, B extends GridViewer<C, D, P>>
-        implements OptimizedPiece<C, P, B>, RequiresRuntimeInformation<C, P>, chessgame.rule.PieceRule<C,P,B> {
+        implements OptimizedPiece<C, P, B>, RequiresRuntimeInformation<C, P>, PieceRule<C,P,B> {
 
     private final RuntimeInformation<C, P> runtimeInformation;
 
@@ -59,8 +60,8 @@ public class King<C extends Cell, P extends PieceClass, D extends Direction<D>, 
     }
 
 
-    public static class WithCastling extends King<Square, StandardPieces, TwoDimension, ChessBoardViewer>
-            implements SpecialMovePiece<Square, StandardPieces, ChessBoardViewer> {
+    public static class WithCastling extends King<Square, StandardPieces, TwoDimension, ChessBoardViewer<StandardPieces>>
+            implements SpecialMovePiece<Square, StandardPieces, ChessBoardViewer<StandardPieces>> {
 
         public WithCastling(RuntimeInformation<Square, StandardPieces> runtimeInformation) {
             super(runtimeInformation);
@@ -71,7 +72,7 @@ public class King<C extends Cell, P extends PieceClass, D extends Direction<D>, 
             return castling(board, player);
         }
 
-        private Optional<CastlingMove<Square>> constructCastlingMove(ChessBoardViewer board,
+        private Optional<CastlingMove<Square>> constructCastlingMove(ChessBoardViewer<StandardPieces> board,
                                                                      Square kingPosition,
                                                                      Square rookPosition,
                                                                      TwoDimension side,
@@ -93,7 +94,7 @@ public class King<C extends Cell, P extends PieceClass, D extends Direction<D>, 
          * Castling is one of the rules of chess and is technically a king move (Hooper & Whyld 1992:71).
          * @return non-empty if a castling is valid, empty otherwise
          */
-        private Collection<Move<Square>> castling(ChessBoardViewer board, Player player) {
+        private Collection<Move<Square>> castling(ChessBoardViewer<StandardPieces> board, Player player) {
             Square kingPosition = getRuntimeInformation().getPieceInformation().locateKing(player);
             Piece<StandardPieces> king = board.getPiece(kingPosition).get();
             if (getRuntimeInformation().getPieceInformation().getPieceMoveCount(king) > 0

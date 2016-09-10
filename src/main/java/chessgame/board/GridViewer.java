@@ -104,4 +104,10 @@ public interface GridViewer<C extends Cell, D extends Direction<D>, P extends Pi
      * @return The cell factory of this grid
      */
     GridCellBuilder<C, D> getGridCellFactory();
+
+
+    /**
+     * @return all possible positions on the board
+     */
+    Collection<C> getAllPositions();
 }

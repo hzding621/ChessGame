@@ -1,5 +1,6 @@
 package chessgame.board;
 
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -33,4 +34,9 @@ public interface GridCellBuilder<C extends Cell, D extends Direction<D>> {
      */
     boolean withinRange(String file, String rank);
 
+
+    /**
+     * @return all possible positions in this grid board
+     */
+    Collection<C> getAllPositions();
 }

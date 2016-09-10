@@ -6,6 +6,7 @@ import chessgame.board.GridViewer;
 import chessgame.game.RuntimeInformation;
 import chessgame.player.Player;
 import chessgame.rule.OptimizedPiece;
+import chessgame.rule.PieceRule;
 import chessgame.rule.RequiresRuntimeInformation;
 import com.google.common.collect.ImmutableList;
 import utility.CollectionUtils;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 
 public final class Pawn<C extends Cell, P extends PieceClass, D extends Direction<D>,
         B extends GridViewer<C, D, P>>
-        implements OptimizedPiece<C, P, B>, RequiresRuntimeInformation<C, P>, chessgame.rule.PieceRule<C,P,B> {
+        implements OptimizedPiece<C, P, B>, RequiresRuntimeInformation<C, P>, PieceRule<C,P,B> {
 
     private final RuntimeInformation<C, P> runtimeInformation;
 

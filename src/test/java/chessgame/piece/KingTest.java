@@ -2,7 +2,6 @@ package chessgame.piece;
 
 import chessgame.board.ChessBoard;
 import chessgame.board.Coordinate;
-import chessgame.board.RectangularBoard;
 import chessgame.board.Square;
 import chessgame.board.TwoDimension;
 import chessgame.game.AttackInformation;
@@ -31,8 +30,8 @@ import java.util.Collection;
 public class KingTest {
 
     private Square.Builder builder;
-    private ChessBoard testBoard = ChessBoard.create(new StandardSetting());
-    private King<Square, StandardPieces, TwoDimension, ChessBoard> rule;
+    private ChessBoard<StandardPieces> testBoard = ChessBoard.create(new StandardSetting());
+    private King<Square, StandardPieces, TwoDimension, ChessBoard<StandardPieces>> rule;
 
     @Mock private PieceInformation<Square, StandardPieces> pieceInformation;
     @Mock private AttackInformation<Square> attackInformation;

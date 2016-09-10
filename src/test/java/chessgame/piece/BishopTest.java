@@ -7,7 +7,6 @@ import chessgame.board.TwoDimension;
 import chessgame.game.ConfigurableGameSetting;
 import chessgame.player.Player;
 import chessgame.rule.LatentAttack;
-import chessgame.rule.PieceRule;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -24,7 +24,7 @@ public class StandardGameTest {
 
     @Before
     public void initializeGame() {
-        game = StandardGame.constructGame();
+        game = StandardGame.constructGame(new StandardSetting());
         cell = game.getBoard().getGridCellFactory();
     }
 

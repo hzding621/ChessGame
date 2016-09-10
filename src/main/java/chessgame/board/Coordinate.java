@@ -24,9 +24,14 @@ public final class Coordinate implements Comparable<Coordinate> {
 
     public static class Builder {
 
-        private final int length;
-        public Builder(int length) {
-            this.length = length;
+        private final int upperBound;
+
+        public Builder(int upperBound) {
+            this.upperBound = upperBound;
+        }
+
+        public int getUpperBound() {
+            return upperBound;
         }
 
         public Coordinate at(int index) {
@@ -37,7 +42,7 @@ public final class Coordinate implements Comparable<Coordinate> {
         }
 
         public boolean withinRange(int index) {
-            return index >= 0 && index < length;
+            return index >= 0 && index < upperBound;
         }
     }
     @Override

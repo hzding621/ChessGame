@@ -22,13 +22,13 @@ public interface Leaper<C extends Cell, P extends PieceClass, D extends Directio
     /**
      * @return the distance by which the leaper attacks
      */
-    Distance getProjection();
+    Distance getDistance();
 
     @Override
     default Collection<C> attacking(B board, C position, Player player) {
         final Set<C> targets = new HashSet<>();
         board.getOrthogonalDirections().forEach(direction -> {
-            int x = getProjection().getForward(), y = getProjection().getRotate();
+            int x = getDistance().getForward(), y = getDistance().getRotate();
             board.moveSteps(position, direction, 1, Distance.of(x, y)).ifPresent(targets::add);
             board.moveSteps(position, direction, 1, Distance.of(x, -y)).ifPresent(targets::add);
             board.moveSteps(position, direction, 1, Distance.of(-x, y)).ifPresent(targets::add);

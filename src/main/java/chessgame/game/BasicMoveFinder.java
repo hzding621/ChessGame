@@ -52,6 +52,7 @@ public final class BasicMoveFinder<C extends Cell, P extends PieceClass, M exten
         Player defender = runtimeInformation.getPlayerInformation().getDefender();
         Collection<Move<C>> moves = rules.basicMoves(board, sourcePosition, actor)
                 .stream()
+                .filter(targetPosition -> board.getPiece(targetPosition).map(p -> p.getPieceClass().canCapture()).orElse(true))
                 .map(targetPosition -> SimpleMove.of(sourcePosition, targetPosition, actor))
                 .filter(move -> {
                     B future = board.preview(move.getTransition());

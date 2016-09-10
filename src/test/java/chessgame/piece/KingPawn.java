@@ -9,5 +9,10 @@ public enum KingPawn implements PieceClass {
     @Override
     public boolean isKing() {
         return this == KING;
-    };
+    }
+
+    @Override
+    public boolean canCapture() {
+        return true;
+    }
 }
