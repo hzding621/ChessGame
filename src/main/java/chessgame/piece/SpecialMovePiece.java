@@ -1,11 +1,9 @@
-package chessgame.rule;
+package chessgame.piece;
 
 import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
 import chessgame.move.Move;
-import chessgame.piece.PieceClass;
 import chessgame.player.Player;
-import fj.P;
 
 import java.util.Collection;
 

@@ -103,28 +103,28 @@ public final class Square implements Cell {
         }
 
         @Override
-        public Optional<Square> moveOnce(Square cell, TwoDimension direction, Distance distance) {
+        public Optional<Square> moveOnce(Square cell, TwoDimension direction, StepSize stepSize) {
 
-            if (distance.getForward() < 0) {
+            if (stepSize.getForward() < 0) {
                 direction = direction.reverse();
             }
             int fileIndex = cell.file.getCoordinate().getIndex();
             int rankIndex = cell.rank.getCoordinate().getIndex();
             int xDelta = direction.getX(), yDelta = direction.getY();
-            for (int i = 0; i < Math.abs(distance.getForward()); i++) {
+            for (int i = 0; i < Math.abs(stepSize.getForward()); i++) {
                 fileIndex += xDelta;
                 rankIndex += yDelta;
                 if (!withinRange(fileIndex, rankIndex)) {
                     return Optional.empty();
                 }
             }
-            if (distance.getRotate() > 0) {
+            if (stepSize.getRotate() > 0) {
                 direction = direction.nextClockWise().nextClockWise();
             } else {
                 direction = direction.nextCounterClockWise().nextCounterClockWise();
             }
             xDelta = direction.getX(); yDelta = direction.getY();
-            for (int j = 0; j < Math.abs(distance.getRotate()); j++) {
+            for (int j = 0; j < Math.abs(stepSize.getRotate()); j++) {
                 fileIndex += xDelta;
                 rankIndex += yDelta;
                 if (!withinRange(fileIndex, rankIndex)) {

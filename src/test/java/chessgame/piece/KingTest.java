@@ -30,7 +30,7 @@ import java.util.Collection;
 public class KingTest {
 
     private Square.Builder builder;
-    private ChessBoard<StandardPieces> testBoard = ChessBoard.create(new StandardSetting());
+    private ChessBoard<StandardPieces> testBoard = ChessBoard.create(StandardSetting.VALUE);
     private King<Square, StandardPieces, TwoDimension, ChessBoard<StandardPieces>> rule;
 
     @Mock private PieceInformation<Square, StandardPieces> pieceInformation;

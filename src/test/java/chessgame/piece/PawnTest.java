@@ -2,7 +2,6 @@ package chessgame.piece;
 
 import chessgame.board.ChessBoard;
 import chessgame.board.Coordinate;
-import chessgame.board.RectangularBoard;
 import chessgame.board.Square;
 import chessgame.board.TwoDimension;
 import chessgame.game.ConfigurableGameSetting;
@@ -46,9 +45,9 @@ public final class PawnTest {
         // black king at E8
 
         testBoard = ChessBoard.create(ConfigurableGameSetting.<StandardPieces>builder(8, 8)
-                .piece(StandardPieces.PAWN, Player.WHITE, "E", "2")
-                .piece(StandardPieces.KING, Player.WHITE, "E", "1")
-                .piece(StandardPieces.KING, Player.BLACK, "E", "8")
+                .set(StandardPieces.PAWN, Player.WHITE, "E", "2")
+                .set(StandardPieces.KING, Player.WHITE, "E", "1")
+                .set(StandardPieces.KING, Player.BLACK, "E", "8")
                 .build()
         );
 

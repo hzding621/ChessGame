@@ -1,11 +1,11 @@
-package chessgame.rule;
+package chessgame.piece;
 
 import chessgame.board.Cell;
 import chessgame.board.Direction;
 import chessgame.board.GridViewer;
-import chessgame.board.Distance;
-import chessgame.piece.PieceClass;
+import chessgame.board.StepSize;
 import chessgame.player.Player;
+import chessgame.rule.LatentAttack;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -27,24 +27,24 @@ public interface Rider<C extends Cell, P extends PieceClass, D extends Direction
     /**
      * @return the distance by which the rider attacks
      */
-    default Distance getDistance() {
-        return Distance.of(1, 0);
+    default StepSize getStepSize() {
+        return StepSize.of(1, 0);
     }
 
     @Override
     default Collection<C> attacking(B board, C position, Player player) {
         return getDirections(board).stream()
-                .flatMap(direction -> board.furthestReach(position, direction, getDistance(), false, true).stream())
+                .flatMap(direction -> board.travelUntilBlocked(position, direction, getStepSize(), false, true).stream())
                 .collect(Collectors.toList());
     }
 
     @Override
     default Collection<LatentAttack<C>> latentAttacking(B board, C position, Player player) {
         return getDirections(board).stream()
-                .map(direction -> board.firstAndSecondOccupant(position, direction, getDistance())
+                .map(direction -> board.firstTwoEncounters(position, direction, getStepSize())
                         .filter(pair -> board.isEnemy(pair.second(), player))
                         .map(pair -> new LatentAttack<>(position, pair.first(), pair.second(),
-                                board.furthestReach(position, direction, getDistance(), true, false))))
+                                board.travelUntilBlocked(position, direction, getStepSize(), true, false))))
                 .filter(Optional::isPresent).map(Optional::get)
                 .collect(Collectors.toList());
     }
@@ -57,6 +57,6 @@ public interface Rider<C extends Cell, P extends PieceClass, D extends Direction
             throw new IllegalArgumentException(sourcePosition + " is not attacking " + targetPosition + " !");
         }
         D direction = board.findDirection(sourcePosition, targetPosition);
-        return board.furthestReach(sourcePosition, direction, getDistance(), true, false);
+        return board.travelUntilBlocked(sourcePosition, direction, getStepSize(), true, false);
     }
 }

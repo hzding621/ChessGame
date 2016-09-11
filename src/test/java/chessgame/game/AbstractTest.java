@@ -3,7 +3,6 @@ package chessgame.game;
 import chessgame.board.ChessBoard;
 import chessgame.board.ChessBoardViewer;
 import chessgame.board.GridCellBuilder;
-import chessgame.board.RectangularBoard;
 import chessgame.board.Square;
 import chessgame.board.TwoDimension;
 import chessgame.piece.StandardPieces;
@@ -32,7 +31,7 @@ public class AbstractTest {
         } else {
             moveFinder = new BasicMoveFinder<>(testBoard, rules, runtimeInformation);
         }
-        cell = testBoard.getGridCellFactory();
+        cell = testBoard.getGridCellBuilder();
         runtimeInformation.initializeInformation(rules);
         moveFinder.recompute();
     }

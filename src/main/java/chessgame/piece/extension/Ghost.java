@@ -1,10 +1,11 @@
-package chessgame.piece;
+package chessgame.piece.extension;
 
 import chessgame.board.Cell;
 import chessgame.board.Direction;
 import chessgame.board.GridViewer;
+import chessgame.piece.PieceClass;
 import chessgame.player.Player;
-import chessgame.rule.PieceRule;
+import chessgame.piece.PieceRule;
 import com.google.common.collect.ImmutableList;
 
 import java.util.Collection;

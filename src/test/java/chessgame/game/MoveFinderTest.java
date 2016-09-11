@@ -25,7 +25,7 @@ public final class MoveFinderTest extends AbstractTest {
     @Test
     public void testAvailableMovesOpeningPosition() {
         testBoth(b -> {
-            hydrate(new StandardSetting(), b);
+            hydrate(StandardSetting.VALUE, b);
             SetMultimap<Square, Move<Square>> allMoves = moveFinder.getAvailableMoves();
 
             // All pawns can move one or two cells upwards
@@ -46,11 +46,11 @@ public final class MoveFinderTest extends AbstractTest {
     public void testCheckmateSituation() {
         testBoth(b -> {
             // Two Rooks on 7th and 8th rank, opponent King in corner
-            GameSetting.GridGame<Square, StandardPieces> config = ConfigurableGameSetting.<StandardPieces>builder(8, 8)
-                    .piece(StandardPieces.KING, Player.BLACK, "H", "8")
-                    .piece(StandardPieces.ROOK, Player.WHITE, "C", "8")
-                    .piece(StandardPieces.ROOK, Player.WHITE, "D", "7")
-                    .piece(StandardPieces.KING, Player.WHITE, "C", "1")
+            ConfigurableGameSetting<StandardPieces> config = ConfigurableGameSetting.<StandardPieces>builder(8, 8)
+                    .set(StandardPieces.KING, Player.BLACK, "H", "8")
+                    .set(StandardPieces.ROOK, Player.WHITE, "C", "8")
+                    .set(StandardPieces.ROOK, Player.WHITE, "D", "7")
+                    .set(StandardPieces.KING, Player.WHITE, "C", "1")
                     .starter(Player.BLACK)
                     .build();
             hydrate(config, b);
@@ -66,10 +66,10 @@ public final class MoveFinderTest extends AbstractTest {
     public void testStalemateSituation() {
         testBoth(b -> {
             // White king is stalemated
-            GameSetting.GridGame<Square, StandardPieces> config = ConfigurableGameSetting.<StandardPieces>builder(8, 8)
-                    .piece(StandardPieces.QUEEN, Player.BLACK, "B", "3")
-                    .piece(StandardPieces.KING, Player.BLACK, "D", "3")
-                    .piece(StandardPieces.KING, Player.WHITE, "C", "1")
+            ConfigurableGameSetting<StandardPieces> config = ConfigurableGameSetting.<StandardPieces>builder(8, 8)
+                    .set(StandardPieces.QUEEN, Player.BLACK, "B", "3")
+                    .set(StandardPieces.KING, Player.BLACK, "D", "3")
+                    .set(StandardPieces.KING, Player.WHITE, "C", "1")
                     .starter(Player.WHITE)
                     .build();
             hydrate(config, b);
@@ -84,12 +84,12 @@ public final class MoveFinderTest extends AbstractTest {
     @Test
     public void testCheckMateFromDoubleRookCheck() {
         testBoth(b -> {
-            GameSetting.GridGame<Square, StandardPieces> config = ConfigurableGameSetting.<StandardPieces>builder(8, 8)
-                    .piece(StandardPieces.KING, Player.BLACK, "H", "8")
-                    .piece(StandardPieces.ROOK, Player.WHITE, "F", "8")
-                    .piece(StandardPieces.ROOK, Player.WHITE, "H", "6")
-                    .piece(StandardPieces.QUEEN, Player.BLACK, "G", "7")
-                    .piece(StandardPieces.KING, Player.WHITE, "C", "1")
+            ConfigurableGameSetting<StandardPieces> config = ConfigurableGameSetting.<StandardPieces>builder(8, 8)
+                    .set(StandardPieces.KING, Player.BLACK, "H", "8")
+                    .set(StandardPieces.ROOK, Player.WHITE, "F", "8")
+                    .set(StandardPieces.ROOK, Player.WHITE, "H", "6")
+                    .set(StandardPieces.QUEEN, Player.BLACK, "G", "7")
+                    .set(StandardPieces.KING, Player.WHITE, "C", "1")
                     .starter(Player.BLACK)
                     .build();
             hydrate(config, b);
@@ -102,12 +102,12 @@ public final class MoveFinderTest extends AbstractTest {
     @Test
     public void testCheckMateCheckAndDiscoveredCheck() {
         testBoth(b -> {
-            GameSetting.GridGame<Square, StandardPieces> config = ConfigurableGameSetting.<StandardPieces>builder(8, 8)
-                    .piece(StandardPieces.KING, Player.BLACK, "H", "8")
-                    .piece(StandardPieces.ROOK, Player.WHITE, "F", "8")
-                    .piece(StandardPieces.ROOK, Player.WHITE, "H", "4")
-                    .piece(StandardPieces.QUEEN, Player.BLACK, "H", "6")
-                    .piece(StandardPieces.KING, Player.WHITE, "A", "1")
+            ConfigurableGameSetting<StandardPieces> config = ConfigurableGameSetting.<StandardPieces>builder(8, 8)
+                    .set(StandardPieces.KING, Player.BLACK, "H", "8")
+                    .set(StandardPieces.ROOK, Player.WHITE, "F", "8")
+                    .set(StandardPieces.ROOK, Player.WHITE, "H", "4")
+                    .set(StandardPieces.QUEEN, Player.BLACK, "H", "6")
+                    .set(StandardPieces.KING, Player.WHITE, "A", "1")
                     .starter(Player.BLACK)
                     .build();
             hydrate(config, b);

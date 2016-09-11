@@ -2,9 +2,9 @@ package chessgame.game;
 
 import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
-import chessgame.board.Square;
+import chessgame.move.AnnotatedSimpleMove;
 import chessgame.move.Move;
-import chessgame.move.SimpleMove;
+import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 import chessgame.rule.Attack;
@@ -69,6 +69,7 @@ public final class OptimizedMoveFinder<C extends Cell, P extends PieceClass, B e
 
         Player actor = runtimeInformation.getPlayerInformation().getActor();
         Player defender = runtimeInformation.getPlayerInformation().getDefender();
+        Piece<P> sourcePiece = board.getPiece(sourcePosition).get();
 
         // Get checkers, and compute its blocking positions
         // At this point all pieces involved will be checked if they implemented the OptimizedPiece interface
@@ -92,7 +93,7 @@ public final class OptimizedMoveFinder<C extends Cell, P extends PieceClass, B e
                          * Either the piece is King and it is moving to a non-attacked position (can always do that)
                          * Or the move removes all poses check (but might expose the King, will be filtered below)
                          */
-                        board.getPiece(sourcePosition).get().getPieceClass().isKing()
+                        sourcePiece.getPieceClass().isKing()
                                 ? !runtimeInformation.getAttackInformation().isAttacked(targetPosition)
                                 : checkers.stream().allMatch(attack -> attack.getBlockingPositions().contains(targetPosition)))
 
@@ -108,7 +109,7 @@ public final class OptimizedMoveFinder<C extends Cell, P extends PieceClass, B e
                         latentCheckers.stream()
                                 .allMatch(pin -> pin.getMaintainingPositions().contains(targetPosition)))
 
-                .map(targetPosition -> SimpleMove.of(sourcePosition, targetPosition, actor))
+                .map(targetPosition -> AnnotatedSimpleMove.of(sourcePiece, sourcePosition, targetPosition, actor))
                 .collect(Collectors.toList());
 
         // Add special moves as well. Checking validity is up to the special move implementation

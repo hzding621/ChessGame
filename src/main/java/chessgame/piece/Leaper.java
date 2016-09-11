@@ -1,10 +1,9 @@
-package chessgame.rule;
+package chessgame.piece;
 
 import chessgame.board.Cell;
 import chessgame.board.Direction;
 import chessgame.board.GridViewer;
-import chessgame.board.Distance;
-import chessgame.piece.PieceClass;
+import chessgame.board.StepSize;
 import chessgame.player.Player;
 import com.google.common.collect.ImmutableList;
 
@@ -22,17 +21,17 @@ public interface Leaper<C extends Cell, P extends PieceClass, D extends Directio
     /**
      * @return the distance by which the leaper attacks
      */
-    Distance getDistance();
+    StepSize getDistance();
 
     @Override
     default Collection<C> attacking(B board, C position, Player player) {
         final Set<C> targets = new HashSet<>();
         board.getOrthogonalDirections().forEach(direction -> {
             int x = getDistance().getForward(), y = getDistance().getRotate();
-            board.moveSteps(position, direction, 1, Distance.of(x, y)).ifPresent(targets::add);
-            board.moveSteps(position, direction, 1, Distance.of(x, -y)).ifPresent(targets::add);
-            board.moveSteps(position, direction, 1, Distance.of(-x, y)).ifPresent(targets::add);
-            board.moveSteps(position, direction, 1, Distance.of(-x, -y)).ifPresent(targets::add);
+            board.travelSteps(position, direction, 1, StepSize.of(x, y)).ifPresent(targets::add);
+            board.travelSteps(position, direction, 1, StepSize.of(x, -y)).ifPresent(targets::add);
+            board.travelSteps(position, direction, 1, StepSize.of(-x, y)).ifPresent(targets::add);
+            board.travelSteps(position, direction, 1, StepSize.of(-x, -y)).ifPresent(targets::add);
         });
         return targets;
     }

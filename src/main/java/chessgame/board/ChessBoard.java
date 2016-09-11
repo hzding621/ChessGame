@@ -78,8 +78,8 @@ public final class ChessBoard<P extends PieceClass> implements
     }
 
     @Override
-    public Collection<TwoDimension> getAllDirections() {
-        return delegate.getAllDirections();
+    public Collection<TwoDimension> getEveryDirections() {
+        return delegate.getEveryDirections();
     }
 
     @Override
@@ -93,23 +93,23 @@ public final class ChessBoard<P extends PieceClass> implements
     }
 
     @Override
-    public Optional<Square> moveSteps(Square startCell, TwoDimension direction, int steps, Distance distance) {
-        return delegate.moveSteps(startCell, direction, steps, distance);
+    public Optional<Square> travelSteps(Square startCell, TwoDimension direction, int steps, StepSize stepSize) {
+        return delegate.travelSteps(startCell, direction, steps, stepSize);
     }
 
     @Override
-    public List<Square> furthestReach(Square startCell, TwoDimension direction, Distance distance, boolean startInclusive, boolean meetInclusive) {
-        return delegate.furthestReach(startCell, direction, distance, startInclusive, meetInclusive);
+    public List<Square> travelUntilBlocked(Square startCell, TwoDimension direction, StepSize stepSize, boolean startInclusive, boolean endInclusive) {
+        return delegate.travelUntilBlocked(startCell, direction, stepSize, startInclusive, endInclusive);
     }
 
     @Override
-    public Optional<Square> firstOccupant(Square startCell, TwoDimension direction, Distance distance) {
-        return delegate.firstOccupant(startCell, direction, distance);
+    public Optional<Square> firstEncounter(Square startCell, TwoDimension direction, StepSize stepSize) {
+        return delegate.firstEncounter(startCell, direction, stepSize);
     }
 
     @Override
-    public Optional<Square> moveForward(Square startCell, Player player) {
-        return delegate.moveForward(startCell, player);
+    public Optional<Square> travelForward(Square startCell, Player player) {
+        return delegate.travelForward(startCell, player);
     }
 
     @Override
@@ -123,8 +123,8 @@ public final class ChessBoard<P extends PieceClass> implements
     }
 
     @Override
-    public GridCellBuilder<Square, TwoDimension> getGridCellFactory() {
-        return delegate.getGridCellFactory();
+    public GridCellBuilder<Square, TwoDimension> getGridCellBuilder() {
+        return delegate.getGridCellBuilder();
     }
 
     @Override
@@ -134,7 +134,7 @@ public final class ChessBoard<P extends PieceClass> implements
 
     @Override
     public ChessBoardViewer<P> preview(BoardTransition<Square, P, ChessBoard<P>> transition) {
-        ChessBoard<P> newBoard = new ChessBoard<P>(new ChessBoardImpl(delegate.occupants, delegate.cellBuilder));
+        ChessBoard<P> newBoard = new ChessBoard<P>(new ChessBoardImpl<>(delegate.occupants, delegate.cellBuilder));
         newBoard.apply(transition);
         return newBoard;
     }

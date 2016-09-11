@@ -1,123 +1,72 @@
 package chessgame.game;
 
-import chessgame.board.Coordinate;
 import chessgame.board.Square;
-import chessgame.piece.PieceImpl;
 import chessgame.piece.Piece;
 import chessgame.piece.StandardPieces;
 import chessgame.player.Player;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Table;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Represents a standard 8x8 chess piece set
  */
-public final class StandardSetting implements GameSetting.GridGame<Square, StandardPieces> {
+public enum StandardSetting implements GameSetting.GridGame<Square, StandardPieces> {
 
-    private final Table<Player, StandardPieces, List<Square>> configuration = HashBasedTable.create(2, 6);
-    private final Map<Player, Square> kingStartingPositions = new HashMap<>();
+    VALUE;
 
-    {
-        Coordinate.Builder coordinateBuilder = new Coordinate.Builder(8);
-        Square.Builder builder = new Square.Builder(coordinateBuilder, coordinateBuilder);
+    private static final ConfigurableGameSetting<StandardPieces> delegate;
 
-        // Definition of standard chess piece locations
-        populatePieces(Player.WHITE, StandardPieces.PAWN, builder, new int[][] {
-                {0, 1}, {1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}, {6, 1}, {7, 1}
-        });
-        populatePieces(Player.BLACK, StandardPieces.PAWN, builder, new int[][] {
-                {0, 6}, {1, 6}, {2, 6}, {3, 6}, {4, 6}, {5, 6}, {6, 6}, {7, 6}
-        });
-        populatePieces(Player.WHITE, StandardPieces.ROOK, builder, new int[][] {
-                {0, 0}, {7, 0}
-        });
-        populatePieces(Player.BLACK, StandardPieces.ROOK, builder, new int[][] {
-                {0, 7}, {7, 7}
-        });
-        populatePieces(Player.WHITE, StandardPieces.KNIGHT, builder, new int[][] {
-                {1, 0}, {6, 0}
-        });
-        populatePieces(Player.BLACK, StandardPieces.KNIGHT, builder, new int[][] {
-                {1, 7}, {6, 7}
-        });
-        populatePieces(Player.WHITE, StandardPieces.BISHOP, builder, new int[][] {
-                {2, 0}, {5, 0}
-        });
-        populatePieces(Player.BLACK, StandardPieces.BISHOP, builder, new int[][] {
-                {2, 7}, {5, 7}
-        });
-        populatePieces(Player.WHITE, StandardPieces.QUEEN, builder, new int[][] {
-                {3, 0}
-        });
-        populatePieces(Player.BLACK, StandardPieces.QUEEN, builder, new int[][] {
-                {3, 7}
-        });
-        populatePieces(Player.WHITE, StandardPieces.KING, builder, new int[][] {
-                {4, 0}
-        });
-        populatePieces(Player.BLACK, StandardPieces.KING, builder, new int[][] {
-                {4, 7}
-        });
+    private static void populateSymmetricPieces(ConfigurableGameSetting.Builder<StandardPieces> builder,
+                                                StandardPieces type, int x, int y) {
+        builder.set(type, Player.WHITE, x, y).set(type, Player.WHITE, 7 - x, y)
+                .set(type, Player.BLACK, x, 7 - y).set(type, Player.BLACK, 7 - x, 7 - y);
+    }
 
-        // Define King starting position
-        kingStartingPositions.put(Player.WHITE, builder.at(4, 0));
-        kingStartingPositions.put(Player.BLACK, builder.at(4, 7));
+    static {
+
+        ConfigurableGameSetting.Builder<StandardPieces> builder = ConfigurableGameSetting.builder(8, 8);
+        for (int i = 0; i < 4; i++) {
+            populateSymmetricPieces(builder, StandardPieces.PAWN, i, 1);
+        }
+        populateSymmetricPieces(builder, StandardPieces.ROOK, 0, 0);
+        populateSymmetricPieces(builder, StandardPieces.KNIGHT, 1, 0);
+        populateSymmetricPieces(builder, StandardPieces.BISHOP, 2, 0);
+        builder.set(StandardPieces.QUEEN, Player.WHITE, 3, 0);
+        builder.set(StandardPieces.QUEEN, Player.BLACK, 3, 7);
+        builder.set(StandardPieces.KING, Player.WHITE, 4, 0);
+        builder.set(StandardPieces.KING, Player.BLACK, 4, 7);
+        delegate = builder.build();
+
     }
 
     @Override
     public Map<Square, Piece<StandardPieces>> constructPiecesByStartingPosition() {
-
-        TreeMap<Square, Piece<StandardPieces>> map = new TreeMap<>();
-        configuration.cellSet().forEach(cell -> {
-            for (int i = 0; i < cell.getValue().size(); i++) {
-                map.put(cell.getValue().get(i), new PieceImpl<>(cell.getColumnKey(), cell.getRowKey(), i));
-            }
-        });
-        return map;
+        return delegate.constructPiecesByStartingPosition();
     }
 
     @Override
     public Map<Player, Square> getKingStartingPositions() {
-        return kingStartingPositions;
+        return delegate.getKingStartingPositions();
     }
 
     @Override
     public Collection<Player> getPlayers() {
-        return Arrays.asList(Player.WHITE, Player.BLACK);
+        return delegate.getPlayers();
     }
 
     @Override
     public Player getStarter() {
-        return Player.WHITE;
-    }
-
-    private void populatePieces(Player player,
-                                StandardPieces type,
-                                Square.Builder builder,
-                                int[][] indices) {
-        for (int[] position: indices) {
-            if (!configuration.contains(player, type)) {
-                configuration.put(player, type, Lists.newArrayList());
-            }
-            configuration.get(player, type).add(builder.at(position[0], position[1]));
-        }
-    }
-
-    @Override
-    public int getRankLength() {
-        return 8;
+        return delegate.getStarter();
     }
 
     @Override
     public int getFileLength() {
-        return 8;
+        return delegate.getFileLength();
+    }
+
+    @Override
+    public int getRankLength() {
+        return delegate.getRankLength();
     }
 }

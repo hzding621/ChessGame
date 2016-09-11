@@ -60,7 +60,7 @@ public class SquareTest {
 
         Square cell = builder.at(3,3);
         for (int i = 0; i < answers.length; i++) {
-            Square moved = builder.moveOnce(cell, dirs[i], Distance.of(1,0)).get();
+            Square moved = builder.moveOnce(cell, dirs[i], StepSize.of(1,0)).get();
             Assert.assertEquals(builder.at(answers[i][0], answers[i][1]), moved);
         }
     }
@@ -70,16 +70,16 @@ public class SquareTest {
         Square cell = builder.at(0,0);
         Optional<Square> nextCell;
 
-        nextCell = builder.moveOnce(cell, TwoDimension.WEST, Distance.of(1,0));
+        nextCell = builder.moveOnce(cell, TwoDimension.WEST, StepSize.of(1,0));
         Assert.assertFalse(nextCell.isPresent());
 
-        nextCell = builder.moveOnce(cell, TwoDimension.SOUTHWEST, Distance.of(1,0));
+        nextCell = builder.moveOnce(cell, TwoDimension.SOUTHWEST, StepSize.of(1,0));
         Assert.assertFalse(nextCell.isPresent());
 
-        nextCell = builder.moveOnce(cell, TwoDimension.SOUTH, Distance.of(1,0));
+        nextCell = builder.moveOnce(cell, TwoDimension.SOUTH, StepSize.of(1,0));
         Assert.assertFalse(nextCell.isPresent());
 
-        nextCell = builder.moveOnce(cell, TwoDimension.SOUTHEAST, Distance.of(1,0));
+        nextCell = builder.moveOnce(cell, TwoDimension.SOUTHEAST, StepSize.of(1,0));
         Assert.assertFalse(nextCell.isPresent());
     }
 }

@@ -4,6 +4,7 @@ import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
 import chessgame.game.RuntimeInformation;
 import chessgame.piece.PieceClass;
+import chessgame.piece.PieceRule;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -3,8 +3,12 @@ package chessgame.rule;
 import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
 import chessgame.move.Move;
+import chessgame.piece.LatentAttackPiece;
+import chessgame.piece.OptimizedPiece;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
+import chessgame.piece.PieceRule;
+import chessgame.piece.SpecialMovePiece;
 import chessgame.player.Player;
 import com.google.common.collect.ImmutableList;
 

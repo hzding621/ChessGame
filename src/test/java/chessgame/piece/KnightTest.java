@@ -2,7 +2,6 @@ package chessgame.piece;
 
 import chessgame.board.ChessBoard;
 import chessgame.board.Coordinate;
-import chessgame.board.RectangularBoard;
 import chessgame.board.Square;
 import chessgame.board.TwoDimension;
 import chessgame.game.ConfigurableGameSetting;
@@ -35,9 +34,9 @@ public final class KnightTest {
         // white king at E1
         // black king at E8
         testBoard = ChessBoard.create(ConfigurableGameSetting.<StandardPieces>builder(8, 8)
-                .piece(StandardPieces.KNIGHT, Player.WHITE, "D", "4")
-                .piece(StandardPieces.KING, Player.WHITE, "E", "1")
-                .piece(StandardPieces.KING, Player.BLACK, "E", "8")
+                .set(StandardPieces.KNIGHT, Player.WHITE, "D", "4")
+                .set(StandardPieces.KING, Player.WHITE, "E", "1")
+                .set(StandardPieces.KING, Player.BLACK, "E", "8")
                 .build()
         );
         Collection<Square> attacked =
@@ -51,9 +50,9 @@ public final class KnightTest {
         // white king at E1
         // black king at E8
         testBoard = ChessBoard.create(ConfigurableGameSetting.<StandardPieces>builder(8, 8)
-                .piece(StandardPieces.KNIGHT, Player.WHITE, "H", "1")
-                .piece(StandardPieces.KING, Player.WHITE, "E", "1")
-                .piece(StandardPieces.KING, Player.BLACK, "E", "8")
+                .set(StandardPieces.KNIGHT, Player.WHITE, "H", "1")
+                .set(StandardPieces.KING, Player.WHITE, "E", "1")
+                .set(StandardPieces.KING, Player.BLACK, "E", "8")
                 .build()
         );
         Collection<Square> attacked =
@@ -67,9 +66,9 @@ public final class KnightTest {
         // white king at E1
         // black king at E8
         testBoard = ChessBoard.create(ConfigurableGameSetting.<StandardPieces>builder(8, 8)
-                .piece(StandardPieces.KNIGHT, Player.WHITE, "F", "6")
-                .piece(StandardPieces.KING, Player.WHITE, "E", "1")
-                .piece(StandardPieces.KING, Player.BLACK, "E", "8")
+                .set(StandardPieces.KNIGHT, Player.WHITE, "F", "6")
+                .set(StandardPieces.KING, Player.WHITE, "E", "1")
+                .set(StandardPieces.KING, Player.BLACK, "E", "8")
                 .build()
         );
         Collection<Square> blockingPositionsWhenAttacking =

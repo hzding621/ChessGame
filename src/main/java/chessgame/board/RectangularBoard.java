@@ -93,7 +93,7 @@ public abstract class RectangularBoard<P extends PieceClass, V extends GridViewe
     }
 
     @Override
-    public Collection<TwoDimension> getAllDirections() {
+    public Collection<TwoDimension> getEveryDirections() {
         return Arrays.asList(TwoDimension.VALUES);
     }
 
@@ -116,28 +116,28 @@ public abstract class RectangularBoard<P extends PieceClass, V extends GridViewe
     }
 
     @Override
-    public Optional<Square> moveSteps(Square startCell, TwoDimension direction, int steps, Distance distance) {
+    public Optional<Square> travelSteps(Square startCell, TwoDimension direction, int steps, StepSize stepSize) {
         validatePosition(startCell);
         Optional<Square> cell = Optional.of(startCell);
         while (steps > 0 && cell.isPresent()) {
-            cell =  getGridCellFactory().moveOnce(cell.get(), direction, distance);
+            cell =  getGridCellBuilder().moveOnce(cell.get(), direction, stepSize);
             steps--;
         }
         return cell;
     }
 
     @Override
-    public List<Square> furthestReach(Square startCell,
-                                      TwoDimension direction,
-                                      Distance distance,
-                                      boolean startInclusive,
-                                      boolean meetInclusive) {
+    public List<Square> travelUntilBlocked(Square startCell,
+                                           TwoDimension direction,
+                                           StepSize stepSize,
+                                           boolean startInclusive,
+                                           boolean endInclusive) {
         validatePosition(startCell);
         List<Square> cellList = new ArrayList<>();
         if (startInclusive) {
             cellList.add(startCell);
         }
-        Optional<Square> nextCell = moveSteps(startCell, direction, 1, distance);
+        Optional<Square> nextCell = travelSteps(startCell, direction, 1, stepSize);
         Optional<Piece<P>> piece = Optional.empty();
         while (nextCell.isPresent()) {
             piece = getPiece(nextCell.get());
@@ -146,26 +146,26 @@ public abstract class RectangularBoard<P extends PieceClass, V extends GridViewe
                 break;
             }
             cellList.add(nextCell.get());
-            nextCell = moveSteps(nextCell.get(), direction, 1, distance);
+            nextCell = travelSteps(nextCell.get(), direction, 1, stepSize);
         }
-        if (meetInclusive && piece.isPresent()) {
+        if (endInclusive && piece.isPresent()) {
             cellList.add(nextCell.get());
         }
         return cellList;
     }
 
-    public Optional<Square> firstOccupant(Square startCell, TwoDimension direction, Distance distance) {
+    public Optional<Square> firstEncounter(Square startCell, TwoDimension direction, StepSize stepSize) {
         validatePosition(startCell);
-        return CollectionUtils.last(furthestReach(startCell, direction, distance, false, true)).filter(this::isOccupied);
+        return CollectionUtils.last(travelUntilBlocked(startCell, direction, stepSize, false, true)).filter(this::isOccupied);
     }
 
     @Override
-    public Optional<Square> moveForward(Square startCell, Player player) {
+    public Optional<Square> travelForward(Square startCell, Player player) {
         validatePosition(startCell);
         if (player == Player.WHITE) {
-            return getGridCellFactory().moveOnce(startCell, TwoDimension.NORTH, Distance.of(1,0));
+            return getGridCellBuilder().moveOnce(startCell, TwoDimension.NORTH, StepSize.of(1,0));
         } else {
-            return getGridCellFactory().moveOnce(startCell, TwoDimension.SOUTH, Distance.of(1,0));
+            return getGridCellBuilder().moveOnce(startCell, TwoDimension.SOUTH, StepSize.of(1,0));
         }
     }
 
@@ -177,13 +177,13 @@ public abstract class RectangularBoard<P extends PieceClass, V extends GridViewe
                 ? new TwoDimension[] {TwoDimension.NORTHWEST, TwoDimension.NORTHEAST}
                 : new TwoDimension[] {TwoDimension.SOUTHWEST, TwoDimension.SOUTHEAST};
         for (TwoDimension dir: dirs) {
-            getGridCellFactory().moveOnce(startCell, dir, Distance.of(1,0)).ifPresent(list::add);
+            getGridCellBuilder().moveOnce(startCell, dir, StepSize.of(1,0)).ifPresent(list::add);
         }
         return list;
     }
 
     @Override
-    public GridCellBuilder<Square, TwoDimension> getGridCellFactory() {
+    public GridCellBuilder<Square, TwoDimension> getGridCellBuilder() {
         return cellBuilder;
     }
 
@@ -196,6 +196,6 @@ public abstract class RectangularBoard<P extends PieceClass, V extends GridViewe
 
     @Override
     public Collection<Square> getAllPositions() {
-        return getGridCellFactory().getAllPositions();
+        return getGridCellBuilder().getAllPositions();
     }
 }

@@ -1,4 +1,4 @@
-package chessgame.rule;
+package chessgame.piece;
 
 import chessgame.board.BoardViewer;
 import chessgame.board.Cell;

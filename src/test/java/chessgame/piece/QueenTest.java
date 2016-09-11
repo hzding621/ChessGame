@@ -2,7 +2,6 @@ package chessgame.piece;
 
 import chessgame.board.ChessBoard;
 import chessgame.board.Coordinate;
-import chessgame.board.RectangularBoard;
 import chessgame.board.Square;
 import chessgame.board.TwoDimension;
 import chessgame.game.ConfigurableGameSetting;
@@ -39,9 +38,9 @@ public class QueenTest {
         // black king at A3
 
         testBoard = ChessBoard.create(ConfigurableGameSetting.<StandardPieces>builder(3, 3)
-                .piece(StandardPieces.QUEEN, Player.WHITE, "B", "2")
-                .piece(StandardPieces.KING, Player.WHITE, "A", "1")
-                .piece(StandardPieces.KING, Player.BLACK, "A", "3")
+                .set(StandardPieces.QUEEN, Player.WHITE, "B", "2")
+                .set(StandardPieces.KING, Player.WHITE, "A", "1")
+                .set(StandardPieces.KING, Player.BLACK, "A", "3")
                 .build()
         );
 
@@ -56,11 +55,11 @@ public class QueenTest {
         // K p Q p k
 
         testBoard = ChessBoard.create(ConfigurableGameSetting.<StandardPieces>builder(5, 1)
-                .piece(StandardPieces.KING, Player.BLACK, "A", "1")
-                .piece(StandardPieces.PAWN, Player.BLACK, "B", "1")
-                .piece(StandardPieces.QUEEN, Player.WHITE, "C", "1")
-                .piece(StandardPieces.PAWN, Player.WHITE, "D", "1")
-                .piece(StandardPieces.KING, Player.WHITE, "E", "1")
+                .set(StandardPieces.KING, Player.BLACK, "A", "1")
+                .set(StandardPieces.PAWN, Player.BLACK, "B", "1")
+                .set(StandardPieces.QUEEN, Player.WHITE, "C", "1")
+                .set(StandardPieces.PAWN, Player.WHITE, "D", "1")
+                .set(StandardPieces.KING, Player.WHITE, "E", "1")
                 .build()
         );
         Collection<LatentAttack<Square>> attacked =
@@ -68,5 +67,25 @@ public class QueenTest {
         Assert.assertEquals(1, attacked.size());
         Assert.assertTrue(attacked.stream().anyMatch(at -> at.getAttacked().equals(builder.at("A", "1"))
                 && at.getBlocker().equals(builder.at("B", "1"))));
+    }
+
+    @Test
+    public void testAttackCompositeVersion() {
+        // white Queen at center (B2) attacking all eight locations
+        // white king at A1
+        // black king at A3
+
+        testBoard = ChessBoard.create(ConfigurableGameSetting.<StandardPieces>builder(3, 3)
+                .set(StandardPieces.QUEEN, Player.WHITE, "B", "2")
+                .set(StandardPieces.KING, Player.WHITE, "A", "1")
+                .set(StandardPieces.KING, Player.BLACK, "A", "3")
+                .build()
+        );
+
+        Queen.Composite<Square, StandardPieces, TwoDimension, ChessBoard<StandardPieces>>
+                rule = new Queen.Composite<>();
+        Collection<Square> attacked =
+                rule.attacking(testBoard, builder.at("B", "2"), Player.WHITE);
+        Assert.assertEquals(8, attacked.size());
     }
 }

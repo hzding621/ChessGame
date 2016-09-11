@@ -21,10 +21,9 @@ public class StandardGame extends ChessGame<StandardPieces> {
     }
 
     public static StandardGame create() {
-        StandardSetting setting = new StandardSetting();
-        ChessBoard<StandardPieces> board = ChessBoard.create(setting);
+        ChessBoard<StandardPieces> board = ChessBoard.create(StandardSetting.VALUE);
         RuntimeInformationImpl<Square, StandardPieces, ChessBoardViewer<StandardPieces>> runtimeInformation =
-                new RuntimeInformationImpl<>(setting, board);
+                new RuntimeInformationImpl<>(StandardSetting.VALUE, board);
         Rules<Square, StandardPieces, ChessBoardViewer<StandardPieces>> rules =
                 new Rules<>(new StandardRuleBindings(runtimeInformation));
         MoveFinder<Square, StandardPieces> moveFinder = new OptimizedMoveFinder<>(board, rules, runtimeInformation);

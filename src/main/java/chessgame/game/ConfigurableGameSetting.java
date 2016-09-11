@@ -89,13 +89,28 @@ public final class ConfigurableGameSetting<P extends PieceClass> implements Game
             this.rankLength = rankLength;
         }
 
-        public Builder<P> piece(P type, Player player, String file, String rank) {
+        public Builder<P> set(P type, Player player, String file, String rank) {
             Square cell = builder.at(file, rank);
-            return piece(type, player, cell.getFile().getCoordinate().getIndex(),
+            return set(type, player, cell.getFile().getCoordinate().getIndex(),
                     cell.getRank().getCoordinate().getIndex());
         }
 
-        public Builder<P> piece(P type, Player player, int file, int rank) {
+        public Builder<P> set(P type, Player player, int file, int rank) {
+            Square position = builder.at(file, rank);
+            if (piecesByPosition.containsKey(position)) {
+                throw new IllegalStateException("Piece at " + position + " is already set!");
+            }
+            return reset(type, player, file, rank);
+        }
+
+        public Builder<P> reset(P type, Player player, String file, String rank) {
+            Square cell = builder.at(file, rank);
+            return reset(type, player, cell.getFile().getCoordinate().getIndex(),
+                    cell.getRank().getCoordinate().getIndex());
+        }
+
+        public Builder<P> reset(P type, Player player, int file, int rank) {
+            Square position = builder.at(file, rank);
             if (type.isKing()) {
                 if (kingPositions.containsKey(player)) {
                     throw new IllegalStateException("Can only have one king for " + player);
@@ -103,10 +118,6 @@ public final class ConfigurableGameSetting<P extends PieceClass> implements Game
                 kingPositions.put(player, builder.at(file, rank));
             }
             pieceTypeCount.put(type, pieceTypeCount.getOrDefault(type, 0) + 1);
-            Square position = builder.at(file, rank);
-            if (piecesByPosition.containsKey(position)) {
-                throw new IllegalStateException("Piece at " + position + " is already set!");
-            }
             Piece<P> piece = new PieceImpl<>(type, player, pieceTypeCount.get(type));
             piecesByPosition.put(position, piece);
             return this;

@@ -2,7 +2,6 @@ package chessgame.piece;
 
 import chessgame.board.ChessBoard;
 import chessgame.board.Coordinate;
-import chessgame.board.RectangularBoard;
 import chessgame.board.Square;
 import chessgame.board.TwoDimension;
 import chessgame.game.ConfigurableGameSetting;
@@ -39,9 +38,9 @@ public final class BishopTest {
         // black king at A5
 
         testBoard = ChessBoard.create(ConfigurableGameSetting.<StandardPieces>builder(5, 5)
-                .piece(StandardPieces.BISHOP, Player.WHITE, "C", "3")
-                .piece(StandardPieces.KING, Player.WHITE, "A", "1")
-                .piece(StandardPieces.KING, Player.BLACK, "A", "5")
+                .set(StandardPieces.BISHOP, Player.WHITE, "C", "3")
+                .set(StandardPieces.KING, Player.WHITE, "A", "1")
+                .set(StandardPieces.KING, Player.BLACK, "A", "5")
                 .build()
         );
 
@@ -67,10 +66,10 @@ public final class BishopTest {
         // latent attack A5 king
 
         testBoard = ChessBoard.create(ConfigurableGameSetting.<StandardPieces>builder(8, 8)
-                .piece(StandardPieces.BISHOP, Player.WHITE, "C", "3")
-                .piece(StandardPieces.KING, Player.WHITE, "A", "1")
-                .piece(StandardPieces.KING, Player.BLACK, "A", "5")
-                .piece(StandardPieces.PAWN, Player.WHITE, "B", "4")
+                .set(StandardPieces.BISHOP, Player.WHITE, "C", "3")
+                .set(StandardPieces.KING, Player.WHITE, "A", "1")
+                .set(StandardPieces.KING, Player.BLACK, "A", "5")
+                .set(StandardPieces.PAWN, Player.WHITE, "B", "4")
                 .build()
         );
 

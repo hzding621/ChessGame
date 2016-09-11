@@ -6,16 +6,12 @@ import chessgame.board.Direction;
 import chessgame.board.GridViewer;
 import chessgame.board.Square;
 import chessgame.board.TwoDimension;
-import chessgame.board.Distance;
+import chessgame.board.StepSize;
 import chessgame.game.RuntimeInformation;
 import chessgame.move.CastlingMove;
 import chessgame.move.Move;
 import chessgame.move.SimpleMove;
 import chessgame.player.Player;
-import chessgame.rule.OptimizedPiece;
-import chessgame.rule.PieceRule;
-import chessgame.rule.RequiresRuntimeInformation;
-import chessgame.rule.SpecialMovePiece;
 import com.google.common.collect.ImmutableList;
 
 import java.util.Collection;
@@ -36,8 +32,8 @@ public class King<C extends Cell, P extends PieceClass, D extends Direction<D>, 
 
     @Override
     public Collection<C> attacking(B board, C position, Player player) {
-        return board.getAllDirections().stream()
-                .map(direction -> board.moveSteps(position, direction, 1, Distance.of(1, 0)))
+        return board.getEveryDirections().stream()
+                .map(direction -> board.travelSteps(position, direction, 1, StepSize.of(1, 0)))
                 .filter(Optional::isPresent).map(Optional::get)
                 .collect(Collectors.toList());
     }
@@ -77,11 +73,11 @@ public class King<C extends Cell, P extends PieceClass, D extends Direction<D>, 
                                                                      Square rookPosition,
                                                                      TwoDimension side,
                                                                      Player player) {
-            Square kingNewPosition = board.moveSteps(kingPosition, side, 2, Distance.of(1, 0)).get();
+            Square kingNewPosition = board.travelSteps(kingPosition, side, 2, StepSize.of(1, 0)).get();
             if (getRuntimeInformation().getAttackInformation().isAttacked(kingNewPosition)) {
                 return Optional.empty();
             }
-            Square rookNewPosition = board.moveSteps(kingNewPosition, side.reverse(), 1, Distance.of(1, 0)).get();
+            Square rookNewPosition = board.travelSteps(kingNewPosition, side.reverse(), 1, StepSize.of(1, 0)).get();
             return Optional.of(new CastlingMove<>(SimpleMove.of(kingPosition, kingNewPosition,player),
                     SimpleMove.of(rookPosition, rookNewPosition,player)));
         }
@@ -102,8 +98,8 @@ public class King<C extends Cell, P extends PieceClass, D extends Direction<D>, 
                 // If King has moved or if king is under check, cannot move
                 return ImmutableList.of();
             }
-            Optional<Square> leftBound = board.firstOccupant(kingPosition, TwoDimension.WEST, Distance.of(1,0));
-            Optional<Square> rightBound = board.firstOccupant(kingPosition, TwoDimension.EAST, Distance.of(1,0));
+            Optional<Square> leftBound = board.firstEncounter(kingPosition, TwoDimension.WEST, StepSize.of(1,0));
+            Optional<Square> rightBound = board.firstEncounter(kingPosition, TwoDimension.EAST, StepSize.of(1,0));
 
             final ImmutableList.Builder<Move<Square>> builder = ImmutableList.builder();
             board.getPiecesOfTypeForPlayer(StandardPieces.ROOK, player).forEach(rookPosition -> {

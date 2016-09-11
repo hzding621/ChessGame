@@ -1,11 +1,12 @@
-package chessgame.piece;
+package chessgame.piece.extension;
 
 import chessgame.board.Cell;
 import chessgame.board.Direction;
-import chessgame.board.Distance;
+import chessgame.board.StepSize;
 import chessgame.board.GridViewer;
+import chessgame.piece.PieceClass;
 import chessgame.player.Player;
-import chessgame.rule.PieceRule;
+import chessgame.piece.PieceRule;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -23,8 +24,8 @@ public final class Assassin<C extends Cell, P extends PieceClass, D extends Dire
     @Override
     public Collection<C> attacking(B board, C position, Player player) {
         Set<C> attacked = new HashSet<>();
-        board.getAllDirections().forEach(direction -> {
-            board.firstAndSecondOccupant(position, direction, Distance.of(1, 0))
+        board.getEveryDirections().forEach(direction -> {
+            board.firstTwoEncounters(position, direction, StepSize.of(1, 0))
                     .ifPresent(attack -> attacked.add(attack.second()));
         });
         return attacked;
@@ -35,8 +36,8 @@ public final class Assassin<C extends Cell, P extends PieceClass, D extends Dire
         return Stream.concat(
                 attacking(board, position, player).stream()
                         .filter(c ->  board.isEnemy(c, player)),
-                board.getAllDirections().stream().flatMap(direction ->
-                        board.furthestReach(position, direction, Distance.of(1, 0), false, false).stream()
+                board.getEveryDirections().stream().flatMap(direction ->
+                        board.travelUntilBlocked(position, direction, StepSize.of(1, 0), false, false).stream()
                                 .filter(board::isEmpty))
         ).collect(Collectors.toList());
 

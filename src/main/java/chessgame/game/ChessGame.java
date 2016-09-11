@@ -23,9 +23,9 @@ public class ChessGame<P extends PieceClass> implements Game<Square, P, ChessBoa
 
 
     protected ChessGame(ChessBoard<P> chessBoard,
-                      Rules<Square, P, ChessBoardViewer<P>> chessRules,
-                      RuntimeInformationImpl<Square, P, ChessBoardViewer<P>> runtimeInformation,
-                      MoveFinder<Square, P> moveFinder) {
+                        Rules<Square, P, ChessBoardViewer<P>> chessRules,
+                        RuntimeInformationImpl<Square, P, ChessBoardViewer<P>> runtimeInformation,
+                        MoveFinder<Square, P> moveFinder) {
         this.chessBoard = chessBoard;
         this.chessRules = chessRules;
         this.runtimeInformation = runtimeInformation;
@@ -35,12 +35,12 @@ public class ChessGame<P extends PieceClass> implements Game<Square, P, ChessBoa
     }
 
     public static <P extends PieceClass> ChessGame<P> create(GameSetting.GridGame<Square, P> setting,
-                                                             ChessRuleBindings.Supplier<P> ruleBindingSupplier) {
+                                                             ChessRuleBindings.Provider<P> ruleBindingProvider) {
         ChessBoard<P> board = ChessBoard.create(setting);
         RuntimeInformationImpl<Square, P, ChessBoardViewer<P>> runtimeInformation =
                 new RuntimeInformationImpl<>(setting, board);
         Rules<Square, P, ChessBoardViewer<P>> rules =
-                new Rules<>(ruleBindingSupplier.get(runtimeInformation));
+                new Rules<>(ruleBindingProvider.get(runtimeInformation));
         MoveFinder<Square, P> moveFinder = new BasicMoveFinder<>(board, rules, runtimeInformation);
         return new ChessGame<>(board, rules, runtimeInformation, moveFinder);
     }

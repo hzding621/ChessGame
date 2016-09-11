@@ -1,4 +1,4 @@
-package chessgame.rule;
+package chessgame.piece;
 
 import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
@@ -15,7 +15,8 @@ import java.util.stream.Collectors;
 public interface PieceRule<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>> {
 
     /**
-     * Find all position on the board the piece is attacking, including position occupied by my own piece
+     * Find all positions on the board the piece is attacking
+     * Note: This method considers positions, not pieces, so it will include positions occupied by my own pieces as well
      *
      * @param board the given board
      * @param position the position of player's piece

@@ -7,18 +7,18 @@ package chessgame.board;
  *
  * e.g. NORTH with (1,2) becomes go north 1 step, then go east 2 steps
  */
-public final class Distance {
+public final class StepSize {
 
     private final int forward;
     private final int rotate;
 
-    private Distance(int straight, int rotate) {
+    private StepSize(int straight, int rotate) {
         this.forward = straight;
         this.rotate = rotate;
     }
 
-    public static Distance of(int x, int y) {
-        return new Distance(x, y);
+    public static StepSize of(int x, int y) {
+        return new StepSize(x, y);
     }
 
     public int getForward() {

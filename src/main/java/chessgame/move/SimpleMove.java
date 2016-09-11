@@ -13,13 +13,13 @@ import java.util.Optional;
 /**
  * Represents a move that involves a single piece
  */
-public final class SimpleMove<C extends Cell> implements Move<C>, Comparable<SimpleMove<C>> {
+public class SimpleMove<C extends Cell> implements Move<C>, Comparable<SimpleMove<C>> {
 
     private final C source;
     private final C target;
     private final Player player;
 
-    private SimpleMove(C source, C target, Player player) {
+    protected SimpleMove(C source, C target, Player player) {
         this.source = source;
         this.target = target;
         this.player = player;
@@ -82,7 +82,7 @@ public final class SimpleMove<C extends Cell> implements Move<C>, Comparable<Sim
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || !(o instanceof SimpleMove)) return false;
 
         SimpleMove<?> that = (SimpleMove<?>) o;
 

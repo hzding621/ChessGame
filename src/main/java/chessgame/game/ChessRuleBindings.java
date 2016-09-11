@@ -11,5 +11,5 @@ import chessgame.rule.RuleBindings;
  */
 public final class ChessRuleBindings<P extends PieceClass> extends RuleBindings<Square, P, ChessBoardViewer<P>> {
 
-    public interface Supplier<P extends PieceClass> extends RuleBindings.Supplier<Square, P, ChessBoardViewer<P>, RuleBindings<Square, P, ChessBoardViewer<P>>> {}
+    public interface Provider<P extends PieceClass> extends RuleBindings.Supplier<Square, P, ChessBoardViewer<P>, RuleBindings<Square, P, ChessBoardViewer<P>>> {}
 }

@@ -3,8 +3,10 @@ package chessgame.game;
 import chessgame.board.Cell;
 import chessgame.board.MutableBoard;
 import chessgame.board.Previewer;
+import chessgame.move.AnnotatedSimpleMove;
 import chessgame.move.Move;
 import chessgame.move.SimpleMove;
+import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 import chessgame.rule.Rules;
@@ -50,10 +52,11 @@ public final class BasicMoveFinder<C extends Cell, P extends PieceClass, M exten
 
         Player actor = runtimeInformation.getPlayerInformation().getActor();
         Player defender = runtimeInformation.getPlayerInformation().getDefender();
+        Piece<P> sourcePiece = board.getPiece(sourcePosition).get();
         Collection<Move<C>> moves = rules.basicMoves(board, sourcePosition, actor)
                 .stream()
                 .filter(targetPosition -> board.getPiece(targetPosition).map(p -> p.getPieceClass().canCapture()).orElse(true))
-                .map(targetPosition -> SimpleMove.of(sourcePosition, targetPosition, actor))
+                .map(targetPosition -> AnnotatedSimpleMove.of(sourcePiece, sourcePosition, targetPosition, actor))
                 .filter(move -> {
                     B future = board.preview(move.getTransition());
                     Set<C> isAttacked = future.getPiecesForPlayer(defender).stream()

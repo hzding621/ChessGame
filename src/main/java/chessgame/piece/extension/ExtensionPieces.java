@@ -1,4 +1,6 @@
-package chessgame.piece;
+package chessgame.piece.extension;
+
+import chessgame.piece.PieceClass;
 
 /**
  * A set that include all extension pieces

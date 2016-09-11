@@ -38,10 +38,10 @@ public final class RookTest {
         // black pawn at E5
 
         testBoard = ChessBoard.create(ConfigurableGameSetting.<StandardPieces>builder(8, 8)
-                .piece(StandardPieces.ROOK, Player.WHITE, "E", "2")
-                .piece(StandardPieces.KING, Player.WHITE, "E", "1")
-                .piece(StandardPieces.KING, Player.BLACK, "E", "8")
-                .piece(StandardPieces.PAWN, Player.BLACK, "E", "5")
+                .set(StandardPieces.ROOK, Player.WHITE, "E", "2")
+                .set(StandardPieces.KING, Player.WHITE, "E", "1")
+                .set(StandardPieces.KING, Player.BLACK, "E", "8")
+                .set(StandardPieces.PAWN, Player.BLACK, "E", "5")
                 .build()
         );
 
@@ -71,12 +71,12 @@ public final class RookTest {
         // latent attack, E7 via E5, A3 via C3
 
         testBoard = ChessBoard.create(ConfigurableGameSetting.<StandardPieces>builder(8, 8)
-                .piece(StandardPieces.ROOK, Player.WHITE, "E", "3")
-                .piece(StandardPieces.PAWN, Player.WHITE, "E", "5")
-                .piece(StandardPieces.KING, Player.BLACK, "E", "7")
-                .piece(StandardPieces.PAWN, Player.BLACK, "C", "3")
-                .piece(StandardPieces.PAWN, Player.BLACK, "A", "3")
-                .piece(StandardPieces.KING, Player.WHITE, "E", "1")
+                .set(StandardPieces.ROOK, Player.WHITE, "E", "3")
+                .set(StandardPieces.PAWN, Player.WHITE, "E", "5")
+                .set(StandardPieces.KING, Player.BLACK, "E", "7")
+                .set(StandardPieces.PAWN, Player.BLACK, "C", "3")
+                .set(StandardPieces.PAWN, Player.BLACK, "A", "3")
+                .set(StandardPieces.KING, Player.WHITE, "E", "1")
                 .build()
         );
 

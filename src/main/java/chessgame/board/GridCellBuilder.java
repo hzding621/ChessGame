@@ -22,7 +22,7 @@ public interface GridCellBuilder<C extends Cell, D extends Direction<D>> {
      */
     C at(int fileIndex, int rankIndex);
 
-    Optional<C> moveOnce(C cell, D direction, Distance distance);
+    Optional<C> moveOnce(C cell, D direction, StepSize stepSize);
 
     /**
      * @return whether the cell at this file and rank is within the range of this factory

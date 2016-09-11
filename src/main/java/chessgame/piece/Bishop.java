@@ -3,8 +3,6 @@ package chessgame.piece;
 import chessgame.board.Direction;
 import chessgame.board.GridViewer;
 import chessgame.board.Cell;
-import chessgame.rule.PieceRule;
-import chessgame.rule.Rider;
 
 import java.util.Collection;
 

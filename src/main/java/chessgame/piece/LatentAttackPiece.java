@@ -1,9 +1,9 @@
-package chessgame.rule;
+package chessgame.piece;
 
 import chessgame.board.BoardViewer;
 import chessgame.board.Cell;
-import chessgame.piece.PieceClass;
 import chessgame.player.Player;
+import chessgame.rule.LatentAttack;
 
 import java.util.Collection;
 

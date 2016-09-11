@@ -5,9 +5,6 @@ import chessgame.board.Direction;
 import chessgame.board.GridViewer;
 import chessgame.game.RuntimeInformation;
 import chessgame.player.Player;
-import chessgame.rule.OptimizedPiece;
-import chessgame.rule.PieceRule;
-import chessgame.rule.RequiresRuntimeInformation;
 import com.google.common.collect.ImmutableList;
 import utility.CollectionUtils;
 
@@ -33,8 +30,8 @@ public final class Pawn<C extends Cell, P extends PieceClass, D extends Directio
 
     private Collection<C> initialMove(B board, C position, Player player) {
         if (runtimeInformation.getPieceInformation().getPieceMoveCount(board.getPiece(position).get()) == 0) {
-            return CollectionUtils.asArrayList(board.moveForwardNoOverlap(position, player)
-                    .flatMap(oneMove -> board.moveForwardNoOverlap(oneMove, player)));
+            return CollectionUtils.asArrayList(board.travelForwardBlockable(position, player)
+                    .flatMap(oneMove -> board.travelForwardBlockable(oneMove, player)));
         }
         return Collections.emptyList();
     }
@@ -46,7 +43,7 @@ public final class Pawn<C extends Cell, P extends PieceClass, D extends Directio
 
     @Override
     public Collection<C> basicMoves(B board, C position, Player player) {
-        List<C> list = CollectionUtils.asArrayList(board.moveForwardNoOverlap(position, player));
+        List<C> list = CollectionUtils.asArrayList(board.travelForwardBlockable(position, player));
         list.addAll(initialMove(board, position, player));
         list.addAll(attacking(board, position, player).stream()
                 .filter(c -> board.isEnemy(c, player))

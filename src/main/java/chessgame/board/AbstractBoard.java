@@ -6,11 +6,14 @@ import chessgame.move.TransitionResult;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Maps;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -44,7 +47,7 @@ abstract class AbstractBoard<C extends Cell, P extends PieceClass, V extends Boa
         }
     }
 
-    final Map<C, Piece<P>> occupants = Maps.newTreeMap();
+    final Map<C, Piece<P>> occupants = new TreeMap<>();
 
     AbstractBoard(Map<C, Piece<P>> occupants) {
 

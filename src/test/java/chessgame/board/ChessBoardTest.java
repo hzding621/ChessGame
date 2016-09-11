@@ -17,7 +17,7 @@ public final class ChessBoardTest {
 
     @Before
     public void initializeBoard() {
-        this.chessBoard = ChessBoard.create(new StandardSetting());
+        this.chessBoard = ChessBoard.create(StandardSetting.VALUE);
         this.tile = new Square.Builder(new Coordinate.Builder(8), new Coordinate.Builder(8));
     }
 

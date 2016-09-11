@@ -16,8 +16,8 @@ public class AttackInformationTest extends AbstractTest {
 
         testBoth(b -> {
             GameSetting.GridGame<Square, StandardPieces> config = ConfigurableGameSetting.<StandardPieces>builder(3, 8)
-                    .piece(StandardPieces.KING, Player.WHITE, "B", "2")
-                    .piece(StandardPieces.KING, Player.BLACK, "B", "7")
+                    .set(StandardPieces.KING, Player.WHITE, "B", "2")
+                    .set(StandardPieces.KING, Player.BLACK, "B", "7")
                     .starter(Player.BLACK)
                     .build();
             hydrate(config, b);
@@ -37,9 +37,9 @@ public class AttackInformationTest extends AbstractTest {
 
         testBoth(b -> {
             GameSetting.GridGame<Square, StandardPieces> config = ConfigurableGameSetting.<StandardPieces>builder(3, 8)
-                    .piece(StandardPieces.KING, Player.WHITE, "B", "1")
-                    .piece(StandardPieces.KING, Player.BLACK, "B", "8")
-                    .piece(StandardPieces.QUEEN, Player.WHITE, "B", "3")
+                    .set(StandardPieces.KING, Player.WHITE, "B", "1")
+                    .set(StandardPieces.KING, Player.BLACK, "B", "8")
+                    .set(StandardPieces.QUEEN, Player.WHITE, "B", "3")
                     .starter(Player.BLACK)
                     .build();
             hydrate(config, b);
