@@ -78,28 +78,10 @@ public final class StandardSetting implements GameSetting.GridGame<Square, Stand
         TreeMap<Square, Piece<StandardPieces>> map = new TreeMap<>();
         configuration.cellSet().forEach(cell -> {
             for (int i = 0; i < cell.getValue().size(); i++) {
-                map.put(cell.getValue().get(i), createPiece(cell.getColumnKey(), cell.getRowKey(), i));
+                map.put(cell.getValue().get(i), new PieceImpl<>(cell.getColumnKey(), cell.getRowKey(), i));
             }
         });
         return map;
-    }
-
-    public static Piece<StandardPieces> createPiece(StandardPieces type, Player player, int id) {
-        switch (type) {
-            case PAWN:
-                return new PieceImpl<>(type, player, id);
-            case KNIGHT:
-                return new PieceImpl<>(type, player, id);
-            case BISHOP:
-                return new PieceImpl<>(type, player, id);
-            case ROOK:
-                return new PieceImpl<>(type, player, id);
-            case QUEEN:
-                return new PieceImpl<>(type, player, id);
-            case KING:
-                return new PieceImpl<>(type, player, id);
-        }
-        throw new IllegalStateException("Reach unexpected value " + type);
     }
 
     @Override

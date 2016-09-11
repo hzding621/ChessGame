@@ -23,7 +23,6 @@ public abstract class RuleBindings<C extends Cell, P extends PieceClass, B exten
         return bindings.get(pieceType);
     }
 
-
     public interface Supplier<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>, T extends RuleBindings<C, P, B>> {
 
         T get(RuntimeInformation<C, P> runtimeInformation);

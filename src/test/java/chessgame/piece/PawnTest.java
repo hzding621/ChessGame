@@ -45,7 +45,7 @@ public final class PawnTest {
         // white king at E1
         // black king at E8
 
-        testBoard = ChessBoard.create(ConfigurableGameSetting.builder(8, 8)
+        testBoard = ChessBoard.create(ConfigurableGameSetting.<StandardPieces>builder(8, 8)
                 .piece(StandardPieces.PAWN, Player.WHITE, "E", "2")
                 .piece(StandardPieces.KING, Player.WHITE, "E", "1")
                 .piece(StandardPieces.KING, Player.BLACK, "E", "8")

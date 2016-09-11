@@ -15,7 +15,7 @@ public class AttackInformationTest extends AbstractTest {
     public void testIsAttacked() {
 
         testBoth(b -> {
-            GameSetting.GridGame<Square, StandardPieces> config = ConfigurableGameSetting.builder(3, 8)
+            GameSetting.GridGame<Square, StandardPieces> config = ConfigurableGameSetting.<StandardPieces>builder(3, 8)
                     .piece(StandardPieces.KING, Player.WHITE, "B", "2")
                     .piece(StandardPieces.KING, Player.BLACK, "B", "7")
                     .starter(Player.BLACK)
@@ -36,7 +36,7 @@ public class AttackInformationTest extends AbstractTest {
     public void testCheckers() {
 
         testBoth(b -> {
-            GameSetting.GridGame<Square, StandardPieces> config = ConfigurableGameSetting.builder(3, 8)
+            GameSetting.GridGame<Square, StandardPieces> config = ConfigurableGameSetting.<StandardPieces>builder(3, 8)
                     .piece(StandardPieces.KING, Player.WHITE, "B", "1")
                     .piece(StandardPieces.KING, Player.BLACK, "B", "8")
                     .piece(StandardPieces.QUEEN, Player.WHITE, "B", "3")

@@ -2,8 +2,9 @@ package chessgame.game;
 
 import chessgame.board.Coordinate;
 import chessgame.board.Square;
-import chessgame.piece.StandardPieces;
 import chessgame.piece.Piece;
+import chessgame.piece.PieceClass;
+import chessgame.piece.PieceImpl;
 import chessgame.player.Player;
 import com.google.common.collect.ImmutableList;
 
@@ -15,17 +16,17 @@ import java.util.Set;
 /**
  * Represents a customized board configuration. Used for testing purposes.
  */
-public final class ConfigurableGameSetting implements GameSetting.GridGame<Square, StandardPieces> {
+public final class ConfigurableGameSetting<P extends PieceClass> implements GameSetting.GridGame<Square, P> {
 
-    private final Set<StandardPieces> supportedTypes;
-    private final Map<Square, Piece<StandardPieces>> piecesByPosition;
+    private final Set<P> supportedTypes;
+    private final Map<Square, Piece<P>> piecesByPosition;
     private final Map<Player, Square> kingStartingPositions;
     private final Player starter;
     private final int fileLength;
     private final int rankLength;
 
-    private ConfigurableGameSetting(Set<StandardPieces> supportedTypes,
-                                    Map<Square, Piece<StandardPieces>> piecesByPosition,
+    private ConfigurableGameSetting(Set<P> supportedTypes,
+                                    Map<Square, Piece<P>> piecesByPosition,
                                     Map<Player, Square> kingStartingPositions,
                                     Player starter,
                                     int fileLength,
@@ -39,7 +40,7 @@ public final class ConfigurableGameSetting implements GameSetting.GridGame<Squar
     }
 
     @Override
-    public Map<Square, Piece<StandardPieces>> constructPiecesByStartingPosition() {
+    public Map<Square, Piece<P>> constructPiecesByStartingPosition() {
         return piecesByPosition;
     }
 
@@ -53,8 +54,8 @@ public final class ConfigurableGameSetting implements GameSetting.GridGame<Squar
         return ImmutableList.of(Player.WHITE, Player.BLACK);
     }
 
-    public static Builder builder(int fileLength, int rankLength) {
-        return new Builder(fileLength, rankLength);
+    public static <P extends PieceClass> Builder<P> builder(int fileLength, int rankLength) {
+        return new Builder<>(fileLength, rankLength);
     }
 
     @Override
@@ -72,13 +73,13 @@ public final class ConfigurableGameSetting implements GameSetting.GridGame<Squar
         return fileLength;
     }
 
-    public static final class Builder {
+    public static final class Builder<P extends PieceClass> {
 
         private final int fileLength;
         private final int rankLength;
         private final Square.Builder builder;
-        private final Map<Square, Piece<StandardPieces>> piecesByPosition = new HashMap<>();
-        private final Map<StandardPieces, Integer> pieceTypeCount = new HashMap<>();
+        private final Map<Square, Piece<P>> piecesByPosition = new HashMap<>();
+        private final Map<P, Integer> pieceTypeCount = new HashMap<>();
         private final Map<Player, Square> kingPositions = new HashMap<>();
         private Player starter = Player.WHITE;
 
@@ -88,14 +89,14 @@ public final class ConfigurableGameSetting implements GameSetting.GridGame<Squar
             this.rankLength = rankLength;
         }
 
-        public Builder piece(StandardPieces type, Player player, String file, String rank) {
+        public Builder<P> piece(P type, Player player, String file, String rank) {
             Square cell = builder.at(file, rank);
             return piece(type, player, cell.getFile().getCoordinate().getIndex(),
                     cell.getRank().getCoordinate().getIndex());
         }
 
-        public Builder piece(StandardPieces type, Player player, int file, int rank) {
-            if (type == StandardPieces.KING) {
+        public Builder<P> piece(P type, Player player, int file, int rank) {
+            if (type.isKing()) {
                 if (kingPositions.containsKey(player)) {
                     throw new IllegalStateException("Can only have one king for " + player);
                 }
@@ -106,21 +107,21 @@ public final class ConfigurableGameSetting implements GameSetting.GridGame<Squar
             if (piecesByPosition.containsKey(position)) {
                 throw new IllegalStateException("Piece at " + position + " is already set!");
             }
-            Piece<StandardPieces> piece = StandardSetting.createPiece(type, player, pieceTypeCount.get(type));
+            Piece<P> piece = new PieceImpl<>(type, player, pieceTypeCount.get(type));
             piecesByPosition.put(position, piece);
             return this;
         }
 
-        public Builder starter(Player starter) {
+        public Builder<P> starter(Player starter) {
             this.starter = starter;
             return this;
         }
 
-        public ConfigurableGameSetting build() {
+        public ConfigurableGameSetting<P> build() {
             if (!kingPositions.containsKey(Player.WHITE) || !kingPositions.containsKey(Player.BLACK)) {
                 throw new IllegalStateException("Kings must be set.");
             }
-            return new ConfigurableGameSetting(pieceTypeCount.keySet(), piecesByPosition, kingPositions, starter,
+            return new ConfigurableGameSetting<>(pieceTypeCount.keySet(), piecesByPosition, kingPositions, starter,
                     fileLength, rankLength);
         }
     }

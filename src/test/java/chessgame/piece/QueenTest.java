@@ -38,7 +38,7 @@ public class QueenTest {
         // white king at A1
         // black king at A3
 
-        testBoard = ChessBoard.create(ConfigurableGameSetting.builder(3, 3)
+        testBoard = ChessBoard.create(ConfigurableGameSetting.<StandardPieces>builder(3, 3)
                 .piece(StandardPieces.QUEEN, Player.WHITE, "B", "2")
                 .piece(StandardPieces.KING, Player.WHITE, "A", "1")
                 .piece(StandardPieces.KING, Player.BLACK, "A", "3")
@@ -55,7 +55,7 @@ public class QueenTest {
 
         // K p Q p k
 
-        testBoard = ChessBoard.create(ConfigurableGameSetting.builder(5, 1)
+        testBoard = ChessBoard.create(ConfigurableGameSetting.<StandardPieces>builder(5, 1)
                 .piece(StandardPieces.KING, Player.BLACK, "A", "1")
                 .piece(StandardPieces.PAWN, Player.BLACK, "B", "1")
                 .piece(StandardPieces.QUEEN, Player.WHITE, "C", "1")

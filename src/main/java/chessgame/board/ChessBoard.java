@@ -18,9 +18,7 @@ import java.util.Optional;
 public final class ChessBoard<P extends PieceClass> implements
         MutableBoard<Square, P, ChessBoard<P>>,
         ChessBoardViewer<P>,
-        Previewer<Square, P, ChessBoardViewer<P>, ChessBoard<P>>
-    {
-
+        Previewer<Square, P, ChessBoardViewer<P>, ChessBoard<P>> {
 
     private ChessBoardImpl<P> delegate;
     private ChessBoard(ChessBoardImpl<P> delegate) {

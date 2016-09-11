@@ -21,6 +21,4 @@ public final class StandardRuleBindings extends BasicRuleBindings<ChessBoardView
 
         // TODO: pawn promotion, en passant
     }
-
-    public interface Supplier extends RuleBindings.Supplier<Square, StandardPieces, ChessBoardViewer<StandardPieces>, StandardRuleBindings> {}
 }

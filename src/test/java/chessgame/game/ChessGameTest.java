@@ -26,7 +26,7 @@ public class ChessGameTest {
 
     @Before
     public void initializeGame() {
-        game = ChessGame.constructGame(new StandardSetting(), (StandardRuleBindings::new));
+        game = ChessGame.create(new StandardSetting(), (StandardRuleBindings::new));
         cell = game.getBoard().getGridCellFactory();
     }
 

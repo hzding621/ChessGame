@@ -22,7 +22,7 @@ public class ChessGame<P extends PieceClass> implements Game<Square, P, ChessBoa
     private GameStatus gameStatus = GameStatus.OPEN;
 
 
-    private ChessGame(ChessBoard<P> chessBoard,
+    protected ChessGame(ChessBoard<P> chessBoard,
                       Rules<Square, P, ChessBoardViewer<P>> chessRules,
                       RuntimeInformationImpl<Square, P, ChessBoardViewer<P>> runtimeInformation,
                       MoveFinder<Square, P> moveFinder) {
@@ -34,8 +34,8 @@ public class ChessGame<P extends PieceClass> implements Game<Square, P, ChessBoa
         moveFinder.recompute();
     }
 
-    public static <P extends PieceClass> ChessGame<P> constructGame(GameSetting.GridGame<Square, P> setting,
-                                                                    CustomRuleBindings.Supplier<P> ruleBindingSupplier) {
+    public static <P extends PieceClass> ChessGame<P> create(GameSetting.GridGame<Square, P> setting,
+                                                             ChessRuleBindings.Supplier<P> ruleBindingSupplier) {
         ChessBoard<P> board = ChessBoard.create(setting);
         RuntimeInformationImpl<Square, P, ChessBoardViewer<P>> runtimeInformation =
                 new RuntimeInformationImpl<>(setting, board);

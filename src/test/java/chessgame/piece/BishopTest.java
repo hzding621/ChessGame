@@ -38,7 +38,7 @@ public final class BishopTest {
         // white king at A1
         // black king at A5
 
-        testBoard = ChessBoard.create(ConfigurableGameSetting.builder(5, 5)
+        testBoard = ChessBoard.create(ConfigurableGameSetting.<StandardPieces>builder(5, 5)
                 .piece(StandardPieces.BISHOP, Player.WHITE, "C", "3")
                 .piece(StandardPieces.KING, Player.WHITE, "A", "1")
                 .piece(StandardPieces.KING, Player.BLACK, "A", "5")
@@ -66,7 +66,7 @@ public final class BishopTest {
 
         // latent attack A5 king
 
-        testBoard = ChessBoard.create(ConfigurableGameSetting.builder(8, 8)
+        testBoard = ChessBoard.create(ConfigurableGameSetting.<StandardPieces>builder(8, 8)
                 .piece(StandardPieces.BISHOP, Player.WHITE, "C", "3")
                 .piece(StandardPieces.KING, Player.WHITE, "A", "1")
                 .piece(StandardPieces.KING, Player.BLACK, "A", "5")
