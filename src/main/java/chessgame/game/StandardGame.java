@@ -13,11 +13,12 @@ import chessgame.rule.StandardRuleBindings;
 public class StandardGame extends ChessGame<StandardPieces> {
 
     private StandardGame(ChessBoard<StandardPieces> chessBoard,
+                         GameSetting.GridGame<Square, StandardPieces> gameSetting,
                          Rules<Square, StandardPieces, ChessBoardViewer<StandardPieces>> chessRules,
                          RuntimeInformationImpl<Square, StandardPieces, ChessBoardViewer<StandardPieces>> runtimeInformation,
                          MoveFinder<Square, StandardPieces> moveFinder) {
 
-        super(chessBoard, chessRules, runtimeInformation, moveFinder);
+        super(chessBoard, gameSetting, chessRules, runtimeInformation, moveFinder);
     }
 
     public static StandardGame create() {
@@ -27,6 +28,6 @@ public class StandardGame extends ChessGame<StandardPieces> {
         Rules<Square, StandardPieces, ChessBoardViewer<StandardPieces>> rules =
                 new Rules<>(new StandardRuleBindings(runtimeInformation));
         MoveFinder<Square, StandardPieces> moveFinder = new OptimizedMoveFinder<>(board, rules, runtimeInformation);
-        return new StandardGame(board, rules, runtimeInformation, moveFinder);
+        return new StandardGame(board, StandardSetting.VALUE, rules, runtimeInformation, moveFinder);
     }
 }

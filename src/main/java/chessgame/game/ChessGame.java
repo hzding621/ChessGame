@@ -14,8 +14,10 @@ import java.util.Collection;
 /**
  * Main class for implementing main loop in a chess game
  */
-public class ChessGame<P extends PieceClass> implements Game<Square, P, ChessBoard<P>> {
+public class ChessGame<P extends PieceClass> implements Game<Square, P, ChessBoard<P>, GameSetting.GridGame<Square, P>> {
+
     private final ChessBoard<P> chessBoard;
+    private final GameSetting.GridGame<Square, P> gameSetting;
     private final Rules<Square, P, ChessBoardViewer<P>> chessRules;
     private final RuntimeInformationImpl<Square, P, ChessBoardViewer<P>> runtimeInformation;
     private final MoveFinder<Square, P> moveFinder;
@@ -23,10 +25,12 @@ public class ChessGame<P extends PieceClass> implements Game<Square, P, ChessBoa
 
 
     protected ChessGame(ChessBoard<P> chessBoard,
+                        GameSetting.GridGame<Square, P> gameSetting,
                         Rules<Square, P, ChessBoardViewer<P>> chessRules,
                         RuntimeInformationImpl<Square, P, ChessBoardViewer<P>> runtimeInformation,
                         MoveFinder<Square, P> moveFinder) {
         this.chessBoard = chessBoard;
+        this.gameSetting = gameSetting;
         this.chessRules = chessRules;
         this.runtimeInformation = runtimeInformation;
         this.moveFinder = moveFinder;
@@ -42,7 +46,7 @@ public class ChessGame<P extends PieceClass> implements Game<Square, P, ChessBoa
         Rules<Square, P, ChessBoardViewer<P>> rules =
                 new Rules<>(ruleBindingProvider.get(runtimeInformation));
         MoveFinder<Square, P> moveFinder = new BasicMoveFinder<>(board, rules, runtimeInformation);
-        return new ChessGame<>(board, rules, runtimeInformation, moveFinder);
+        return new ChessGame<>(board, setting, rules, runtimeInformation, moveFinder);
     }
 
     @Override
@@ -102,5 +106,10 @@ public class ChessGame<P extends PieceClass> implements Game<Square, P, ChessBoa
     @Override
     public GameStatus getGameStatus() {
         return gameStatus;
+    }
+
+    @Override
+    public GameSetting.GridGame<Square, P> getSetting() {
+        return gameSetting;
     }
 }

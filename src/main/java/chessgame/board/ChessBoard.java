@@ -139,7 +139,8 @@ public final class ChessBoard<P extends PieceClass> implements
         return newBoard;
     }
 
-    private static final class ChessBoardImpl<P extends PieceClass> extends RectangularBoard<P, GridViewer<Square, TwoDimension, P>, ChessBoardImpl<P>> {
+    private static final class ChessBoardImpl<P extends PieceClass>
+            extends RectangularBoard<P, GridViewer<Square, TwoDimension, P>, ChessBoardImpl<P>> {
 
         private ChessBoardImpl(Map<Square, Piece<P>> occupants, Square.Builder cellBuilder) {
             super(occupants, cellBuilder);

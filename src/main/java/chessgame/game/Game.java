@@ -11,7 +11,7 @@ import java.util.Collection;
 /**
  * Interface for a variant of chess game
  */
-interface Game<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>> {
+interface Game<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>, S extends GameSetting<C, P>> {
 
     B getBoard();
 
@@ -26,4 +26,6 @@ interface Game<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>
     void move(Move<C> move);
 
     GameStatus getGameStatus();
+
+    S getSetting();
 }

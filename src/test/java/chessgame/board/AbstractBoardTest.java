@@ -1,22 +1,51 @@
 package chessgame.board;
 
+import chessgame.game.GameSetting;
 import chessgame.game.KingPawnGame;
+import chessgame.move.BoardTransition;
+import chessgame.move.TransitionResult;
 import chessgame.piece.KingPawn;
 import chessgame.piece.Piece;
+import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Contains tests for AbstractBoard
  */
 public final class AbstractBoardTest {
 
+    static class Instance<C extends Cell, P extends PieceClass>
+            extends AbstractBoard<C, P, Instance<C, P>, Instance<C, P>> {
+
+        protected Instance(Map<C, Piece<P>> occupants) {
+            super(occupants);
+        }
+
+        public static <C extends Cell, P extends PieceClass> Instance<C, P> create(GameSetting<C, P> gameSetting) {
+            return new Instance<>(gameSetting.constructPiecesByStartingPosition());
+        }
+
+        @Override
+        public TransitionResult<C, P> apply(BoardTransition<C, P, Instance<C, P>> boardTransition) {
+            return boardTransition.apply(this);
+        }
+
+        @Override
+        public Instance<C, P> preview(BoardTransition<C, P, Instance<C, P>> transition) {
+            Instance<C, P> newInstance = new Instance<>(this.occupants);
+            newInstance.apply(transition);
+            return newInstance;
+        }
+    }
+
     private Square.Builder builder;
-    private AbstractBoard.Instance<Square, KingPawn> testBoard;
+    private Instance<Square, KingPawn> testBoard;
     /**
      * Create a test board like the following, where W is white pawn and B is black pawn, k is white king, K is black king
      *
@@ -29,7 +58,7 @@ public final class AbstractBoardTest {
     public void instantiateTestPieceSet() {
         Coordinate.Builder coordinateBuilder = new Coordinate.Builder(4);
         builder = new Square.Builder(coordinateBuilder, coordinateBuilder);
-        testBoard = AbstractBoard.Instance.create(new KingPawnGame(builder));
+        testBoard = Instance.create(new KingPawnGame(builder));
     }
 
     @Test

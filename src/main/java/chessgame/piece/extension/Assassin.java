@@ -24,10 +24,8 @@ public final class Assassin<C extends Cell, P extends PieceClass, D extends Dire
     @Override
     public Collection<C> attacking(B board, C position, Player player) {
         Set<C> attacked = new HashSet<>();
-        board.getEveryDirections().forEach(direction -> {
-            board.firstTwoEncounters(position, direction, StepSize.of(1, 0))
-                    .ifPresent(attack -> attacked.add(attack.second()));
-        });
+        board.getEveryDirections().forEach(direction -> board.firstTwoEncounters(position, direction, StepSize.of(1, 0))
+                .ifPresent(attack -> attacked.add(attack.second())));
         return attacked;
     }
 

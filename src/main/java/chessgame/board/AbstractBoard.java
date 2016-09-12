@@ -23,33 +23,9 @@ import java.util.stream.Collectors;
 abstract class AbstractBoard<C extends Cell, P extends PieceClass, V extends BoardViewer<C, P>, T extends AbstractBoard<C, P, V, T>>
         implements MutableBoard<C, P, T>, Previewer<C, P, V, T> {
 
-    static class Instance<C extends Cell, P extends PieceClass>
-            extends AbstractBoard<C, P, Instance<C, P>, Instance<C, P>> {
+    protected final Map<C, Piece<P>> occupants = new TreeMap<>();
 
-        protected Instance(Map<C, Piece<P>> occupants) {
-            super(occupants);
-        }
-
-        public static <C extends Cell, P extends PieceClass> Instance<C, P> create(GameSetting<C, P> gameSetting) {
-            return new Instance<>(gameSetting.constructPiecesByStartingPosition());
-        }
-
-        @Override
-        public TransitionResult<C, P> apply(BoardTransition<C, P, Instance<C, P>> boardTransition) {
-            return boardTransition.apply(this);
-        }
-
-        @Override
-        public Instance<C, P> preview(BoardTransition<C, P, Instance<C, P>> transition) {
-            Instance<C, P> newInstance = new Instance<>(this.occupants);
-            newInstance.apply(transition);
-            return newInstance;
-        }
-    }
-
-    final Map<C, Piece<P>> occupants = new TreeMap<>();
-
-    AbstractBoard(Map<C, Piece<P>> occupants) {
+    protected AbstractBoard(Map<C, Piece<P>> occupants) {
 
         // There is no magic here, create copies !!!
         this.occupants.putAll(occupants);

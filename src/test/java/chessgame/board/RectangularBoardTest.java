@@ -1,6 +1,11 @@
 package chessgame.board;
 
+import chessgame.game.GameSetting;
 import chessgame.game.StandardSetting;
+import chessgame.move.BoardTransition;
+import chessgame.move.TransitionResult;
+import chessgame.piece.Piece;
+import chessgame.piece.PieceClass;
 import chessgame.piece.StandardPieces;
 import chessgame.player.Player;
 import org.junit.Assert;
@@ -11,6 +16,7 @@ import utility.Pair;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -18,14 +24,41 @@ import java.util.Optional;
  */
 public final class RectangularBoardTest {
 
+    static class Instance<P extends PieceClass> extends RectangularBoard<P, Instance<P>, Instance<P>> {
+
+        private Instance(Map<Square, Piece<P>> occupants, Square.Builder cellBuilder) {
+            super(occupants, cellBuilder);
+        }
+
+        public static <P extends PieceClass> Instance<P> create(
+                GameSetting.GridGame<Square, P> gameSetting) {
+            final Coordinate.Builder fileBuilder = new Coordinate.Builder(gameSetting.getFileLength());
+            final Coordinate.Builder rankBuilder = new Coordinate.Builder(gameSetting.getRankLength());
+            return new Instance<>(gameSetting.constructPiecesByStartingPosition(),
+                    new Square.Builder(fileBuilder, rankBuilder));
+        }
+
+        @Override
+        public TransitionResult<Square, P> apply(BoardTransition<Square, P, RectangularBoardTest.Instance<P>> boardTransition) {
+            return boardTransition.apply(this);
+        }
+
+        @Override
+        public Instance<P> preview(BoardTransition<Square, P, Instance<P>> transition) {
+            Instance<P> newInstance = new Instance<P>(occupants, cellBuilder);
+            newInstance.apply(transition);
+            return newInstance;
+        }
+    }
+
     private Square.Builder builder;
-    private RectangularBoard.Instance<StandardPieces> testBoard;
+    private Instance<StandardPieces> testBoard;
 
     @Before
     public void instantiateTestPieceSet() {
         Coordinate.Builder coordinateBuilder = new Coordinate.Builder(8);
         builder = new Square.Builder(coordinateBuilder, coordinateBuilder);
-        testBoard = RectangularBoard.Instance.create(StandardSetting.VALUE);
+        testBoard = Instance.create(StandardSetting.VALUE);
     }
 
     @Test(expected = IllegalArgumentException.class)

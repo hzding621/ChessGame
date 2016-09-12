@@ -21,33 +21,6 @@ import java.util.Optional;
 public abstract class RectangularBoard<P extends PieceClass, V extends GridViewer<Square, TwoDimension, P>, T extends RectangularBoard<P, V, T>>
         extends AbstractBoard<Square, P, V, T> implements GridViewer<Square, TwoDimension, P> {
 
-    static class Instance<P extends PieceClass> extends RectangularBoard<P, Instance<P>, Instance<P>> {
-
-        private Instance(Map<Square, Piece<P>> occupants, Square.Builder cellBuilder) {
-            super(occupants, cellBuilder);
-        }
-
-        public static <P extends PieceClass> RectangularBoard.Instance<P> create(
-                GameSetting.GridGame<Square, P> gameSetting) {
-            final Coordinate.Builder fileBuilder = new Coordinate.Builder(gameSetting.getFileLength());
-            final Coordinate.Builder rankBuilder = new Coordinate.Builder(gameSetting.getRankLength());
-            return new RectangularBoard.Instance<>(gameSetting.constructPiecesByStartingPosition(),
-                    new Square.Builder(fileBuilder, rankBuilder));
-        }
-
-        @Override
-        public TransitionResult<Square, P> apply(BoardTransition<Square, P, RectangularBoard.Instance<P>> boardTransition) {
-            return boardTransition.apply(this);
-        }
-
-        @Override
-        public RectangularBoard.Instance<P> preview(BoardTransition<Square, P, RectangularBoard.Instance<P>> transition) {
-            RectangularBoard.Instance<P> newInstance = new RectangularBoard.Instance<P>(occupants, cellBuilder);
-            newInstance.apply(transition);
-            return newInstance;
-        }
-    }
-
     protected final Square.Builder cellBuilder;
 
     protected RectangularBoard(Map<Square, Piece<P>> occupants, Square.Builder cellBuilder) {
