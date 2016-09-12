@@ -5,71 +5,32 @@ import chessgame.move.BoardTransition;
 import chessgame.move.TransitionResult;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
+import chessgame.piece.StandardPieces;
 import chessgame.player.Player;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Represents a regular 8x8 chess board
  */
-public final class ChessBoard<P extends PieceClass> implements
-        MutableBoard<Square, P, ChessBoard<P>>,
-        ChessBoardViewer<P>,
-        Previewer<Square, P, ChessBoardViewer<P>, ChessBoard<P>> {
+public final class ChessBoard<P extends PieceClass>
+        extends RectangularBoard<P, GridViewer<Square, TwoDimension, P>, ChessBoard<P>>
+        implements Previewer<Square, P, ChessBoardViewer<P>, ChessBoard<P>>, ChessBoardViewer<P> {
 
-    private ChessBoardImpl<P> delegate;
-    private ChessBoard(ChessBoardImpl<P> delegate) {
-        this.delegate = delegate;
+    private ChessBoard(Map<Square, Piece<P>> occupants, Square.Builder cellBuilder) {
+        super(occupants, cellBuilder);
     }
 
     public static <P extends PieceClass> ChessBoard<P> create(GameSetting.GridGame<Square, P> gameSetting) {
         final Coordinate.Builder fileBuilder = new Coordinate.Builder(gameSetting.getFileLength());
         final Coordinate.Builder rankBuilder = new Coordinate.Builder(gameSetting.getRankLength());
-        return new ChessBoard<P>(new ChessBoardImpl<P>(gameSetting.constructPiecesByStartingPosition(),
-                new Square.Builder(fileBuilder, rankBuilder)));
-    }
-
-    @Override
-    public Optional<Piece<P>> getPiece(Square cell) {
-        return delegate.getPiece(cell);
-    }
-
-    @Override
-    public Collection<Square> getPiecesOfTypeForPlayer(P type, Player player) {
-        return delegate.getPiecesOfTypeForPlayer(type, player);
-    }
-
-    @Override
-    public Collection<Square> getPiecesForPlayer(Player player) {
-        return delegate.getPiecesForPlayer(player);
-    }
-
-    @Override
-    public boolean isOccupied(Square cell) {
-        return delegate.isOccupied(cell);
-    }
-
-    @Override
-    public boolean isEnemy(Square cell, Player player) {
-        return delegate.isEnemy(cell, player);
-    }
-
-    @Override
-    public Piece<P> clearPiece(Square position) {
-        return delegate.clearPiece(position);
-    }
-
-    @Override
-    public Piece<P> movePiece(Square source, Square target) {
-        return delegate.movePiece(source, target);
-    }
-
-    @Override
-    public void addPiece(Square position, Piece<P> piece) {
-        delegate.addPiece(position, piece);
+        return new ChessBoard<P>(gameSetting.constructPiecesByStartingPosition(),
+                new Square.Builder(fileBuilder, rankBuilder));
     }
 
     @Override
@@ -78,84 +39,16 @@ public final class ChessBoard<P extends PieceClass> implements
     }
 
     @Override
-    public Collection<TwoDimension> getEveryDirections() {
-        return delegate.getEveryDirections();
+    public void preview(BoardTransition<Square, P, ChessBoard<P>> transition, Consumer<ChessBoardViewer<P>> callback) {
+        ChessBoard<P> chessBoard = new ChessBoard<P>(occupants, cellBuilder); // Creates a copy
+        chessBoard.apply(transition);
+        callback.accept(chessBoard);
     }
 
     @Override
-    public Collection<TwoDimension> getOrthogonalDirections() {
-        return delegate.getOrthogonalDirections();
-    }
-
-    @Override
-    public Collection<TwoDimension> getDiagonalDirections() {
-        return delegate.getDiagonalDirections();
-    }
-
-    @Override
-    public Optional<Square> travelSteps(Square startCell, TwoDimension direction, int steps, StepSize stepSize) {
-        return delegate.travelSteps(startCell, direction, steps, stepSize);
-    }
-
-    @Override
-    public List<Square> travelUntilBlocked(Square startCell, TwoDimension direction, StepSize stepSize, boolean startInclusive, boolean endInclusive) {
-        return delegate.travelUntilBlocked(startCell, direction, stepSize, startInclusive, endInclusive);
-    }
-
-    @Override
-    public Optional<Square> firstEncounter(Square startCell, TwoDimension direction, StepSize stepSize) {
-        return delegate.firstEncounter(startCell, direction, stepSize);
-    }
-
-    @Override
-    public Optional<Square> travelForward(Square startCell, Player player) {
-        return delegate.travelForward(startCell, player);
-    }
-
-    @Override
-    public Collection<Square> attackPawnStyle(Square startCell, Player player) {
-        return delegate.attackPawnStyle(startCell, player);
-    }
-
-    @Override
-    public TwoDimension findDirection(Square startCell, Square endCell) {
-        return delegate.findDirection(startCell, endCell);
-    }
-
-    @Override
-    public GridCellBuilder<Square, TwoDimension> getGridCellBuilder() {
-        return delegate.getGridCellBuilder();
-    }
-
-    @Override
-    public Collection<Square> getAllPositions() {
-        return delegate.getAllPositions();
-    }
-
-    @Override
-    public ChessBoardViewer<P> preview(BoardTransition<Square, P, ChessBoard<P>> transition) {
-        ChessBoard<P> newBoard = new ChessBoard<P>(new ChessBoardImpl<>(delegate.occupants, delegate.cellBuilder));
-        newBoard.apply(transition);
-        return newBoard;
-    }
-
-    private static final class ChessBoardImpl<P extends PieceClass>
-            extends RectangularBoard<P, GridViewer<Square, TwoDimension, P>, ChessBoardImpl<P>> {
-
-        private ChessBoardImpl(Map<Square, Piece<P>> occupants, Square.Builder cellBuilder) {
-            super(occupants, cellBuilder);
-        }
-
-        @Override
-        public TransitionResult<Square, P> apply(BoardTransition<Square, P, ChessBoardImpl<P>> boardTransition) {
-            return boardTransition.apply(this);
-        }
-
-        @Override
-        public GridViewer<Square, TwoDimension, P> preview(BoardTransition<Square, P, ChessBoardImpl<P>> transition) {
-            ChessBoardImpl<P> chessBoard = new ChessBoardImpl<P>(occupants, cellBuilder);
-            chessBoard.apply(transition);
-            return chessBoard;
-        }
+    public <T> T preview(BoardTransition<Square, P, ChessBoard<P>> transition, Function<ChessBoardViewer<P>, T> callback) {
+        ChessBoard<P> chessBoard = new ChessBoard<P>(occupants, cellBuilder); // Creates a copy
+        chessBoard.apply(transition);
+        return callback.apply(chessBoard);
     }
 }

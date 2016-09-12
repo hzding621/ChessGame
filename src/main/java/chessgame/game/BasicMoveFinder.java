@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public final class BasicMoveFinder<C extends Cell, P extends PieceClass, M extends MutableBoard<C, P, M>,
         B extends Previewer<C, P, B, M>> implements MoveFinder<C, P>
 {
-    private final SetMultimap<C, Move<C>> availableMoves = MultimapBuilder.treeKeys().hashSetValues().build();
+    private final SetMultimap<C, Move<C, P>> availableMoves = MultimapBuilder.treeKeys().hashSetValues().build();
 
     private final B board;
     private final Rules<C, P, B> rules;
@@ -48,21 +48,22 @@ public final class BasicMoveFinder<C extends Cell, P extends PieceClass, M exten
     }
 
 
-    public Collection<Move<C>> computeAvailableMoves(C sourcePosition) {
+    public Collection<Move<C, P>> computeAvailableMoves(C sourcePosition) {
 
         Player actor = runtimeInformation.getPlayerInformation().getActor();
         Player defender = runtimeInformation.getPlayerInformation().getDefender();
         Piece<P> sourcePiece = board.getPiece(sourcePosition).get();
-        Collection<Move<C>> moves = rules.basicMoves(board, sourcePosition, actor)
+        Collection<Move<C, P>> moves = rules.basicMoves(board, sourcePosition, actor)
                 .stream()
                 .filter(targetPosition -> board.getPiece(targetPosition).map(p -> p.getPieceClass().canCapture()).orElse(true))
                 .map(targetPosition -> AnnotatedSimpleMove.of(sourcePiece, sourcePosition, targetPosition, actor))
                 .filter(move -> {
-                    B future = board.preview(move.getTransition());
-                    Set<C> isAttacked = future.getPiecesForPlayer(defender).stream()
-                            .flatMap(defenderPosition ->
-                                    rules.attacking(future, defenderPosition, defender).stream())
-                            .collect(Collectors.toSet());
+                    Set<C> isAttacked = board.preview(move.getTransition(), future -> {
+                        return future.getPiecesForPlayer(defender).stream()
+                                .flatMap(defenderPosition ->
+                                        rules.attacking(future, defenderPosition, defender).stream())
+                                .collect(Collectors.toSet());
+                    });
                     C kingStartingPosition = runtimeInformation.getPieceInformation().locateKing(actor);
                     boolean result;
                     if (sourcePosition.equals(kingStartingPosition)) {
@@ -81,7 +82,7 @@ public final class BasicMoveFinder<C extends Cell, P extends PieceClass, M exten
     }
 
     @Override
-    public SetMultimap<C, Move<C>> getAvailableMoves() {
+    public SetMultimap<C, Move<C, P>> getAvailableMoves() {
      return availableMoves;
     }
 

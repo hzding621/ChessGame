@@ -102,7 +102,7 @@ public final class CustomGameTest {
     public void testInitialGhost() {
         hydrate(staringPosition());
         Square ghostPosition = Iterables.getFirst(customGame.getBoard().getPiecesOfTypeForPlayer(ExtensionPieces.GHOST, Player.WHITE), null);
-        Collection<Move<Square>> moves = customGame.availableMovesFrom(ghostPosition);
+        Collection<Move<Square, ExtensionPieces>> moves = customGame.availableMovesFrom(ghostPosition);
         Assert.assertEquals(40, moves.size()); // Ghost can teleport to all the 10x6 empty spaces in the middle
      }
 
@@ -118,14 +118,14 @@ public final class CustomGameTest {
                 .starter(Player.BLACK)
                 .build()
         );
-        Collection<Move<Square>> moves = customGame.availableMoves();
+        Collection<Move<Square, ExtensionPieces>> moves = customGame.availableMoves();
         Assert.assertEquals(2, moves.size());
     }
 
     @Test
     public void testInitialAssassinAttack() {
         hydrate(staringPosition());
-        Collection<Move<Square>> moves = customGame.availableMovesFrom(cellBuilder.at(3, 0));
+        Collection<Move<Square, ExtensionPieces>> moves = customGame.availableMovesFrom(cellBuilder.at(3, 0));
 
         int attacks = 2;
         if (customGame.getBoard().getPiecesOfTypeForPlayer(ExtensionPieces.GHOST, Player.BLACK).contains(cellBuilder.at(3, 6))) {

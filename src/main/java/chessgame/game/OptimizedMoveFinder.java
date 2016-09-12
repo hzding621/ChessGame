@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public final class OptimizedMoveFinder<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
         implements MoveFinder<C, P> {
 
-    private final SetMultimap<C, Move<C>> availableMoves = MultimapBuilder.treeKeys().hashSetValues().build();
+    private final SetMultimap<C, Move<C, P>> availableMoves = MultimapBuilder.treeKeys().hashSetValues().build();
     private final SetMultimap<C, LatentAttack<C>> latentCheckersByBlocker = MultimapBuilder.treeKeys().hashSetValues().build();
 
     private final B board;
@@ -65,7 +65,7 @@ public final class OptimizedMoveFinder<C extends Cell, P extends PieceClass, B e
      * king into new check
      * @return the collection of available moves
      */
-    private Collection<Move<C>> computeAvailableMoves(C sourcePosition) {
+    private Collection<Move<C, P>> computeAvailableMoves(C sourcePosition) {
 
         Player actor = runtimeInformation.getPlayerInformation().getActor();
         Player defender = runtimeInformation.getPlayerInformation().getDefender();
@@ -83,7 +83,7 @@ public final class OptimizedMoveFinder<C extends Cell, P extends PieceClass, B e
         Collection<LatentAttack<C>> latentCheckers = latentCheckersByBlocker.get(sourcePosition);
 
         // Get all potential moves for the actor piece
-        Collection<Move<C>> moves = rules.basicMoves(board, sourcePosition, actor)
+        Collection<Move<C, P>> moves = rules.basicMoves(board, sourcePosition, actor)
                 .stream()
                 .filter(targetPosition ->
                         board.getPiece(targetPosition).map(p -> p.getPieceClass().canCapture()).orElse(true))
@@ -119,7 +119,7 @@ public final class OptimizedMoveFinder<C extends Cell, P extends PieceClass, B e
     }
 
     @Override
-    public SetMultimap<C, Move<C>> getAvailableMoves() {
+    public SetMultimap<C, Move<C, P>> getAvailableMoves() {
         return availableMoves;
     }
 }

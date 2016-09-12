@@ -65,12 +65,12 @@ public class ChessGame<P extends PieceClass> implements Game<Square, P, ChessBoa
     }
 
     @Override
-    public Collection<Move<Square>> availableMoves() {
+    public Collection<Move<Square, P>> availableMoves() {
         return moveFinder.getAvailableMoves().values();
     }
 
     @Override
-    public Collection<Move<Square>> availableMovesFrom(Square square) {
+    public Collection<Move<Square, P>> availableMovesFrom(Square square) {
         return moveFinder.getAvailableMoves().get(square);
     }
 
@@ -91,7 +91,7 @@ public class ChessGame<P extends PieceClass> implements Game<Square, P, ChessBoa
     }
 
     @Override
-    public void move(Move<Square> attemptedMove) {
+    public void move(Move<Square, P> attemptedMove) {
         if (gameStatus != GameStatus.OPEN) {
             throw new IllegalStateException("Game has ended in " + gameStatus);
         }

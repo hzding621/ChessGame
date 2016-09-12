@@ -64,11 +64,11 @@ public class King<C extends Cell, P extends PieceClass, D extends Direction<D>, 
         }
 
         @Override
-        public Collection<Move<Square>> specialMove(ChessBoardViewer<StandardPieces> board, Player player) {
+        public Collection<Move<Square, StandardPieces>> specialMove(ChessBoardViewer<StandardPieces> board, Player player) {
             return castling(board, player);
         }
 
-        private Optional<CastlingMove<Square>> constructCastlingMove(ChessBoardViewer<StandardPieces> board,
+        private Optional<CastlingMove<Square, StandardPieces>> constructCastlingMove(ChessBoardViewer<StandardPieces> board,
                                                                      Square kingPosition,
                                                                      Square rookPosition,
                                                                      TwoDimension side,
@@ -90,7 +90,7 @@ public class King<C extends Cell, P extends PieceClass, D extends Direction<D>, 
          * Castling is one of the rules of chess and is technically a king move (Hooper & Whyld 1992:71).
          * @return non-empty if a castling is valid, empty otherwise
          */
-        private Collection<Move<Square>> castling(ChessBoardViewer<StandardPieces> board, Player player) {
+        private Collection<Move<Square, StandardPieces>> castling(ChessBoardViewer<StandardPieces> board, Player player) {
             Square kingPosition = getRuntimeInformation().getPieceInformation().locateKing(player);
             Piece<StandardPieces> king = board.getPiece(kingPosition).get();
             if (getRuntimeInformation().getPieceInformation().getPieceMoveCount(king) > 0
@@ -101,7 +101,7 @@ public class King<C extends Cell, P extends PieceClass, D extends Direction<D>, 
             Optional<Square> leftBound = board.firstEncounter(kingPosition, TwoDimension.WEST, StepSize.of(1,0));
             Optional<Square> rightBound = board.firstEncounter(kingPosition, TwoDimension.EAST, StepSize.of(1,0));
 
-            final ImmutableList.Builder<Move<Square>> builder = ImmutableList.builder();
+            final ImmutableList.Builder<Move<Square, StandardPieces>> builder = ImmutableList.builder();
             board.getPiecesOfTypeForPlayer(StandardPieces.ROOK, player).forEach(rookPosition -> {
                 if (leftBound.isPresent() && rookPosition.equals(leftBound.get())) {
                     constructCastlingMove(board, kingPosition, rookPosition, TwoDimension.WEST, player)

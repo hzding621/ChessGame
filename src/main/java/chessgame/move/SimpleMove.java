@@ -7,13 +7,14 @@ import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 /**
  * Represents a move that involves a single piece
  */
-public class SimpleMove<C extends Cell> implements Move<C>, Comparable<SimpleMove<C>> {
+public class SimpleMove<C extends Cell, P extends PieceClass> implements Move<C, P>, Comparable<SimpleMove<C, P>> {
 
     private final C source;
     private final C target;
@@ -25,7 +26,7 @@ public class SimpleMove<C extends Cell> implements Move<C>, Comparable<SimpleMov
         this.player = player;
     }
 
-    public static <C extends Cell> SimpleMove<C> of(C source, C target, Player player) {
+    public static <C extends Cell, P extends PieceClass> SimpleMove<C, P> of(C source, C target, Player player) {
         return new SimpleMove<>(source, target, player);
     }
 
@@ -44,7 +45,7 @@ public class SimpleMove<C extends Cell> implements Move<C>, Comparable<SimpleMov
     }
 
     @Override
-    public <P extends PieceClass, M extends MutableBoard<C, P, M>> BoardTransition<C, P, M> getTransition() {
+    public <M extends MutableBoard<C, P, M>> BoardTransition<C, P, M> getTransition() {
         return board -> {
             if (!board.getPiece(source).isPresent()) {
                 throw new IllegalStateException("Invalid move. Source cell " + source + " is empty!");
@@ -60,7 +61,7 @@ public class SimpleMove<C extends Cell> implements Move<C>, Comparable<SimpleMov
             List<TransitionResult.MovedPiece<C, P>> history = new ArrayList<>();
             history.add(TransitionResult.MovedPiece.of(movedPiece, source, target));
             capturedPiece.ifPresent(p -> history.add(TransitionResult.MovedPiece.of(p, target, null)));
-            return () -> history;
+            return TransitionResult.create(() -> history, () -> new ReverseMove<>(this, history));
         };
     }
 
@@ -70,7 +71,7 @@ public class SimpleMove<C extends Cell> implements Move<C>, Comparable<SimpleMov
     }
 
     @Override
-    public int compareTo(SimpleMove<C> o) {
+    public int compareTo(SimpleMove<C, P> o) {
         if (o == this) return 0;
         int a = this.source.compareTo(o.source);
         if (a != 0) return a;
@@ -84,7 +85,7 @@ public class SimpleMove<C extends Cell> implements Move<C>, Comparable<SimpleMov
         if (this == o) return true;
         if (o == null || !(o instanceof SimpleMove)) return false;
 
-        SimpleMove<?> that = (SimpleMove<?>) o;
+        SimpleMove<?, ?> that = (SimpleMove<?, ?>) o;
 
         if (!source.equals(that.source)) return false;
         if (!target.equals(that.target)) return false;

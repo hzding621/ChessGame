@@ -35,13 +35,6 @@ public final class AbstractBoardTest {
         public TransitionResult<C, P> apply(BoardTransition<C, P, Instance<C, P>> boardTransition) {
             return boardTransition.apply(this);
         }
-
-        @Override
-        public Instance<C, P> preview(BoardTransition<C, P, Instance<C, P>> transition) {
-            Instance<C, P> newInstance = new Instance<>(this.occupants);
-            newInstance.apply(transition);
-            return newInstance;
-        }
     }
 
     private Square.Builder builder;

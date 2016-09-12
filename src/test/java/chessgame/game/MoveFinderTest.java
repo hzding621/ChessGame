@@ -15,18 +15,18 @@ import org.junit.Test;
  */
 public final class MoveFinderTest extends AbstractTest {
 
-    private static boolean checkIsValidMove(SetMultimap<Square, Move<Square>> allMoves, Square source, Square target) {
+    private static boolean checkIsValidMove(SetMultimap<Square, Move<Square, StandardPieces>> allMoves, Square source, Square target) {
         return allMoves.get(source)
                 .stream()
                 .filter(move -> move instanceof SimpleMove)
-                .anyMatch(move -> (((SimpleMove<Square>)(move)).getTarget().equals(target)));
+                .anyMatch(move -> (((SimpleMove<Square, StandardPieces>)(move)).getTarget().equals(target)));
     }
 
     @Test
     public void testAvailableMovesOpeningPosition() {
         testBoth(b -> {
             hydrate(StandardSetting.VALUE, b);
-            SetMultimap<Square, Move<Square>> allMoves = moveFinder.getAvailableMoves();
+            SetMultimap<Square, Move<Square, StandardPieces>> allMoves = moveFinder.getAvailableMoves();
 
             // All pawns can move one or two cells upwards
             for (int i = 0; i < 8; i++) {
@@ -55,7 +55,7 @@ public final class MoveFinderTest extends AbstractTest {
                     .build();
             hydrate(config, b);
 
-            SetMultimap<Square, Move<Square>> allMoves = moveFinder.getAvailableMoves();
+            SetMultimap<Square, Move<Square, StandardPieces>> allMoves = moveFinder.getAvailableMoves();
 
             Assert.assertTrue(allMoves.isEmpty());
             Assert.assertEquals(1, runtimeInformation.getAttackInformation().getCheckers().size(), 1);
@@ -74,7 +74,7 @@ public final class MoveFinderTest extends AbstractTest {
                     .build();
             hydrate(config, b);
 
-            SetMultimap<Square, Move<Square>> allMoves = moveFinder.getAvailableMoves();
+            SetMultimap<Square, Move<Square, StandardPieces>> allMoves = moveFinder.getAvailableMoves();
 
             Assert.assertTrue(allMoves.isEmpty());
             Assert.assertTrue(runtimeInformation.getAttackInformation().getCheckers().isEmpty());
@@ -94,7 +94,7 @@ public final class MoveFinderTest extends AbstractTest {
                     .build();
             hydrate(config, b);
 
-            SetMultimap<Square, Move<Square>> allMoves = moveFinder.getAvailableMoves();
+            SetMultimap<Square, Move<Square, StandardPieces>> allMoves = moveFinder.getAvailableMoves();
             Assert.assertTrue(allMoves.isEmpty());
         });
     }

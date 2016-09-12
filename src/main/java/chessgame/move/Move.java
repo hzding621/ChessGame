@@ -8,11 +8,11 @@ import chessgame.player.Player;
 /**
  * Represents a move in the game wherein a piece is moved from A to B
  */
-public interface Move<C extends Cell>  {
+public interface Move<C extends Cell, P extends PieceClass>  {
 
     C getInitiator();
 
     Player getPlayer();
 
-    <P extends PieceClass, M extends MutableBoard<C, P, M>> BoardTransition<C, P, M> getTransition();
+    <M extends MutableBoard<C, P, M>> BoardTransition<C, P, M> getTransition();
 }

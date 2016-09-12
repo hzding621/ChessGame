@@ -22,5 +22,5 @@ public interface MoveFinder<C extends Cell, P extends PieceClass> {
     /**
      * @return Mapping of available moves for each actor's pieces
      */
-    SetMultimap<C, Move<C>> getAvailableMoves();
+    SetMultimap<C, Move<C, P>> getAvailableMoves();
 }

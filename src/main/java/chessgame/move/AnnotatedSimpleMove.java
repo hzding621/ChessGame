@@ -8,7 +8,7 @@ import chessgame.player.Player;
 /**
  * Simple Move with stubbing of which piece is moving
  */
-public class AnnotatedSimpleMove<C extends Cell, P extends PieceClass> extends SimpleMove<C> {
+public class AnnotatedSimpleMove<C extends Cell, P extends PieceClass> extends SimpleMove<C, P> {
 
     private final Piece<P> piece;
 
@@ -31,7 +31,7 @@ public class AnnotatedSimpleMove<C extends Cell, P extends PieceClass> extends S
         if (this == o) return true;
         if (o == null || !(o instanceof SimpleMove)) return false;
 
-        SimpleMove<?> that = (SimpleMove<?>) o;
+        SimpleMove<?, ?> that = (SimpleMove<?, ?>) o;
 
         return that.equals(this);
     }

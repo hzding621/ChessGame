@@ -112,10 +112,10 @@ public class ChessGameTest {
             game.move(SimpleMove.of(cell.at(move[0], move[1]), cell.at(move[2], move[3]), game.getActor()));
         }
 
-        Collection<Move<Square>> moves = game.availableMovesFrom(cell.at("E", "1"));
+        Collection<Move<Square, StandardPieces>> moves = game.availableMovesFrom(cell.at("E", "1"));
         Assert.assertEquals(3, moves.size());
 
-        Optional<Move<Square>> castling = Iterables.tryFind(moves, m -> m instanceof CastlingMove);
+        Optional<Move<Square, StandardPieces>> castling = Iterables.tryFind(moves, m -> m instanceof CastlingMove);
         Assert.assertTrue(castling.isPresent());
 
         game.move(castling.get());

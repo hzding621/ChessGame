@@ -19,11 +19,11 @@ interface Game<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>
 
     Player getDefender();
 
-    Collection<Move<C>> availableMoves();
+    Collection<Move<C, P>> availableMoves();
 
-    Collection<Move<C>> availableMovesFrom(C c);
+    Collection<Move<C, P>> availableMovesFrom(C c);
 
-    void move(Move<C> move);
+    void move(Move<C, P> move);
 
     GameStatus getGameStatus();
 

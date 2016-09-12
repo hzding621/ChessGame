@@ -23,11 +23,13 @@ public final class ChessBoardTest {
 
     @Test
     public void testPreview() {
-        ChessBoardViewer<StandardPieces> preivew = chessBoard.preview(mutableBoard -> {
+        Assert.assertTrue(chessBoard.preview(mutableBoard -> {
             mutableBoard.movePiece(tile.at("E", "2"), tile.at("E", "4"));
             return null;
-        });
-        Assert.assertTrue(preivew.isOccupied(tile.at("E", "4")));
+        }, future -> {
+           return future.isOccupied(tile.at("E", "4"));
+        }));
+
         Assert.assertTrue(chessBoard.isOccupied(tile.at("E", "2")));
     }
 }

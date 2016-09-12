@@ -42,13 +42,6 @@ public final class RectangularBoardTest {
         public TransitionResult<Square, P> apply(BoardTransition<Square, P, RectangularBoardTest.Instance<P>> boardTransition) {
             return boardTransition.apply(this);
         }
-
-        @Override
-        public Instance<P> preview(BoardTransition<Square, P, Instance<P>> transition) {
-            Instance<P> newInstance = new Instance<P>(occupants, cellBuilder);
-            newInstance.apply(transition);
-            return newInstance;
-        }
     }
 
     private Square.Builder builder;

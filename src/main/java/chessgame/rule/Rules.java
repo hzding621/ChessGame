@@ -57,7 +57,7 @@ public final class Rules<C extends Cell, P extends PieceClass, B extends BoardVi
         return ruleBindings.getRule(piece.getPieceClass()).attacking(board, source, attacker);
     }
 
-    public Collection<Move<C>> specialMove(B board, C source, Player actor) {
+    public Collection<Move<C, P>> specialMove(B board, C source, Player actor) {
         throwUnlessPieceExistsAndBelongsToPlayer(board, source, actor);
         Piece<P> piece = board.getPiece(source).get();
         PieceRule<C, P, B> rule = ruleBindings.getRule(piece.getPieceClass());

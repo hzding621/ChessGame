@@ -1,11 +1,14 @@
 package chessgame.move;
 
 import chessgame.board.Cell;
+import chessgame.game.ChessRuleBindings;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * Represents the change a move has made
@@ -13,9 +16,33 @@ import java.util.Optional;
 public interface TransitionResult<C extends Cell, P extends PieceClass> {
 
     /**
+     * This is a helper method so as that creation of this interface can utilize Java 8 lambda expression
+     */
+    static <C extends Cell, P extends PieceClass> TransitionResult<C, P> create(
+            Supplier<List<MovedPiece<C, P>>> movedPieces, Supplier<Move<C, P>> reverseMove) {
+
+        return new TransitionResult<C, P>() {
+            @Override
+            public List<MovedPiece<C, P>> getMovedPieces() {
+                return movedPieces.get();
+            }
+
+            @Override
+            public Move<C, P> getReverseMove() {
+                return reverseMove.get();
+            }
+        };
+    }
+
+    /**
      * @return all moved pieces as a result of this move
      */
-    Collection<MovedPiece<C, P>> getMovedPieces();
+    List<MovedPiece<C, P>> getMovedPieces();
+
+    /**
+     * @return the move to reverse the effect of the just applied transition
+     */
+    Move<C, P> getReverseMove();
 
     /**
      * Annotated piece that includes its soruce position and its optional target position

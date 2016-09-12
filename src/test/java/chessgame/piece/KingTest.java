@@ -69,8 +69,8 @@ public class KingTest {
         testBoard.movePiece(builder.at("C", "1"), builder.at("C", "3"));
         testBoard.movePiece(builder.at("B", "1"), builder.at("B", "3"));
 
-        Collection<Move<Square>> move = new King.WithCastling(runtimeInformation).specialMove(testBoard, Player.WHITE);
-        Assert.assertTrue(move.contains(new CastlingMove<>(
+        Collection<Move<Square, StandardPieces>> move = new King.WithCastling(runtimeInformation).specialMove(testBoard, Player.WHITE);
+        Assert.assertTrue(move.contains(new CastlingMove<Square, StandardPieces>(
                 SimpleMove.of(builder.at("E", "1"), builder.at("C", "1"), Player.WHITE),
                 SimpleMove.of(builder.at("A", "1"), builder.at("D", "1"), Player.WHITE)
                 )));

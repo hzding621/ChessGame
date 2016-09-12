@@ -13,5 +13,5 @@ import java.util.Collection;
 public interface SpecialMovePiece<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
         extends PieceRule<C, P, B> {
 
-    Collection<Move<C>> specialMove(B board, Player player);
+    Collection<Move<C, P>> specialMove(B board, Player player);
 }

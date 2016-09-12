@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * Makes no assumptions about how cells are connected to each other.
  */
 abstract class AbstractBoard<C extends Cell, P extends PieceClass, V extends BoardViewer<C, P>, T extends AbstractBoard<C, P, V, T>>
-        implements MutableBoard<C, P, T>, Previewer<C, P, V, T> {
+        implements MutableBoard<C, P, T> {
 
     protected final Map<C, Piece<P>> occupants = new TreeMap<>();
 
