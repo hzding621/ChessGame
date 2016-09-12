@@ -1,6 +1,6 @@
 package chessgame.move;
 
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
@@ -8,7 +8,7 @@ import chessgame.player.Player;
 /**
  * Simple Move with stubbing of which piece is moving
  */
-public class AnnotatedSimpleMove<C extends Cell, P extends PieceClass> extends SimpleMove<C, P> {
+public final class AnnotatedSimpleMove<C extends Tile, P extends PieceClass> extends SimpleMove<C, P> {
 
     private final Piece<P> piece;
 
@@ -17,8 +17,8 @@ public class AnnotatedSimpleMove<C extends Cell, P extends PieceClass> extends S
         this.piece = piece;
     }
 
-    public static <C extends Cell, P extends PieceClass> AnnotatedSimpleMove<C, P> of(Piece<P> piece, C source, C target, Player player) {
-        return new AnnotatedSimpleMove<C, P>(source, target, player, piece);
+    public static <C extends Tile, P extends PieceClass> AnnotatedSimpleMove<C, P> of(Piece<P> piece, C source, C target, Player player) {
+        return new AnnotatedSimpleMove<>(source, target, player, piece);
     }
 
     @Override

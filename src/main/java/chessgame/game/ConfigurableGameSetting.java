@@ -90,9 +90,9 @@ public final class ConfigurableGameSetting<P extends PieceClass> implements Game
         }
 
         public Builder<P> set(P type, Player player, String file, String rank) {
-            Square cell = builder.at(file, rank);
-            return set(type, player, cell.getFile().getCoordinate().getIndex(),
-                    cell.getRank().getCoordinate().getIndex());
+            Square tile = builder.at(file, rank);
+            return set(type, player, tile.getFile().getCoordinate().getIndex(),
+                    tile.getRank().getCoordinate().getIndex());
         }
 
         public Builder<P> set(P type, Player player, int file, int rank) {
@@ -104,9 +104,9 @@ public final class ConfigurableGameSetting<P extends PieceClass> implements Game
         }
 
         public Builder<P> reset(P type, Player player, String file, String rank) {
-            Square cell = builder.at(file, rank);
-            return reset(type, player, cell.getFile().getCoordinate().getIndex(),
-                    cell.getRank().getCoordinate().getIndex());
+            Square tile = builder.at(file, rank);
+            return reset(type, player, tile.getFile().getCoordinate().getIndex(),
+                    tile.getRank().getCoordinate().getIndex());
         }
 
         public Builder<P> reset(P type, Player player, int file, int rank) {

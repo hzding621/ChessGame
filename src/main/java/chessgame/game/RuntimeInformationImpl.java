@@ -1,7 +1,7 @@
 package chessgame.game;
 
 import chessgame.board.BoardViewer;
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 import chessgame.move.TransitionResult;
 import chessgame.piece.PieceClass;
 import chessgame.rule.Rules;
@@ -9,7 +9,7 @@ import chessgame.rule.Rules;
 /**
  * A composite class that holds all major runtime information
  */
-public final class RuntimeInformationImpl<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>> implements RuntimeInformation<C, P> {
+public final class RuntimeInformationImpl<C extends Tile, P extends PieceClass, B extends BoardViewer<C, P>> implements RuntimeInformation<C, P> {
 
     private final PieceInformationImpl<C, P> pieceInformation;
     private final PlayerInformationImpl playerInformation;

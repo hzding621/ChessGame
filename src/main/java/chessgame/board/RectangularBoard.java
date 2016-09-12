@@ -18,29 +18,29 @@ import java.util.Optional;
 public abstract class RectangularBoard<P extends PieceClass>
         extends AbstractBoard<Square, P> implements GridViewer<Square, TwoDimension, P> {
 
-    protected final Square.Builder cellBuilder;
+    protected final Square.Builder tileBuilder;
 
-    protected RectangularBoard(Map<Square, Piece<P>> occupants, Square.Builder cellBuilder) {
+    protected RectangularBoard(Map<Square, Piece<P>> occupants, Square.Builder tileBuilder) {
         super(occupants);
-        this.cellBuilder = cellBuilder;
+        this.tileBuilder = tileBuilder;
     }
 
     @Override
-    public boolean isOccupied(Square cell) {
-        validatePosition(cell);
-        return super.isOccupied(cell);
+    public boolean isOccupied(Square tile) {
+        validatePosition(tile);
+        return super.isOccupied(tile);
     }
 
     @Override
-    public boolean isEnemy(Square cell, Player player) {
-        validatePosition(cell);
-        return super.isEnemy(cell, player);
+    public boolean isEnemy(Square tile, Player player) {
+        validatePosition(tile);
+        return super.isEnemy(tile, player);
     }
 
     @Override
-    public Optional<Piece<P>> getPiece(Square cell) {
-        validatePosition(cell);
-        return super.getPiece(cell);
+    public Optional<Piece<P>> getPiece(Square tile) {
+        validatePosition(tile);
+        return super.getPiece(tile);
     }
 
     @Override
@@ -79,93 +79,93 @@ public abstract class RectangularBoard<P extends PieceClass>
 
 
     @Override
-    public TwoDimension findDirection(Square startCell, Square endCell) {
-        validatePosition(startCell);
-        validatePosition(endCell);
-        return Square.findDirection(startCell, endCell);
+    public TwoDimension findDirection(Square startTile, Square endTile) {
+        validatePosition(startTile);
+        validatePosition(endTile);
+        return Square.findDirection(startTile, endTile);
     }
 
     @Override
-    public Optional<Square> travelSteps(Square startCell, TwoDimension direction, int steps, StepSize stepSize) {
-        validatePosition(startCell);
-        Optional<Square> cell = Optional.of(startCell);
-        while (steps > 0 && cell.isPresent()) {
-            cell =  getGridCellBuilder().moveOnce(cell.get(), direction, stepSize);
+    public Optional<Square> travelSteps(Square startTile, TwoDimension direction, int steps, StepSize stepSize) {
+        validatePosition(startTile);
+        Optional<Square> tile = Optional.of(startTile);
+        while (steps > 0 && tile.isPresent()) {
+            tile =  getGridTileBuilder().moveOnce(tile.get(), direction, stepSize);
             steps--;
         }
-        return cell;
+        return tile;
     }
 
     @Override
-    public List<Square> travelUntilBlocked(Square startCell,
+    public List<Square> travelUntilBlocked(Square startTile,
                                            TwoDimension direction,
                                            StepSize stepSize,
                                            boolean startInclusive,
                                            boolean endInclusive) {
-        validatePosition(startCell);
-        List<Square> cellList = new ArrayList<>();
+        validatePosition(startTile);
+        List<Square> tileList = new ArrayList<>();
         if (startInclusive) {
-            cellList.add(startCell);
+            tileList.add(startTile);
         }
-        Optional<Square> nextCell = travelSteps(startCell, direction, 1, stepSize);
+        Optional<Square> nextTile = travelSteps(startTile, direction, 1, stepSize);
         Optional<Piece<P>> piece = Optional.empty();
-        while (nextCell.isPresent()) {
-            piece = getPiece(nextCell.get());
+        while (nextTile.isPresent()) {
+            piece = getPiece(nextTile.get());
             if (piece.isPresent()) {
-                // nextCell has an occupant
+                // nextTile has an occupant
                 break;
             }
-            cellList.add(nextCell.get());
-            nextCell = travelSteps(nextCell.get(), direction, 1, stepSize);
+            tileList.add(nextTile.get());
+            nextTile = travelSteps(nextTile.get(), direction, 1, stepSize);
         }
         if (endInclusive && piece.isPresent()) {
-            cellList.add(nextCell.get());
+            tileList.add(nextTile.get());
         }
-        return cellList;
+        return tileList;
     }
 
-    public Optional<Square> firstEncounter(Square startCell, TwoDimension direction, StepSize stepSize) {
-        validatePosition(startCell);
-        return CollectionUtils.last(travelUntilBlocked(startCell, direction, stepSize, false, true)).filter(this::isOccupied);
+    public Optional<Square> firstEncounter(Square startTile, TwoDimension direction, StepSize stepSize) {
+        validatePosition(startTile);
+        return CollectionUtils.last(travelUntilBlocked(startTile, direction, stepSize, false, true)).filter(this::isOccupied);
     }
 
     @Override
-    public Optional<Square> travelForward(Square startCell, Player player) {
-        validatePosition(startCell);
+    public Optional<Square> travelForward(Square startTile, Player player) {
+        validatePosition(startTile);
         if (player == Player.WHITE) {
-            return getGridCellBuilder().moveOnce(startCell, TwoDimension.NORTH, StepSize.of(1,0));
+            return getGridTileBuilder().moveOnce(startTile, TwoDimension.NORTH, StepSize.of(1,0));
         } else {
-            return getGridCellBuilder().moveOnce(startCell, TwoDimension.SOUTH, StepSize.of(1,0));
+            return getGridTileBuilder().moveOnce(startTile, TwoDimension.SOUTH, StepSize.of(1,0));
         }
     }
 
     @Override
-    public Collection<Square> attackPawnStyle(Square startCell, Player player) {
-        validatePosition(startCell);
+    public Collection<Square> attackPawnStyle(Square startTile, Player player) {
+        validatePosition(startTile);
         final List<Square> list = new ArrayList<>();
         TwoDimension[] dirs = player == Player.WHITE
                 ? new TwoDimension[] {TwoDimension.NORTHWEST, TwoDimension.NORTHEAST}
                 : new TwoDimension[] {TwoDimension.SOUTHWEST, TwoDimension.SOUTHEAST};
         for (TwoDimension dir: dirs) {
-            getGridCellBuilder().moveOnce(startCell, dir, StepSize.of(1,0)).ifPresent(list::add);
+            getGridTileBuilder().moveOnce(startTile, dir, StepSize.of(1,0)).ifPresent(list::add);
         }
         return list;
     }
 
     @Override
-    public GridCellBuilder<Square, TwoDimension> getGridCellBuilder() {
-        return cellBuilder;
+    public GridTileBuilder<Square, TwoDimension> getGridTileBuilder() {
+        return tileBuilder;
     }
 
-    private void validatePosition(Square cell) {
-        if (!cellBuilder.withinRange(cell.getFile().getCoordinate().getIndex(),
-                cell.getRank().getCoordinate().getIndex())) {
-            throw new IllegalArgumentException("Square " + cell + " is out of boundary of this board!");
+    private void validatePosition(Square tile) {
+        if (!tileBuilder.withinRange(tile.getFile().getCoordinate().getIndex(),
+                tile.getRank().getCoordinate().getIndex())) {
+            throw new IllegalArgumentException("Square " + tile + " is out of boundary of this board!");
         }
     }
 
     @Override
     public Collection<Square> getAllPositions() {
-        return getGridCellBuilder().getAllPositions();
+        return getGridTileBuilder().getAllPositions();
     }
 }

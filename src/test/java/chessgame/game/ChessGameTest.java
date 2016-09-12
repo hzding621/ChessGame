@@ -1,6 +1,6 @@
 package chessgame.game;
 
-import chessgame.board.GridCellBuilder;
+import chessgame.board.GridTileBuilder;
 import chessgame.board.Square;
 import chessgame.board.TwoDimension;
 import chessgame.move.CastlingMove;
@@ -22,12 +22,12 @@ import java.util.Collection;
 public class ChessGameTest {
 
     private ChessGame<StandardPieces> game;
-    private GridCellBuilder<Square, TwoDimension> cell;
+    private GridTileBuilder<Square, TwoDimension> tile;
 
     @Before
     public void initializeGame() {
         game = ChessGame.create(StandardSetting.VALUE, (StandardRuleBindings::new));
-        cell = game.getBoard().getGridCellBuilder();
+        tile = game.getBoard().getGridTileBuilder();
     }
 
     @Test
@@ -44,42 +44,42 @@ public class ChessGameTest {
 
         }) {
             moves++;
-            game.move(SimpleMove.of(cell.at(move[0], move[1]), cell.at(move[2], move[3]), game.getActor()));
+            game.move(SimpleMove.of(tile.at(move[0], move[1]), tile.at(move[2], move[3]), game.getActor()));
         }
 
         Assert.assertEquals(6, game.availableMoves().size());
-        Assert.assertEquals(2, game.availableMovesFrom(cell.at("B", "8")).size());
-        Assert.assertEquals(1, game.availableMovesFrom(cell.at("C", "7")).size());
-        Assert.assertEquals(1, game.availableMovesFrom(cell.at("C", "8")).size());
-        Assert.assertEquals(1, game.availableMovesFrom(cell.at("D", "8")).size());
-        Assert.assertEquals(1, game.availableMovesFrom(cell.at("F", "6")).size());
+        Assert.assertEquals(2, game.availableMovesFrom(tile.at("B", "8")).size());
+        Assert.assertEquals(1, game.availableMovesFrom(tile.at("C", "7")).size());
+        Assert.assertEquals(1, game.availableMovesFrom(tile.at("C", "8")).size());
+        Assert.assertEquals(1, game.availableMovesFrom(tile.at("D", "8")).size());
+        Assert.assertEquals(1, game.availableMovesFrom(tile.at("F", "6")).size());
 
         for (String[] move:  new String[][] {
                 {"C", "7", "C", "6"},
                 {"B", "5", "C", "6"}
         }) {
-            game.move(SimpleMove.of(cell.at(move[0], move[1]), cell.at(move[2], move[3]), game.getActor()));
+            game.move(SimpleMove.of(tile.at(move[0], move[1]), tile.at(move[2], move[3]), game.getActor()));
         }
 
         Assert.assertEquals(6, game.availableMoves().size());
-        Assert.assertEquals(2, game.availableMovesFrom(cell.at("B", "8")).size());
-        Assert.assertEquals(1, game.availableMovesFrom(cell.at("B", "7")).size());
-        Assert.assertEquals(1, game.availableMovesFrom(cell.at("C", "8")).size());
-        Assert.assertEquals(1, game.availableMovesFrom(cell.at("D", "8")).size());
-        Assert.assertEquals(1, game.availableMovesFrom(cell.at("F", "6")).size());
+        Assert.assertEquals(2, game.availableMovesFrom(tile.at("B", "8")).size());
+        Assert.assertEquals(1, game.availableMovesFrom(tile.at("B", "7")).size());
+        Assert.assertEquals(1, game.availableMovesFrom(tile.at("C", "8")).size());
+        Assert.assertEquals(1, game.availableMovesFrom(tile.at("D", "8")).size());
+        Assert.assertEquals(1, game.availableMovesFrom(tile.at("F", "6")).size());
 
         for (String[] move:  new String[][] {
                 {"D", "8", "D", "7"},
                 {"C", "6", "D", "7"}
         }) {
-            game.move(SimpleMove.of(cell.at(move[0], move[1]), cell.at(move[2], move[3]), game.getActor()));
+            game.move(SimpleMove.of(tile.at(move[0], move[1]), tile.at(move[2], move[3]), game.getActor()));
         }
 
         Assert.assertEquals(5, game.availableMoves().size());
-        Assert.assertEquals(1, game.availableMovesFrom(cell.at("B", "8")).size());
-        Assert.assertEquals(1, game.availableMovesFrom(cell.at("C", "8")).size());
-        Assert.assertEquals(2, game.availableMovesFrom(cell.at("E", "8")).size());
-        Assert.assertEquals(1, game.availableMovesFrom(cell.at("F", "6")).size());
+        Assert.assertEquals(1, game.availableMovesFrom(tile.at("B", "8")).size());
+        Assert.assertEquals(1, game.availableMovesFrom(tile.at("C", "8")).size());
+        Assert.assertEquals(2, game.availableMovesFrom(tile.at("E", "8")).size());
+        Assert.assertEquals(1, game.availableMovesFrom(tile.at("F", "6")).size());
     }
 
     @Test
@@ -93,7 +93,7 @@ public class ChessGameTest {
                 {"G", "8", "F", "6"},
                 {"H", "5", "F", "7"},
         }) {
-            game.move(SimpleMove.of(cell.at(move[0], move[1]), cell.at(move[2], move[3]), game.getActor()));
+            game.move(SimpleMove.of(tile.at(move[0], move[1]), tile.at(move[2], move[3]), game.getActor()));
         }
 
         Assert.assertTrue(game.availableMoves().isEmpty());
@@ -109,10 +109,10 @@ public class ChessGameTest {
                 {"F", "1", "C", "4"},
                 {"B", "8", "C", "6"},
         }) {
-            game.move(SimpleMove.of(cell.at(move[0], move[1]), cell.at(move[2], move[3]), game.getActor()));
+            game.move(SimpleMove.of(tile.at(move[0], move[1]), tile.at(move[2], move[3]), game.getActor()));
         }
 
-        Collection<Move<Square, StandardPieces>> moves = game.availableMovesFrom(cell.at("E", "1"));
+        Collection<Move<Square, StandardPieces>> moves = game.availableMovesFrom(tile.at("E", "1"));
         Assert.assertEquals(3, moves.size());
 
         Optional<Move<Square, StandardPieces>> castling = Iterables.tryFind(moves, m -> m instanceof CastlingMove);
@@ -120,7 +120,7 @@ public class ChessGameTest {
 
         game.move(castling.get());
 
-        Assert.assertTrue(game.getBoard().isOccupied(cell.at("G", "1")));
-        Assert.assertTrue(game.getBoard().isOccupied(cell.at("F", "1")));
+        Assert.assertTrue(game.getBoard().isOccupied(tile.at("G", "1")));
+        Assert.assertTrue(game.getBoard().isOccupied(tile.at("F", "1")));
     }
 }

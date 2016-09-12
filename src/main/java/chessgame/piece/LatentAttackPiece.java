@@ -1,7 +1,7 @@
 package chessgame.piece;
 
 import chessgame.board.BoardViewer;
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 import chessgame.player.Player;
 import chessgame.rule.LatentAttack;
 
@@ -10,7 +10,7 @@ import java.util.Collection;
 /**
  * This interface exposes additional rule associated with pieces capable of making pinning/discovered attacks
  */
-public interface LatentAttackPiece<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
+public interface LatentAttackPiece<C extends Tile, P extends PieceClass, B extends BoardViewer<C, P>>
         extends OptimizedPiece<C, P, B> {
 
     /**

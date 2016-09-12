@@ -1,6 +1,6 @@
 package chessgame.piece.extension;
 
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 import chessgame.board.Direction;
 import chessgame.board.GridViewer;
 import chessgame.piece.PieceClass;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * For now it requires a grid board so that it can enumerate all positions on the board
  */
 
-public final class Ghost<C extends Cell, P extends PieceClass, D extends Direction<D>,
+public final class Ghost<C extends Tile, P extends PieceClass, D extends Direction<D>,
         B extends GridViewer<C, D, P>> implements PieceRule<C,P,B> {
 
     @Override

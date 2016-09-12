@@ -24,8 +24,8 @@ public final class RectangularBoardTest {
 
     private static class Instance<P extends PieceClass> extends RectangularBoard<P> {
 
-        private Instance(Map<Square, Piece<P>> occupants, Square.Builder cellBuilder) {
-            super(occupants, cellBuilder);
+        private Instance(Map<Square, Piece<P>> occupants, Square.Builder tileBuilder) {
+            super(occupants, tileBuilder);
         }
 
         public static <P extends PieceClass> Instance<P> create(

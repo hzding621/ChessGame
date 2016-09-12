@@ -18,13 +18,13 @@ import java.util.Map;
  */
 public final class AbstractBoardTest {
 
-    private static class Instance<C extends Cell, P extends PieceClass> extends AbstractBoard<C, P> {
+    private static class Instance<C extends Tile, P extends PieceClass> extends AbstractBoard<C, P> {
 
         protected Instance(Map<C, Piece<P>> occupants) {
             super(occupants);
         }
 
-        public static <C extends Cell, P extends PieceClass> Instance<C, P> create(GameSetting<C, P> gameSetting) {
+        public static <C extends Tile, P extends PieceClass> Instance<C, P> create(GameSetting<C, P> gameSetting) {
             return new Instance<>(gameSetting.constructPiecesByStartingPosition());
         }
     }
@@ -56,7 +56,7 @@ public final class AbstractBoardTest {
     }
 
     @Test
-    public void testMovePieceToEmptyCell() {
+    public void testMovePieceToEmptyTile() {
         Piece<KingPawn> p = testBoard.movePiece(builder.at(1, 0), builder.at(1, 1));
         Assert.assertFalse(testBoard.getPiece(builder.at(1, 0)).isPresent());
         Assert.assertEquals(p, testBoard.getPiece(builder.at(1,1)).get());
@@ -74,7 +74,7 @@ public final class AbstractBoardTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void testClearPieceAtEmptyCellThrows() {
+    public void testClearPieceAtEmptyTileThrows() {
         testBoard.clearPiece(builder.at(0,0));
     }
 

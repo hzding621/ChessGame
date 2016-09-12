@@ -10,7 +10,7 @@ import chessgame.rule.StandardRuleBindings;
 /**
  * A standard with 8x8 chessboard and standard pieces
  */
-public class StandardGame extends ChessGame<StandardPieces> {
+public final class StandardGame extends ChessGame<StandardPieces> {
 
     private StandardGame(ChessBoard<StandardPieces> chessBoard,
                          GameSetting.GridGame<Square, StandardPieces> gameSetting,

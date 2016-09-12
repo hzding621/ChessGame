@@ -1,6 +1,6 @@
 package chessgame.game;
 
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 import chessgame.board.Board;
 import chessgame.board.Previewable;
 import chessgame.move.AnnotatedSimpleMove;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * Find moves by brute-force
  */
-public final class BasicMoveFinder<C extends Cell, P extends PieceClass, M extends Board<C, P>,
+public final class BasicMoveFinder<C extends Tile, P extends PieceClass, M extends Board<C, P>,
         B extends Previewable<C, P, B, M>> implements MoveFinder<C, P>
 {
     private final SetMultimap<C, Move<C, P>> availableMoves = MultimapBuilder.treeKeys().hashSetValues().build();

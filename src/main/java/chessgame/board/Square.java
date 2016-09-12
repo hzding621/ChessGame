@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
- * Immutable class that represents a single cell on a two dimensional chess board
+ * Immutable class that represents a single tile on a two dimensional chess board
  */
-public final class Square implements Cell {
+public final class Square implements Tile {
 
     private final File file;
     private final Rank rank;
@@ -26,12 +26,12 @@ public final class Square implements Cell {
         return rank;
     }
 
-    public static TwoDimension findDirection(Square startCell, Square endCell) {
-        if (startCell.equals(endCell)) {
-            throw new IllegalArgumentException("Two cells are equal!");
+    public static TwoDimension findDirection(Square startTile, Square endTile) {
+        if (startTile.equals(endTile)) {
+            throw new IllegalArgumentException("Two tiles are equal!");
         }
-        int x1 = startCell.getFile().getCoordinate().getIndex(), x2 = endCell.getFile().getCoordinate().getIndex();
-        int y1 = startCell.getRank().getCoordinate().getIndex(), y2 = endCell.getRank().getCoordinate().getIndex();
+        int x1 = startTile.getFile().getCoordinate().getIndex(), x2 = endTile.getFile().getCoordinate().getIndex();
+        int y1 = startTile.getRank().getCoordinate().getIndex(), y2 = endTile.getRank().getCoordinate().getIndex();
         int xDiff = x2 - x1, yDiff = y2 - y1;
         if (x1 == x2) {
             return yDiff > 0 ? TwoDimension.NORTH : TwoDimension.SOUTH;
@@ -39,7 +39,7 @@ public final class Square implements Cell {
             return xDiff > 0 ? TwoDimension.EAST : TwoDimension.WEST;
         } else {
             if (Math.abs(xDiff) != Math.abs(yDiff)) {
-                throw new IllegalArgumentException("Two cells are not on the same line!");
+                throw new IllegalArgumentException("Two tiles are not on the same line!");
             }
             if (xDiff > 0 && yDiff > 0) return TwoDimension.NORTHEAST;
             if (xDiff > 0 && yDiff < 0) return TwoDimension.SOUTHEAST;
@@ -61,9 +61,9 @@ public final class Square implements Cell {
     }
 
     @Override
-    public int compareTo(Cell o) {
+    public int compareTo(Tile o) {
         if (!(o instanceof Square)) {
-            throw new IllegalStateException("Cannot compare Square to a cell of different type: "
+            throw new IllegalStateException("Cannot compare Square to a tile of different type: "
                     + o.getClass() + "! ");
         }
         Square that = (Square) o;
@@ -72,7 +72,7 @@ public final class Square implements Cell {
         return this.rank.compareTo(that.rank);
     }
 
-    public static final class Builder implements GridCellBuilder<Square, TwoDimension> {
+    public static final class Builder implements GridTileBuilder<Square, TwoDimension> {
         private final Coordinate.Builder rankBuilder;
         private final Coordinate.Builder fileBuilder;
 
@@ -84,10 +84,10 @@ public final class Square implements Cell {
         @Override
         public Square at(String file, String rank) {
             if (file.length() != 1) {
-                throw new IllegalArgumentException("Grid cell factory does not support encoding of files larger than 26!");
+                throw new IllegalArgumentException("Grid tile factory does not support encoding of files larger than 26!");
             }
             if (!Character.isAlphabetic(file.charAt(0))) {
-                throw new IllegalArgumentException("Grid cell factory only support alphabetic encoding for files!");
+                throw new IllegalArgumentException("Grid tile factory only support alphabetic encoding for files!");
             }
 
             int fileIndex = Character.toUpperCase(file.charAt(0)) - 'A';
@@ -103,13 +103,13 @@ public final class Square implements Cell {
         }
 
         @Override
-        public Optional<Square> moveOnce(Square cell, TwoDimension direction, StepSize stepSize) {
+        public Optional<Square> moveOnce(Square tile, TwoDimension direction, StepSize stepSize) {
 
             if (stepSize.getForward() < 0) {
                 direction = direction.reverse();
             }
-            int fileIndex = cell.file.getCoordinate().getIndex();
-            int rankIndex = cell.rank.getCoordinate().getIndex();
+            int fileIndex = tile.file.getCoordinate().getIndex();
+            int rankIndex = tile.rank.getCoordinate().getIndex();
             int xDelta = direction.getX(), yDelta = direction.getY();
             for (int i = 0; i < Math.abs(stepSize.getForward()); i++) {
                 fileIndex += xDelta;

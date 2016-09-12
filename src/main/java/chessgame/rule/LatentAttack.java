@@ -1,6 +1,6 @@
 package chessgame.rule;
 
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 
 import java.util.Collection;
 
@@ -8,7 +8,7 @@ import java.util.Collection;
  * A latent attack is a particular condition in the game in which a piece A is not directly attacking a piece B,
  * as the attack is blocked by a piece C, unless C moves to a position other than defined in a set P
  */
-public final class LatentAttack<C extends Cell> {
+public final class LatentAttack<C extends Tile> {
     private final C attacker;
     private final C blocker;
     private final C attacked;

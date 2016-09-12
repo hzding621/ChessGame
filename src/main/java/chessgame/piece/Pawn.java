@@ -1,6 +1,6 @@
 package chessgame.piece;
 
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 import chessgame.board.Direction;
 import chessgame.board.GridViewer;
 import chessgame.game.RuntimeInformation;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * Class that implements Pawn piece moving logic
  */
 
-public final class Pawn<C extends Cell, P extends PieceClass, D extends Direction<D>,
+public final class Pawn<C extends Tile, P extends PieceClass, D extends Direction<D>,
         B extends GridViewer<C, D, P>>
         implements OptimizedPiece<C, P, B>, RequiresRuntimeInformation<C, P>, PieceRule<C,P,B> {
 

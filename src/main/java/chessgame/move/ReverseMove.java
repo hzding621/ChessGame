@@ -1,6 +1,6 @@
 package chessgame.move;
 
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 import chessgame.board.Board;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
@@ -12,12 +12,12 @@ import java.util.stream.Collectors;
 /**
  * Represents a Move to reverse the effect of a simple move or castling move
  */
-public class ReverseMove<C extends Cell, P extends PieceClass> implements Move<C, P> {
+final class ReverseMove<C extends Tile, P extends PieceClass> implements Move<C, P> {
 
     private final Move<C, P> originalMove;
     private final List<TransitionResult.MovedPiece<C, P>> movedPieces;
 
-    public ReverseMove(Move<C, P> originalMove, List<TransitionResult.MovedPiece<C, P>> movedPieces) {
+    ReverseMove(Move<C, P> originalMove, List<TransitionResult.MovedPiece<C, P>> movedPieces) {
         this.originalMove = originalMove;
         this.movedPieces = Lists.reverse(movedPieces);
     }

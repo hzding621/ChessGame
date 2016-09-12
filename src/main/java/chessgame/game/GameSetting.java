@@ -1,6 +1,6 @@
 package chessgame.game;
 
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Represents a certain kind of chess piece set with board configuration
  */
-public interface GameSetting<C extends Cell, P extends PieceClass> {
+public interface GameSetting<C extends Tile, P extends PieceClass> {
 
     /**
      * @return all starting pieces in this game setting by starting position
@@ -34,7 +34,7 @@ public interface GameSetting<C extends Cell, P extends PieceClass> {
      */
     Player getStarter();
 
-    interface GridGame<C extends Cell, P extends PieceClass> extends GameSetting<C, P> {
+    interface GridGame<C extends Tile, P extends PieceClass> extends GameSetting<C, P> {
 
         int getRankLength();
 

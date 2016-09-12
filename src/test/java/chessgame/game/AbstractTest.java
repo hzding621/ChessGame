@@ -2,7 +2,7 @@ package chessgame.game;
 
 import chessgame.board.ChessBoard;
 import chessgame.board.ChessBoardViewer;
-import chessgame.board.GridCellBuilder;
+import chessgame.board.GridTileBuilder;
 import chessgame.board.Square;
 import chessgame.board.TwoDimension;
 import chessgame.piece.StandardPieces;
@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 public class AbstractTest {
 
     protected ChessBoard<StandardPieces> testBoard;
-    protected GridCellBuilder<Square, TwoDimension> cell;
+    protected GridTileBuilder<Square, TwoDimension> tile;
     protected Rules<Square, StandardPieces, ChessBoardViewer<StandardPieces>> rules;
     protected RuntimeInformationImpl<Square, StandardPieces, ChessBoardViewer<StandardPieces>> runtimeInformation;
     protected MoveFinder<Square, StandardPieces> moveFinder;
@@ -31,7 +31,7 @@ public class AbstractTest {
         } else {
             moveFinder = new BasicMoveFinder<>(testBoard, rules, runtimeInformation);
         }
-        cell = testBoard.getGridCellBuilder();
+        tile = testBoard.getGridTileBuilder();
         runtimeInformation.initializeInformation(rules);
         moveFinder.recompute();
     }

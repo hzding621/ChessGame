@@ -14,8 +14,8 @@ import java.util.function.Function;
 public final class ChessBoard<P extends PieceClass> extends RectangularBoard<P>
         implements Previewable<Square, P, ChessBoardViewer<P>, ChessBoard<P>>, ChessBoardViewer<P> {
 
-    private ChessBoard(Map<Square, Piece<P>> occupants, Square.Builder cellBuilder) {
-        super(occupants, cellBuilder);
+    private ChessBoard(Map<Square, Piece<P>> occupants, Square.Builder tileBuilder) {
+        super(occupants, tileBuilder);
     }
 
     public static <P extends PieceClass> ChessBoard<P> create(GameSetting.GridGame<Square, P> gameSetting) {

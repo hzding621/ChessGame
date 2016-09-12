@@ -12,7 +12,7 @@ import java.util.Optional;
 /**
  * A GridViewer is a BoardViewer that supports the notion of orthogonal and diagonal directions.
  */
-public interface GridViewer<C extends Cell, D extends Direction<D>, P extends PieceClass>
+public interface GridViewer<C extends Tile, D extends Direction<D>, P extends PieceClass>
         extends BoardViewer<C, P> {
 
     /**
@@ -31,43 +31,43 @@ public interface GridViewer<C extends Cell, D extends Direction<D>, P extends Pi
     Collection<D> getDiagonalDirections();
 
     /**
-     * Move the startCell at direction for the given number of steps
-     * @param startCell starting cell
+     * Move the startTile at direction for the given number of steps
+     * @param startTile starting tile
      * @param direction the direction to move
      * @param steps the given number
      * @param stepSize a step magnifier/modifier
-     * @return non-empty value if the cell is not at the edge of the board, empty otherwise
+     * @return non-empty value if the tile is not at the edge of the board, empty otherwise
      */
-    Optional<C> travelSteps(C startCell, D direction, int steps, StepSize stepSize);
+    Optional<C> travelSteps(C startTile, D direction, int steps, StepSize stepSize);
 
     /**
-     * Returns a series of cell movement that starts at a cell, goes at a certain direction,
+     * Returns a series of tile movement that starts at a tile, goes at a certain direction,
      * and either stops at first occupant or at the edge of board
-     *  @param startCell the cell the movement starts at
+     *  @param startTile the tile the movement starts at
      * @param direction the direction the movement goes at
      * @param stepSize a step magnifier/modifier
-     * @param startInclusive whether or not to include the startCell
+     * @param startInclusive whether or not to include the startTile
      * @param endInclusive whether or not to include the occupant if there exists  @return the list of movement
      */
-    List<C> travelUntilBlocked(C startCell, D direction, StepSize stepSize, boolean startInclusive, boolean endInclusive);
+    List<C> travelUntilBlocked(C startTile, D direction, StepSize stepSize, boolean startInclusive, boolean endInclusive);
 
     /**
-     * @param startCell the given cell
+     * @param startTile the given tile
      * @param direction the given direction
      * @param stepSize a step magnifier/modifier
-     * @return non-empty if moving at the given cell in the given direction will lead to this piece, empty if it will lead the edge of the board
+     * @return non-empty if moving at the given tile in the given direction will lead to this piece, empty if it will lead the edge of the board
      */
-    Optional<C> firstEncounter(C startCell, D direction, StepSize stepSize);
+    Optional<C> firstEncounter(C startTile, D direction, StepSize stepSize);
 
     /**
-     * Return the first and second occupant met starting at the given cell and moving toward the given direction
-     * @param startCell the given cell
+     * Return the first and second occupant met starting at the given tile and moving toward the given direction
+     * @param startTile the given tile
      * @param direction the given direction
      * @param stepSize a step magnifier/modifier
      * @return Non-empty if there exists two such pieces
      */
-    default Optional<Pair<C, C>> firstTwoEncounters(C startCell, D direction, StepSize stepSize) {
-        Optional<C> firstMeet = firstEncounter(startCell, direction, stepSize);
+    default Optional<Pair<C, C>> firstTwoEncounters(C startTile, D direction, StepSize stepSize) {
+        Optional<C> firstMeet = firstEncounter(startTile, direction, stepSize);
         if (!firstMeet.isPresent()) return Optional.empty();
         Optional<C> secondMeet = firstEncounter(firstMeet.get(), direction, stepSize);
         if (!secondMeet.isPresent()) return Optional.empty();
@@ -75,35 +75,35 @@ public interface GridViewer<C extends Cell, D extends Direction<D>, P extends Pi
     }
 
     /**
-     * return the position where the piece starts at startCell and move toward the enemy's side by one step
-     * @return empty if the startCell is at an edge
+     * return the position where the piece starts at startTile and move toward the enemy's side by one step
+     * @return empty if the startTile is at an edge
      */
-    Optional<C> travelForward(C startCell, Player player);
+    Optional<C> travelForward(C startTile, Player player);
 
     /**
-     * same as travelForward except cannot land on a cell that is occupied
-     * @return empty if the startCell is at an edge or the getForward position is occupied
+     * same as travelForward except cannot land on a tile that is occupied
+     * @return empty if the startTile is at an edge or the getForward position is occupied
      */
-    default Optional<C> travelForwardBlockable(C startCell, Player player) {
-        return travelForward(startCell, player)
+    default Optional<C> travelForwardBlockable(C startTile, Player player) {
+        return travelForward(startTile, player)
                 .flatMap(c -> isOccupied(c) ? Optional.empty() : Optional.of(c));
     }
 
     /**
-     * @return the positions where the startCell is attacking in the pawn-style
+     * @return the positions where the startTile is attacking in the pawn-style
      */
-    Collection<C> attackPawnStyle(C startCell, Player player);
+    Collection<C> attackPawnStyle(C startTile, Player player);
 
     /**
-     * @return the direction from startCell to endCell
+     * @return the direction from startTile to endTile
      */
-    D findDirection(C startCell, C endCell);
+    D findDirection(C startTile, C endTile);
 
     /**
-     * Return the cell factory of this grid. Can be used to construct cell for querying the grid.
-     * @return The cell factory of this grid
+     * Return the tile factory of this grid. Can be used to construct tile for querying the grid.
+     * @return The tile factory of this grid
      */
-    GridCellBuilder<C, D> getGridCellBuilder();
+    GridTileBuilder<C, D> getGridTileBuilder();
 
 
     /**

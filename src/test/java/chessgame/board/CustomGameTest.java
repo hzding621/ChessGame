@@ -32,7 +32,7 @@ public final class CustomGameTest {
     private ConfigurableGameSetting<ExtensionPieces> setting;
     private ChessGame<ExtensionPieces> customGame;
     private ChessRuleBindings.Provider<ExtensionPieces> ruleBindingsProvider;
-    private GridCellBuilder<Square, TwoDimension> cellBuilder;
+    private GridTileBuilder<Square, TwoDimension> tileBuilder;
 
     private static void populatePieces(ConfigurableGameSetting.Builder<ExtensionPieces> builder,
                                        ExtensionPieces type, int x, int y, int fileLength, int rankLength) {
@@ -112,7 +112,7 @@ public final class CustomGameTest {
 
     public void hydrate(ConfigurableGameSetting<ExtensionPieces> setting) {
         customGame = ChessGame.create(setting, ruleBindingsProvider);
-        cellBuilder = customGame.getBoard().getGridCellBuilder();
+        tileBuilder = customGame.getBoard().getGridTileBuilder();
     }
 
     @Test
@@ -142,13 +142,13 @@ public final class CustomGameTest {
     @Test
     public void testInitialAssassinAttack() {
         hydrate(staringPosition());
-        Collection<Move<Square, ExtensionPieces>> moves = customGame.availableMovesFrom(cellBuilder.at(3, 0));
+        Collection<Move<Square, ExtensionPieces>> moves = customGame.availableMovesFrom(tileBuilder.at(3, 0));
 
         int attacks = 2;
-        if (customGame.getBoard().getPiecesOfTypeForPlayer(ExtensionPieces.GHOST, Player.BLACK).contains(cellBuilder.at(3, 6))) {
+        if (customGame.getBoard().getPiecesOfTypeForPlayer(ExtensionPieces.GHOST, Player.BLACK).contains(tileBuilder.at(3, 6))) {
             attacks--;
         }
-        if (customGame.getBoard().getPiecesOfTypeForPlayer(ExtensionPieces.GHOST, Player.BLACK).contains(cellBuilder.at(9, 6))) {
+        if (customGame.getBoard().getPiecesOfTypeForPlayer(ExtensionPieces.GHOST, Player.BLACK).contains(tileBuilder.at(9, 6))) {
             attacks--;
         }
         Assert.assertEquals(attacks, moves.size());
@@ -157,7 +157,7 @@ public final class CustomGameTest {
     @Test
     public void testInitialAssassinAttackNoGhost() {
         hydrate(startingPositionNoGhost());
-        Collection<Move<Square, ExtensionPieces>> moves = customGame.availableMovesFrom(cellBuilder.at(3, 0));
+        Collection<Move<Square, ExtensionPieces>> moves = customGame.availableMovesFrom(tileBuilder.at(3, 0));
         Assert.assertEquals(2, moves.size());
     }
 }

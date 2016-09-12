@@ -1,6 +1,6 @@
 package chessgame.piece;
 
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 import chessgame.board.Direction;
 import chessgame.board.GridViewer;
 import chessgame.board.StepSize;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * This type of piece attack takes unlimited number of moves in certain directions with certain step size,
  * e.g.  Rook, Bishop, Queen
  */
-public interface Rider<C extends Cell, P extends PieceClass, D extends Direction<D>,
+public interface Rider<C extends Tile, P extends PieceClass, D extends Direction<D>,
         B extends GridViewer<C, D, P>> extends LatentAttackPiece<C, P, B> {
 
     /**

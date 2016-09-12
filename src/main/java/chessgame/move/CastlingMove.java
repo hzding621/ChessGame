@@ -1,6 +1,6 @@
 package chessgame.move;
 
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 import chessgame.board.Board;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Represent the castling move in standard chess game
  */
-public final class CastlingMove<C extends Cell, P extends PieceClass> implements Move<C, P> {
+public final class CastlingMove<C extends Tile, P extends PieceClass> implements Move<C, P> {
 
     private final SimpleMove<C, P> kingMove;
     private final SimpleMove<C, P> rookMove;

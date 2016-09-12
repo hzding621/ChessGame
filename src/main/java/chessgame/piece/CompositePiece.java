@@ -1,7 +1,7 @@
 package chessgame.piece;
 
 import chessgame.board.BoardViewer;
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 import chessgame.player.Player;
 
 import java.util.Collection;
@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 /**
  * A piece that has exactly the same power as its components
  */
-public interface CompositePiece<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
+public interface CompositePiece<C extends Tile, P extends PieceClass, B extends BoardViewer<C, P>>
         extends PieceRule<C, P, B> {
 
     Collection<? extends PieceRule<C, P, B>> attackLike();

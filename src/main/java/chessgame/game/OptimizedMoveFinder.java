@@ -1,7 +1,7 @@
 package chessgame.game;
 
 import chessgame.board.BoardViewer;
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 import chessgame.move.AnnotatedSimpleMove;
 import chessgame.move.Move;
 import chessgame.piece.Piece;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * Optimized move finder by utilizing mainly latent attacks information. Not applicable for non-standard chess pieces
  */
-public final class OptimizedMoveFinder<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
+public final class OptimizedMoveFinder<C extends Tile, P extends PieceClass, B extends BoardViewer<C, P>>
         implements MoveFinder<C, P> {
 
     private final SetMultimap<C, Move<C, P>> availableMoves = MultimapBuilder.treeKeys().hashSetValues().build();

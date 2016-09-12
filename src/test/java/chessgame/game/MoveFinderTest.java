@@ -28,17 +28,17 @@ public final class MoveFinderTest extends AbstractTest {
             hydrate(StandardSetting.VALUE, b);
             SetMultimap<Square, Move<Square, StandardPieces>> allMoves = moveFinder.getAvailableMoves();
 
-            // All pawns can move one or two cells upwards
+            // All pawns can move one or two tiles upwards
             for (int i = 0; i < 8; i++) {
                 String file = String.valueOf((char)('A' + i));
-                Assert.assertTrue(checkIsValidMove(allMoves, cell.at(file, "2"), cell.at(file, "3")));
-                Assert.assertTrue(checkIsValidMove(allMoves, cell.at(file, "2"), cell.at(file, "4")));
+                Assert.assertTrue(checkIsValidMove(allMoves, tile.at(file, "2"), tile.at(file, "3")));
+                Assert.assertTrue(checkIsValidMove(allMoves, tile.at(file, "2"), tile.at(file, "4")));
             }
             // Both knights have two moves
-            Assert.assertTrue(checkIsValidMove(allMoves, cell.at("B", "1"), cell.at("A", "3")));
-            Assert.assertTrue(checkIsValidMove(allMoves, cell.at("B", "1"), cell.at("C", "3")));
-            Assert.assertTrue(checkIsValidMove(allMoves, cell.at("G", "1"), cell.at("F", "3")));
-            Assert.assertTrue(checkIsValidMove(allMoves, cell.at("G", "1"), cell.at("H", "3")));
+            Assert.assertTrue(checkIsValidMove(allMoves, tile.at("B", "1"), tile.at("A", "3")));
+            Assert.assertTrue(checkIsValidMove(allMoves, tile.at("B", "1"), tile.at("C", "3")));
+            Assert.assertTrue(checkIsValidMove(allMoves, tile.at("G", "1"), tile.at("F", "3")));
+            Assert.assertTrue(checkIsValidMove(allMoves, tile.at("G", "1"), tile.at("H", "3")));
         });
     }
 

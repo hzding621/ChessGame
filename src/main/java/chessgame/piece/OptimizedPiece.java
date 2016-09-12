@@ -1,7 +1,7 @@
 package chessgame.piece;
 
 import chessgame.board.BoardViewer;
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 import chessgame.player.Player;
 
 import java.util.Collection;
@@ -9,7 +9,7 @@ import java.util.Collection;
 /**
  * Chess pieces implementing this rule can be optimized in move finding
  */
-public interface OptimizedPiece<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
+public interface OptimizedPiece<C extends Tile, P extends PieceClass, B extends BoardViewer<C, P>>
         extends PieceRule<C, P, B> {
 
     /**

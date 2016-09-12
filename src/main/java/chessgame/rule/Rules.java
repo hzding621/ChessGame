@@ -1,7 +1,7 @@
 package chessgame.rule;
 
 import chessgame.board.BoardViewer;
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 import chessgame.move.Move;
 import chessgame.piece.LatentAttackPiece;
 import chessgame.piece.OptimizedPiece;
@@ -17,7 +17,7 @@ import java.util.Collection;
 /**
  * Represents a set of rules associated with an instance of game
  */
-public final class Rules<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>> {
+public final class Rules<C extends Tile, P extends PieceClass, B extends BoardViewer<C, P>> {
 
     private final RuleBindings<C, P, B> ruleBindings;
 

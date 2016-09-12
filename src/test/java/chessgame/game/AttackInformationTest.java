@@ -26,7 +26,7 @@ public class AttackInformationTest extends AbstractTest {
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
                     if (i == j) continue;
-                    Assert.assertTrue(runtimeInformation.getAttackInformation().isAttacked(cell.at(i, j)));
+                    Assert.assertTrue(runtimeInformation.getAttackInformation().isAttacked(tile.at(i, j)));
                 }
             }
         });
@@ -46,7 +46,7 @@ public class AttackInformationTest extends AbstractTest {
 
             // white queen checking
             Assert.assertEquals(1, runtimeInformation.getAttackInformation().getCheckers().size());
-            Assert.assertTrue(runtimeInformation.getAttackInformation().getCheckers().contains(cell.at("B", "3")));
+            Assert.assertTrue(runtimeInformation.getAttackInformation().getCheckers().contains(tile.at("B", "3")));
         });
     }
 }

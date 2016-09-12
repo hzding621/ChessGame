@@ -1,6 +1,6 @@
 package chessgame.piece.extension;
 
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 import chessgame.board.Direction;
 import chessgame.board.GridViewer;
 import chessgame.board.StepSize;
@@ -8,7 +8,6 @@ import chessgame.piece.CompositePiece;
 import chessgame.piece.Knight;
 import chessgame.piece.PieceClass;
 import chessgame.piece.Leaper;
-import chessgame.piece.OptimizedPiece;
 import chessgame.piece.PieceRule;
 import chessgame.piece.Queen;
 import chessgame.piece.Rider;
@@ -21,7 +20,7 @@ import java.util.Collection;
  */
 public final class Fairies {
 
-    public static final class Camel<C extends Cell, P extends PieceClass, D extends Direction<D>,
+    public static final class Camel<C extends Tile, P extends PieceClass, D extends Direction<D>,
             B extends GridViewer<C, D, P>> implements Leaper<C, P, D, B> {
 
         @Override
@@ -30,7 +29,7 @@ public final class Fairies {
         }
     }
 
-    public static final class Zebra<C extends Cell, P extends PieceClass, D extends Direction<D>,
+    public static final class Zebra<C extends Tile, P extends PieceClass, D extends Direction<D>,
             B extends GridViewer<C, D, P>> implements Leaper<C, P, D, B> {
 
         @Override
@@ -39,7 +38,7 @@ public final class Fairies {
         }
     }
 
-    public static final class Elephant<C extends Cell, P extends PieceClass, D extends Direction<D>,
+    public static final class Elephant<C extends Tile, P extends PieceClass, D extends Direction<D>,
             B extends GridViewer<C, D, P>> implements Leaper<C, P, D, B> {
 
         @Override
@@ -48,7 +47,7 @@ public final class Fairies {
         }
     }
 
-    public static final class NightRider<C extends Cell, P extends PieceClass, D extends Direction<D>,
+    public static final class NightRider<C extends Tile, P extends PieceClass, D extends Direction<D>,
             B extends GridViewer<C, D, P>> implements Rider<C, P, D, B> {
 
         @Override
@@ -62,7 +61,7 @@ public final class Fairies {
         }
     }
 
-    public static final class Unicorn<C extends Cell, P extends PieceClass, D extends Direction<D>,
+    public static final class Unicorn<C extends Tile, P extends PieceClass, D extends Direction<D>,
             B extends GridViewer<C, D, P>> implements CompositePiece<C, P, B> {
 
         @Override

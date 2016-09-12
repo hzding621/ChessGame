@@ -1,11 +1,9 @@
 package chessgame.move;
 
-import chessgame.board.Cell;
-import chessgame.game.ChessRuleBindings;
+import chessgame.board.Tile;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -13,12 +11,12 @@ import java.util.function.Supplier;
 /**
  * Represents the change a move has made
  */
-public interface TransitionResult<C extends Cell, P extends PieceClass> {
+public interface TransitionResult<C extends Tile, P extends PieceClass> {
 
     /**
      * This is a helper method so as that creation of this interface can utilize Java 8 lambda expression
      */
-    static <C extends Cell, P extends PieceClass> TransitionResult<C, P> create(
+    static <C extends Tile, P extends PieceClass> TransitionResult<C, P> create(
             Supplier<List<MovedPiece<C, P>>> movedPieces, Supplier<Move<C, P>> reverseMove) {
 
         return new TransitionResult<C, P>() {
@@ -49,7 +47,7 @@ public interface TransitionResult<C extends Cell, P extends PieceClass> {
      * If the piece is taken out of the board, target is empty
      * If the piece appears from nowhere (for example in case of Pawn promotion), source is empty
      */
-    class MovedPiece<C extends Cell, P extends PieceClass> {
+    class MovedPiece<C extends Tile, P extends PieceClass> {
 
         private final Piece<P> movedPiece;
         private final C source;
@@ -61,7 +59,7 @@ public interface TransitionResult<C extends Cell, P extends PieceClass> {
             this.target = target;
         }
 
-        public static <C extends Cell, P extends PieceClass> MovedPiece<C, P> of(
+        public static <C extends Tile, P extends PieceClass> MovedPiece<C, P> of(
                 Piece<P> movedPiece, C source, C target) {
             return new MovedPiece<>(movedPiece, source, target);
         }

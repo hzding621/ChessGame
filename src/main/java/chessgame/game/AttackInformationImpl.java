@@ -1,10 +1,9 @@
 package chessgame.game;
 
 import chessgame.board.BoardViewer;
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
-import chessgame.rule.Attack;
 import chessgame.rule.Rules;
 
 import java.util.Set;
@@ -13,7 +12,7 @@ import java.util.TreeSet;
 /**
  * Default implementation of AttackInformation
  */
-public final class AttackInformationImpl<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>>
+public final class AttackInformationImpl<C extends Tile, P extends PieceClass, B extends BoardViewer<C, P>>
         implements AttackInformation<C> {
 
     private final Set<C> isAttacked = new TreeSet<>();
@@ -28,8 +27,8 @@ public final class AttackInformationImpl<C extends Cell, P extends PieceClass, B
     }
 
     @Override
-    public boolean isAttacked(C cell) {
-        return isAttacked.contains(cell);
+    public boolean isAttacked(C tile) {
+        return isAttacked.contains(tile);
     }
 
     @Override

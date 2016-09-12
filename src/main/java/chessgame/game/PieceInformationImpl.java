@@ -1,6 +1,6 @@
 package chessgame.game;
 
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 import chessgame.move.TransitionResult;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * Default implementation of PieceInformation
  */
-public final class PieceInformationImpl<C extends Cell, P extends PieceClass> implements PieceInformation<C, P>{
+public final class PieceInformationImpl<C extends Tile, P extends PieceClass> implements PieceInformation<C, P>{
 
     private final Map<Piece<P>, Integer> moveCounts = new HashMap<>();
     private final Map<Player, C> kingPosition = new HashMap<>();

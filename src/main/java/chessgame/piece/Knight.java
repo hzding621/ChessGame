@@ -1,6 +1,6 @@
 package chessgame.piece;
 
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 import chessgame.board.Direction;
 import chessgame.board.GridViewer;
 import chessgame.board.StepSize;
@@ -9,7 +9,7 @@ import chessgame.board.StepSize;
  * Class that implements Knight piece moving logic
  */
 
-public final class Knight<C extends Cell, P extends PieceClass, D extends Direction<D>,
+public final class Knight<C extends Tile, P extends PieceClass, D extends Direction<D>,
         B extends GridViewer<C, D, P>> implements Leaper<C, P, D, B> {
 
     @Override

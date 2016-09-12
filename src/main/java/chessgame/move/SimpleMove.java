@@ -1,6 +1,6 @@
 package chessgame.move;
 
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 import chessgame.board.Board;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
@@ -13,7 +13,7 @@ import java.util.Optional;
 /**
  * Represents a move that involves a single piece
  */
-public class SimpleMove<C extends Cell, P extends PieceClass> implements Move<C, P>, Comparable<SimpleMove<C, P>> {
+public class SimpleMove<C extends Tile, P extends PieceClass> implements Move<C, P>, Comparable<SimpleMove<C, P>> {
 
     private final C source;
     private final C target;
@@ -25,7 +25,7 @@ public class SimpleMove<C extends Cell, P extends PieceClass> implements Move<C,
         this.player = player;
     }
 
-    public static <C extends Cell, P extends PieceClass> SimpleMove<C, P> of(C source, C target, Player player) {
+    public static <C extends Tile, P extends PieceClass> SimpleMove<C, P> of(C source, C target, Player player) {
         return new SimpleMove<>(source, target, player);
     }
 
@@ -47,7 +47,7 @@ public class SimpleMove<C extends Cell, P extends PieceClass> implements Move<C,
     public <M extends Board<C, P>> BoardTransition<C, P, M> getTransition() {
         return board -> {
             if (!board.getPiece(source).isPresent()) {
-                throw new IllegalStateException("Invalid move. Source cell " + source + " is empty!");
+                throw new IllegalStateException("Invalid move. Source tile " + source + " is empty!");
             }
             board.getPiece(target).ifPresent(piece -> {
                 if (piece.getPieceClass().isKing()) {

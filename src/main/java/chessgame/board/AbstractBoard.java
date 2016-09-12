@@ -11,10 +11,10 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
- * Represents a chess board in the abstract way. Stores a mapping from cells to pieces.
- * Makes no assumptions about how cells are connected to each other.
+ * Represents a chess board in the abstract way. Stores a mapping from tiles to pieces.
+ * Makes no assumptions about how tiles are connected to each other.
  */
-abstract class AbstractBoard<C extends Cell, P extends PieceClass> implements Board<C, P> {
+abstract class AbstractBoard<C extends Tile, P extends PieceClass> implements Board<C, P> {
 
     protected final Map<C, Piece<P>> occupants = new TreeMap<>();
 
@@ -50,18 +50,18 @@ abstract class AbstractBoard<C extends Cell, P extends PieceClass> implements Bo
     }
 
     @Override
-    public boolean isOccupied(C cell) {
-        return occupants.containsKey(cell);
+    public boolean isOccupied(C tile) {
+        return occupants.containsKey(tile);
     }
 
     @Override
-    public boolean isEnemy(C cell, Player player) {
-        return isOccupied(cell) && !getPiece(cell).get().getPlayer().equals(player);
+    public boolean isEnemy(C tile, Player player) {
+        return isOccupied(tile) && !getPiece(tile).get().getPlayer().equals(player);
     }
 
     @Override
-    public Optional<Piece<P>> getPiece(C cell) {
-        return Optional.ofNullable(occupants.get(cell));
+    public Optional<Piece<P>> getPiece(C tile) {
+        return Optional.ofNullable(occupants.get(tile));
     }
 
     @Override

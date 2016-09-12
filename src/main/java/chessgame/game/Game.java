@@ -1,7 +1,7 @@
 package chessgame.game;
 
 import chessgame.board.BoardViewer;
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 import chessgame.move.Move;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
@@ -11,7 +11,7 @@ import java.util.Collection;
 /**
  * Interface for a variant of chess game
  */
-interface Game<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>, S extends GameSetting<C, P>> {
+interface Game<C extends Tile, P extends PieceClass, B extends BoardViewer<C, P>, S extends GameSetting<C, P>> {
 
     B getBoard();
 

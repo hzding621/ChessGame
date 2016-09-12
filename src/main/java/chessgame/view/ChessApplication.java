@@ -1,7 +1,6 @@
 package chessgame.view;
 
 import chessgame.game.StandardGame;
-import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
@@ -30,7 +29,6 @@ public class ChessApplication extends Application {
 
     public static void main(String[] args) {
 
-        SvgImageLoaderFactory.install();
         launch(args);
     }
 }

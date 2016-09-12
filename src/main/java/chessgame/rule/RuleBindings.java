@@ -1,7 +1,7 @@
 package chessgame.rule;
 
 import chessgame.board.BoardViewer;
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 import chessgame.game.RuntimeInformation;
 import chessgame.piece.PieceClass;
 import chessgame.piece.PieceRule;
@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * Represents mappings from a piece type to the rule associated with it on a certain type of board
  */
-public abstract class RuleBindings<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>> {
+public abstract class RuleBindings<C extends Tile, P extends PieceClass, B extends BoardViewer<C, P>> {
 
     private final Map<P, PieceRule<C, P, B>> bindings = new HashMap<>();
 
@@ -24,7 +24,7 @@ public abstract class RuleBindings<C extends Cell, P extends PieceClass, B exten
         return bindings.get(pieceType);
     }
 
-    public interface Supplier<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>, T extends RuleBindings<C, P, B>> {
+    public interface Supplier<C extends Tile, P extends PieceClass, B extends BoardViewer<C, P>, T extends RuleBindings<C, P, B>> {
 
         T get(RuntimeInformation<C, P> runtimeInformation);
     }

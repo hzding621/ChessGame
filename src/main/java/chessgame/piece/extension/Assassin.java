@@ -1,6 +1,6 @@
 package chessgame.piece.extension;
 
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 import chessgame.board.Direction;
 import chessgame.board.StepSize;
 import chessgame.board.GridViewer;
@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  * An assassin moves just like the queen, but attack an opponent only if there is exactly one piece in between the cannon and the enemy
  */
 
-public final class Assassin<C extends Cell, P extends PieceClass, D extends Direction<D>,
+public final class Assassin<C extends Tile, P extends PieceClass, D extends Direction<D>,
         B extends GridViewer<C, D, P>> implements PieceRule<C,P,B> {
 
     @Override

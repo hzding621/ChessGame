@@ -1,13 +1,13 @@
 package chessgame.rule;
 
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 
 import java.util.Collection;
 
 /**
  * Represents an attack and the positions to block the attack by the defender
  */
-public final class Attack<C extends Cell> implements Comparable<Attack<C>> {
+public final class Attack<C extends Tile> implements Comparable<Attack<C>> {
 
     private final C attacker;
     private final Collection<C> blockingPositions;

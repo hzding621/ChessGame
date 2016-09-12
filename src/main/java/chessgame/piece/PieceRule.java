@@ -1,8 +1,7 @@
 package chessgame.piece;
 
 import chessgame.board.BoardViewer;
-import chessgame.board.Cell;
-import chessgame.piece.PieceClass;
+import chessgame.board.Tile;
 import chessgame.player.Player;
 
 import java.util.Collection;
@@ -12,7 +11,7 @@ import java.util.stream.Collectors;
  * Abstraction of moving rule for the piece class,
  * handles piece moving logic
  */
-public interface PieceRule<C extends Cell, P extends PieceClass, B extends BoardViewer<C, P>> {
+public interface PieceRule<C extends Tile, P extends PieceClass, B extends BoardViewer<C, P>> {
 
     /**
      * Find all positions on the board the piece is attacking

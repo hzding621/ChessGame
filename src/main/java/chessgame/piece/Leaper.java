@@ -1,6 +1,6 @@
 package chessgame.piece;
 
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 import chessgame.board.Direction;
 import chessgame.board.GridViewer;
 import chessgame.board.StepSize;
@@ -15,7 +15,7 @@ import java.util.Set;
  * A (mxn) Leaper moves a fixed type of vector between its start and arrival
  * A leaper's move cannot be blocked!
  */
-public interface Leaper<C extends Cell, P extends PieceClass, D extends Direction<D>,
+public interface Leaper<C extends Tile, P extends PieceClass, D extends Direction<D>,
         B extends GridViewer<C, D, P>> extends OptimizedPiece<C, P, B> {
 
     /**

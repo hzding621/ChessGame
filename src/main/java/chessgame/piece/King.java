@@ -1,6 +1,6 @@
 package chessgame.piece;
 
-import chessgame.board.Cell;
+import chessgame.board.Tile;
 import chessgame.board.ChessBoardViewer;
 import chessgame.board.Direction;
 import chessgame.board.GridViewer;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  * Class that implements King piece moving logic. Specific rules regarding king checking is handled elsewhere
  */
-public class King<C extends Cell, P extends PieceClass, D extends Direction<D>, B extends GridViewer<C, D, P>>
+public final class King<C extends Tile, P extends PieceClass, D extends Direction<D>, B extends GridViewer<C, D, P>>
         implements OptimizedPiece<C, P, B>, RequiresRuntimeInformation<C, P>, PieceRule<C,P,B> {
 
     private final RuntimeInformation<C, P> runtimeInformation;
@@ -56,11 +56,16 @@ public class King<C extends Cell, P extends PieceClass, D extends Direction<D>, 
     }
 
 
-    public static class WithCastling extends King<Square, StandardPieces, TwoDimension, ChessBoardViewer<StandardPieces>>
-            implements SpecialMovePiece<Square, StandardPieces, ChessBoardViewer<StandardPieces>> {
+    public static final class WithCastling implements OptimizedPiece<Square, StandardPieces, ChessBoardViewer<StandardPieces>>,
+            RequiresRuntimeInformation<Square, StandardPieces>, PieceRule<Square, StandardPieces, ChessBoardViewer<StandardPieces>>,
+            SpecialMovePiece<Square, StandardPieces, ChessBoardViewer<StandardPieces>> {
+
+        private final King<Square, StandardPieces, TwoDimension, ChessBoardViewer<StandardPieces>> delegate;
+        private final RuntimeInformation<Square, StandardPieces> runtimeInformation;
 
         public WithCastling(RuntimeInformation<Square, StandardPieces> runtimeInformation) {
-            super(runtimeInformation);
+            this.delegate = new King<>(runtimeInformation);
+            this.runtimeInformation = runtimeInformation;
         }
 
         @Override
@@ -95,6 +100,7 @@ public class King<C extends Cell, P extends PieceClass, D extends Direction<D>, 
             Piece<StandardPieces> king = board.getPiece(kingPosition).get();
             if (getRuntimeInformation().getPieceInformation().getPieceMoveCount(king) > 0
                     || getRuntimeInformation().getAttackInformation().getCheckers().size() > 0) {
+
                 // If King has moved or if king is under check, cannot move
                 return ImmutableList.of();
             }
@@ -117,6 +123,25 @@ public class King<C extends Cell, P extends PieceClass, D extends Direction<D>, 
              * does not expose king
              */
             return builder.build();
+        }
+
+        @Override
+        public RuntimeInformation<Square, StandardPieces> getRuntimeInformation() {
+            return runtimeInformation;
+        }
+
+        @Override
+        public Collection<Square> attacking(ChessBoardViewer<StandardPieces> board, Square position, Player player) {
+            return delegate.attacking(board, position, player);
+        }
+
+        @Override
+        public Collection<Square> attackBlockingPositions(ChessBoardViewer<StandardPieces> board, Square sourcePosition, Square targetPosition, Player player) {
+            /* Note: attackingBlockingPosition is used by OptimizedMoveFinder to find check-escapers,
+             * Since any king should never directly attack an opponent king, this method does not matter too much for King piece
+             * Therefore it does not matter too much to castling as well
+             */
+            return delegate.attackBlockingPositions(board, sourcePosition, targetPosition, player);
         }
     }
 }
