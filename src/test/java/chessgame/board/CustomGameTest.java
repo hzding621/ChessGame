@@ -60,6 +60,23 @@ public final class CustomGameTest {
         };
     }
 
+    public ConfigurableGameSetting<ExtensionPieces> startingPositionNoGhost() {
+        ConfigurableGameSetting.Builder<ExtensionPieces> builder = ConfigurableGameSetting.builder(10,8);
+        for (int i = 0; i < 5; i++) {
+            populatePieces(builder, ExtensionPieces.PAWN, i, 1, 10, 8);
+        }
+        populatePieces(builder, ExtensionPieces.ROOK, 0, 0, 10, 8);
+        populatePieces(builder, ExtensionPieces.KNIGHT, 1, 0, 10, 8);
+        populatePieces(builder, ExtensionPieces.BISHOP, 2, 0, 10, 8);
+        populatePieces(builder, ExtensionPieces.ASSASSIN, 3, 0, 10, 8); // Assassins are in between Bishops and Queens
+        builder.set(ExtensionPieces.QUEEN, Player.WHITE, 4, 0);
+        builder.set(ExtensionPieces.QUEEN, Player.BLACK, 4, 7);
+        builder.set(ExtensionPieces.KING, Player.WHITE, 5, 0);
+        builder.set(ExtensionPieces.KING, Player.BLACK, 5, 7);
+
+        return builder.build();
+    }
+
     public ConfigurableGameSetting<ExtensionPieces> staringPosition() {
         ConfigurableGameSetting.Builder<ExtensionPieces> builder = ConfigurableGameSetting.builder(10,8);
         for (int i = 0; i < 5; i++) {
@@ -135,5 +152,12 @@ public final class CustomGameTest {
             attacks--;
         }
         Assert.assertEquals(attacks, moves.size());
+    }
+
+    @Test
+    public void testInitialAssassinAttackNoGhost() {
+        hydrate(startingPositionNoGhost());
+        Collection<Move<Square, ExtensionPieces>> moves = customGame.availableMovesFrom(cellBuilder.at(3, 0));
+        Assert.assertEquals(2, moves.size());
     }
 }

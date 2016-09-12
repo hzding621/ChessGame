@@ -1,7 +1,10 @@
 package chessgame.board;
 
 import chessgame.game.StandardSetting;
+import chessgame.move.Move;
+import chessgame.move.SimpleMove;
 import chessgame.piece.StandardPieces;
+import chessgame.player.Player;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,10 +26,8 @@ public final class ChessBoardTest {
 
     @Test
     public void testPreview() {
-        Assert.assertTrue(chessBoard.preview(mutableBoard -> {
-            mutableBoard.movePiece(tile.at("E", "2"), tile.at("E", "4"));
-            return null;
-        }, future -> {
+        Move<Square, StandardPieces> simpleMove = SimpleMove.of(tile.at("E", "2"), tile.at("E", "4"), Player.WHITE);
+        Assert.assertTrue(chessBoard.preview(simpleMove.getTransition(), future -> {
            return future.isOccupied(tile.at("E", "4"));
         }));
 

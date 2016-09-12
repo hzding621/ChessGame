@@ -59,8 +59,8 @@ public class SimpleMove<C extends Cell, P extends PieceClass> implements Move<C,
             Piece<P> movedPiece = board.movePiece(source, target);
 
             List<TransitionResult.MovedPiece<C, P>> history = new ArrayList<>();
-            history.add(TransitionResult.MovedPiece.of(movedPiece, source, target));
             capturedPiece.ifPresent(p -> history.add(TransitionResult.MovedPiece.of(p, target, null)));
+            history.add(TransitionResult.MovedPiece.of(movedPiece, source, target));
             return TransitionResult.create(() -> history, () -> new ReverseMove<>(this, history));
         };
     }
