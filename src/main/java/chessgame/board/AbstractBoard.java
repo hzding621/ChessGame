@@ -1,14 +1,8 @@
 package chessgame.board;
 
-import chessgame.game.GameSetting;
-import chessgame.move.BoardTransition;
-import chessgame.move.TransitionResult;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.google.common.collect.Maps;
 
 import java.util.Collection;
 import java.util.Map;
@@ -20,8 +14,7 @@ import java.util.stream.Collectors;
  * Represents a chess board in the abstract way. Stores a mapping from cells to pieces.
  * Makes no assumptions about how cells are connected to each other.
  */
-abstract class AbstractBoard<C extends Cell, P extends PieceClass, V extends BoardViewer<C, P>, T extends AbstractBoard<C, P, V, T>>
-        implements MutableBoard<C, P, T> {
+abstract class AbstractBoard<C extends Cell, P extends PieceClass> implements Board<C, P> {
 
     protected final Map<C, Piece<P>> occupants = new TreeMap<>();
 

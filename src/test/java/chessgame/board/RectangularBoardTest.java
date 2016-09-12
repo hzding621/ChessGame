@@ -2,8 +2,6 @@ package chessgame.board;
 
 import chessgame.game.GameSetting;
 import chessgame.game.StandardSetting;
-import chessgame.move.BoardTransition;
-import chessgame.move.TransitionResult;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
 import chessgame.piece.StandardPieces;
@@ -24,7 +22,7 @@ import java.util.Optional;
  */
 public final class RectangularBoardTest {
 
-    static class Instance<P extends PieceClass> extends RectangularBoard<P, Instance<P>, Instance<P>> {
+    private static class Instance<P extends PieceClass> extends RectangularBoard<P> {
 
         private Instance(Map<Square, Piece<P>> occupants, Square.Builder cellBuilder) {
             super(occupants, cellBuilder);
@@ -36,11 +34,6 @@ public final class RectangularBoardTest {
             final Coordinate.Builder rankBuilder = new Coordinate.Builder(gameSetting.getRankLength());
             return new Instance<>(gameSetting.constructPiecesByStartingPosition(),
                     new Square.Builder(fileBuilder, rankBuilder));
-        }
-
-        @Override
-        public TransitionResult<Square, P> apply(BoardTransition<Square, P, RectangularBoardTest.Instance<P>> boardTransition) {
-            return boardTransition.apply(this);
         }
     }
 

@@ -1,9 +1,6 @@
 package chessgame.board;
 
-import chessgame.move.BoardTransition;
-import chessgame.move.TransitionResult;
 import chessgame.piece.Piece;
-import chessgame.game.GameSetting;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 import utility.CollectionUtils;
@@ -18,8 +15,8 @@ import java.util.Optional;
 /**
  * Represents an abstract rectangular board
  */
-public abstract class RectangularBoard<P extends PieceClass, V extends GridViewer<Square, TwoDimension, P>, T extends RectangularBoard<P, V, T>>
-        extends AbstractBoard<Square, P, V, T> implements GridViewer<Square, TwoDimension, P> {
+public abstract class RectangularBoard<P extends PieceClass>
+        extends AbstractBoard<Square, P> implements GridViewer<Square, TwoDimension, P> {
 
     protected final Square.Builder cellBuilder;
 

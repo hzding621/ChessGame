@@ -1,7 +1,7 @@
 package chessgame.move;
 
 import chessgame.board.Cell;
-import chessgame.board.MutableBoard;
+import chessgame.board.Board;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 
@@ -10,9 +10,18 @@ import chessgame.player.Player;
  */
 public interface Move<C extends Cell, P extends PieceClass>  {
 
+    /**
+     * @return the initiating piece of this move
+     */
     C getInitiator();
 
+    /**
+     * @return the initiating player of this move
+     */
     Player getPlayer();
 
-    <M extends MutableBoard<C, P, M>> BoardTransition<C, P, M> getTransition();
+    /**
+     * @return the transition function that implements this move
+     */
+    <M extends Board<C, P>> BoardTransition<C, P, M> getTransition();
 }

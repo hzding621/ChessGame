@@ -1,13 +1,12 @@
 package chessgame.move;
 
 import chessgame.board.Cell;
-import chessgame.board.MutableBoard;
+import chessgame.board.Board;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +44,7 @@ public class SimpleMove<C extends Cell, P extends PieceClass> implements Move<C,
     }
 
     @Override
-    public <M extends MutableBoard<C, P, M>> BoardTransition<C, P, M> getTransition() {
+    public <M extends Board<C, P>> BoardTransition<C, P, M> getTransition() {
         return board -> {
             if (!board.getPiece(source).isPresent()) {
                 throw new IllegalStateException("Invalid move. Source cell " + source + " is empty!");

@@ -99,7 +99,7 @@ public class ChessGame<P extends PieceClass> implements Game<Square, P, ChessBoa
         if (!moveFinder.getAvailableMoves().get(source).contains(attemptedMove)) {
             throw new IllegalStateException("Attempted move " + attemptedMove + " is invalid!");
         }
-        updateInformationForThisRound(chessBoard.apply(attemptedMove.getTransition()));
+        updateInformationForThisRound(attemptedMove.<ChessBoard<P>>getTransition().transition(chessBoard));
         moveFinder.recompute();
     }
 

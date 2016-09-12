@@ -35,7 +35,7 @@ public interface GridViewer<C extends Cell, D extends Direction<D>, P extends Pi
      * @param startCell starting cell
      * @param direction the direction to move
      * @param steps the given number
-     * @param stepSize
+     * @param stepSize a step magnifier/modifier
      * @return non-empty value if the cell is not at the edge of the board, empty otherwise
      */
     Optional<C> travelSteps(C startCell, D direction, int steps, StepSize stepSize);
@@ -45,7 +45,7 @@ public interface GridViewer<C extends Cell, D extends Direction<D>, P extends Pi
      * and either stops at first occupant or at the edge of board
      *  @param startCell the cell the movement starts at
      * @param direction the direction the movement goes at
-     * @param stepSize
+     * @param stepSize a step magnifier/modifier
      * @param startInclusive whether or not to include the startCell
      * @param endInclusive whether or not to include the occupant if there exists  @return the list of movement
      */
@@ -54,7 +54,7 @@ public interface GridViewer<C extends Cell, D extends Direction<D>, P extends Pi
     /**
      * @param startCell the given cell
      * @param direction the given direction
-     * @param stepSize
+     * @param stepSize a step magnifier/modifier
      * @return non-empty if moving at the given cell in the given direction will lead to this piece, empty if it will lead the edge of the board
      */
     Optional<C> firstEncounter(C startCell, D direction, StepSize stepSize);
@@ -63,7 +63,7 @@ public interface GridViewer<C extends Cell, D extends Direction<D>, P extends Pi
      * Return the first and second occupant met starting at the given cell and moving toward the given direction
      * @param startCell the given cell
      * @param direction the given direction
-     * @param stepSize
+     * @param stepSize a step magnifier/modifier
      * @return Non-empty if there exists two such pieces
      */
     default Optional<Pair<C, C>> firstTwoEncounters(C startCell, D direction, StepSize stepSize) {

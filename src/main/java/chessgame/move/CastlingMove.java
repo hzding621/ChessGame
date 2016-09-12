@@ -1,7 +1,7 @@
 package chessgame.move;
 
 import chessgame.board.Cell;
-import chessgame.board.MutableBoard;
+import chessgame.board.Board;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
@@ -36,7 +36,7 @@ public final class CastlingMove<C extends Cell, P extends PieceClass> implements
     }
 
     @Override
-    public <M extends MutableBoard<C, P, M>> BoardTransition<C, P, M> getTransition() {
+    public <M extends Board<C, P>> BoardTransition<C, P, M> getTransition() {
         return board -> {
             Piece<P> king = board.movePiece(kingMove.getInitiator(), kingMove.getTarget());
             Piece<P> rook = board.movePiece(rookMove.getInitiator(), rookMove.getTarget());

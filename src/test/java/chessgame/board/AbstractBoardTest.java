@@ -2,8 +2,6 @@ package chessgame.board;
 
 import chessgame.game.GameSetting;
 import chessgame.game.KingPawnGame;
-import chessgame.move.BoardTransition;
-import chessgame.move.TransitionResult;
 import chessgame.piece.KingPawn;
 import chessgame.piece.Piece;
 import chessgame.piece.PieceClass;
@@ -20,8 +18,7 @@ import java.util.Map;
  */
 public final class AbstractBoardTest {
 
-    static class Instance<C extends Cell, P extends PieceClass>
-            extends AbstractBoard<C, P, Instance<C, P>, Instance<C, P>> {
+    private static class Instance<C extends Cell, P extends PieceClass> extends AbstractBoard<C, P> {
 
         protected Instance(Map<C, Piece<P>> occupants) {
             super(occupants);
@@ -29,11 +26,6 @@ public final class AbstractBoardTest {
 
         public static <C extends Cell, P extends PieceClass> Instance<C, P> create(GameSetting<C, P> gameSetting) {
             return new Instance<>(gameSetting.constructPiecesByStartingPosition());
-        }
-
-        @Override
-        public TransitionResult<C, P> apply(BoardTransition<C, P, Instance<C, P>> boardTransition) {
-            return boardTransition.apply(this);
         }
     }
 

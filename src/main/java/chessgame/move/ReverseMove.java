@@ -1,7 +1,7 @@
 package chessgame.move;
 
 import chessgame.board.Cell;
-import chessgame.board.MutableBoard;
+import chessgame.board.Board;
 import chessgame.piece.PieceClass;
 import chessgame.player.Player;
 import com.google.common.collect.Lists;
@@ -33,7 +33,7 @@ public class ReverseMove<C extends Cell, P extends PieceClass> implements Move<C
     }
 
     @Override
-    public <M extends MutableBoard<C, P, M>> BoardTransition<C, P, M> getTransition() {
+    public <M extends Board<C, P>> BoardTransition<C, P, M> getTransition() {
         return board -> {
             movedPieces.forEach(movedPiece -> {
                 if (movedPiece.getSource().isPresent() && movedPiece.getTarget().isPresent()) {
