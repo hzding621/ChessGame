@@ -26,7 +26,7 @@ public final class CollectionUtils {
     }
 
     /**
-     * @return transform the element into an arraylist containing the element, or an empty arraylist if the element is empty
+     * @return transform the element into an arraylist containing the element, or an empty ArrayList if the element is empty
      */
     @SafeVarargs
     public static <E> List<E> asArrayList(Optional<E>... elements) {
