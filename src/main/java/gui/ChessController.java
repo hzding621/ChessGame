@@ -1,59 +1,67 @@
 package gui;
 
-import core.board.ChessBoardViewer;
-import core.game.ChessGame;
-import core.piece.Piece;
 import core.piece.PieceClass;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.Node;
+import javafx.scene.effect.ColorInput;
+import javafx.scene.effect.Shadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * This class contains the view for the chess board
  */
-public class ChessBoardLayout<P extends PieceClass> {
+public class ChessController<P extends PieceClass> implements Initializable {
 
-    private final ChessGame<P> game;
+    private static final int SQUARE_SIZE = 60;
+    private final ChessModel<P> model;
     private final PiecesIcon<P> icons;
-    private final GridPane layout;
 
-    public ChessBoardLayout(ChessGame<P> game, PiecesIcon<P> icons) {
+    @FXML
+    GridPane grid;
 
-        this.game = game;
+    public ChessController(ChessModel<P> model, PiecesIcon<P> icons) {
+        this.model = model;
         this.icons = icons;
-        this.layout = createGrid(game.getSetting().getFileLength(),
-                game.getSetting().getRankLength(), ColorScheme.STANDARD);
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        initializeGrid(model.getFileLength(), model.getRankLength(), ColorScheme.STANDARD);
         populatePieceImages();
     }
 
     /**
-     * Create a JavaFX layout of certain file length and rank length and a color scheme
-     * @return the created grid pane
+     * Initialize Grid with certain file length and rank length and a color scheme
      */
-    private static GridPane createGrid(int fileLength, int rankLength, ColorScheme colorScheme) {
+    private void initializeGrid(int fileLength, int rankLength, ColorScheme colorScheme) {
 
-        GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setPadding(new Insets(40, 40, 40, 40));
 
         // Create Rows and Columns
         for (int i = 0; i < fileLength; i++) {
             ColumnConstraints column = new ColumnConstraints();
-            column.setPrefWidth(80);
+            column.setPrefWidth(SQUARE_SIZE);
             column.setHalignment(HPos.CENTER);
             grid.getColumnConstraints().add(column);
         }
         for (int j = 0; j < rankLength; j++) {
             RowConstraints row = new RowConstraints();
-            row.setPrefHeight(80);
+            row.setPrefHeight(SQUARE_SIZE);
             row.setValignment(VPos.CENTER);
             grid.getRowConstraints().add(row);
         }
@@ -62,14 +70,13 @@ public class ChessBoardLayout<P extends PieceClass> {
         for (int i = 0; i < fileLength; i++) {
             for (int j = 0; j < rankLength; j ++) {
                 Rectangle rectangle = new Rectangle();
-                rectangle.setWidth(80);
-                rectangle.setHeight(80);
+                rectangle.setWidth(SQUARE_SIZE);
+                rectangle.setHeight(SQUARE_SIZE);
                 rectangle.setFill((i + j) % 2 == 0 ? colorScheme.dark() : colorScheme.light());
                 rectangle.setId(idOfTile(i, j));
                 grid.add(rectangle, i, toRowIndex(j, rankLength));
             }
         }
-        return grid;
     }
 
     /**
@@ -77,22 +84,14 @@ public class ChessBoardLayout<P extends PieceClass> {
      */
     private void populatePieceImages() {
 
-        ChessBoardViewer<P> board = game.getBoard();
-        game.getSetting().getPlayers().forEach(player -> board.getPieceLocationsOfPlayer(player).forEach(square -> {
-
-            int file = square.getFile().getCoordinate().getIndex();
-            int rank = square.getRank().getCoordinate().getIndex();
-
-            Piece<P> piece = board.getPiece(square).get();
-
+        model.streamAllPieces().forEach(piece -> {
             ImageView pieceIcon = new ImageView();
-            pieceIcon.setImage(new Image(icons.getResource(piece.getPieceClass(), player)));
-            pieceIcon.setFitHeight(60);
-            pieceIcon.setFitWidth(60);
-            pieceIcon.setId(idOfPiece(piece));
-            layout.add(pieceIcon, file, toRowIndex(rank, game.getSetting().getRankLength()));
-
-        }));
+            pieceIcon.setImage(new Image(icons.getResource(piece.getType(), piece.getPlayer())));
+            pieceIcon.setFitHeight(SQUARE_SIZE);
+            pieceIcon.setFitWidth(SQUARE_SIZE);
+            pieceIcon.setId(idOfPiece(piece.pieceId()));
+            grid.add(pieceIcon, piece.getFile(), toRowIndex(piece.getRank(), model.getRankLength()));
+        });
     }
 
     /**
@@ -105,25 +104,14 @@ public class ChessBoardLayout<P extends PieceClass> {
     /**
      * @return generate id for a piece for use in JavaFX indexing
      */
-    private static <P extends PieceClass> String idOfPiece(Piece<P> piece) {
-        return "Piece[" + piece.toString() + "]";
+    private static String idOfTile(int file, int rank) {
+        return "TILE[" + file + "," + rank + "]";
     }
 
     /**
      * @return generate id for a piece for use in JavaFX indexing
      */
-    private static String idOfTile(int file, int rank) {
-        return "TILE[" + file + "," + rank + "]";
-    }
-
-    private Node getPieceNode(Piece<P> piece) {
-        return layout.lookup("#" + idOfPiece(piece));
-    }
-
-    /**
-     * Getter for GridPane
-     */
-    public GridPane getLayout() {
-        return layout;
+    private static String idOfPiece(String pieceId) {
+        return "Piece[" + pieceId + "]";
     }
 }

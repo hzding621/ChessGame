@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.GridPane?>
+
+<!--<FlowPane fx:id="root" xmlns:fx="http://javafx.com/fxml">-->
+<!--<children>-->
+<!--<Label fx:id="firstName" text="" />-->
+<!--<Label fx:id="lastName" text="" />-->
+<!--</children>-->
+<!--</FlowPane>-->
+
+<GridPane fx:id="grid" xmlns:fx="http://javafx.com/fxml">
+</GridPane>

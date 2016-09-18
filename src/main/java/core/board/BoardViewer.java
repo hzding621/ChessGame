@@ -5,6 +5,7 @@ import core.piece.PieceClass;
 import core.player.Player;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -51,4 +52,8 @@ public interface BoardViewer<C extends Tile, P extends PieceClass> {
      */
     boolean isEnemy(C tile, Player player);
 
+    /**
+     * @return The underlying map from tiles to pieces
+     */
+    Map<C, Piece<P>> getMap();
 }

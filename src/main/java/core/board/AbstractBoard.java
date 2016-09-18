@@ -1,9 +1,12 @@
 package core.board;
 
 import com.google.common.collect.BiMap;
+import com.google.common.collect.ImmutableMap;
 import core.piece.Piece;
 import core.piece.PieceClass;
 import core.player.Player;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 
 import java.util.Collection;
 import java.util.Map;
@@ -81,5 +84,10 @@ abstract class AbstractBoard<C extends Tile, P extends PieceClass> implements Bo
                 .filter(e -> e.getValue().getPlayer().equals(player))
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Map<C, Piece<P>> getMap() {
+        return occupants;
     }
 }
