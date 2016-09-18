@@ -17,10 +17,11 @@ public class Test {
         Map<String, String> map = new HashMap<>();
         ObservableMap<String, String> observableMap = FXCollections.observableMap(map);
         observableMap.addListener((MapChangeListener<String, String>) (change -> {
+            if (change.wasRemoved()) {
+                System.out.println("map[" + change.getKey() + "]->X");
+            }
             if (change.wasAdded()) {
                 System.out.println("map[" + change.getKey() + "]=" + change.getValueAdded());
-            } else {
-                System.out.println("map[" + change.getKey() + "]->X");
             }
         }));
         observableMap.put("A", "C");
@@ -28,6 +29,7 @@ public class Test {
         observableMap.put("A", "C");
         observableMap.put("A", "C");
         observableMap.put("A", "C");
+        observableMap.remove("A");
     }
 
 }

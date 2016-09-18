@@ -12,5 +12,5 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.paint.Color?>
 
-<GridPane fx:id="grid" xmlns:fx="http://javafx.com/fxml">
+<GridPane fx:id="layout" xmlns:fx="http://javafx.com/fxml">
 </GridPane>

@@ -1,17 +1,11 @@
 package gui;
 
-import core.board.ChessBoard;
 import core.board.Square;
 import core.game.ChessGame;
-import core.game.GameSetting;
 import core.piece.Piece;
 import core.piece.PieceClass;
 import core.player.Player;
-import javafx.beans.property.MapPropertyBase;
-import javafx.beans.property.ReadOnlyMapWrapper;
-import javafx.beans.property.SimpleMapProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 
 import java.util.stream.Stream;
@@ -30,17 +24,16 @@ public class ChessModel<P extends PieceClass> {
         return observableMap;
     }
 
-
     public ChessModel(ChessGame<P> game) {
         this.game = game;
     }
 
-    public Stream<PieceModel<P>> streamAllPieces() {
-        return game.getSetting().getPlayers().stream().flatMap(player ->
-                game.getBoard().getPieceLocationsOfPlayer(player).stream().map(square -> {
-                    Piece<P> p = game.getBoard().getPiece(square).get();
-                    return new PieceModel<>(p, square, player);
-                }));
+    public Stream<PieceId<P>> piecesConfiguration() {
+        return game.getSetting().constructPiecesByStartingPosition().values().stream().map(PieceId::new);
+    }
+
+    public void refreshAllPieces() {
+        this.observableMap.putAll(game.getBoard().getMap());
     }
 
     public int getFileLength() {
@@ -51,35 +44,26 @@ public class ChessModel<P extends PieceClass> {
         return game.getSetting().getRankLength();
     }
 
-    public static class PieceModel<P extends PieceClass> {
-        private final Piece<P> piece;
-        private final Square square;
-        private final Player player;
+    public static class PieceId<P extends PieceClass> {
+        private final String id;
+        private final String shortId;
 
-        private PieceModel(Piece<P> piece, Square square, Player player) {
-            this.piece = piece;
-            this.square = square;
-            this.player = player;
+        public PieceId(Piece<P> piece) {
+            this.id = piece.toString();
+            this.shortId = piece.getPieceClass() + "_" + piece.getPlayer();
         }
 
-        public P getType() {
-            return piece.getPieceClass();
+        public String getId() {
+            return id;
         }
 
-        public int getFile() {
-            return square.getFile().getCoordinate().getIndex();
+        public String getShortId() {
+            return shortId;
         }
 
-        public int getRank() {
-            return square.getRank().getCoordinate().getIndex();
-        }
-
-        public Player getPlayer() {
-            return player;
-        }
-
-        public String pieceId() {
-            return piece.toString();
+        @Override
+        public String toString() {
+            return id;
         }
     }
 

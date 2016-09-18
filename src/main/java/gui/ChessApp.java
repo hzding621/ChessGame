@@ -26,7 +26,7 @@ public class ChessApp extends Application {
     public ChessApp() {
         this.game = ChessGame.create(StandardSetting.VALUE, StandardRuleBindings::new);
         this.model = new ChessModel<>(game);
-        this.controller = new ChessController<>(model, StandardPiecesIcon.VALUE);
+        this.controller = new ChessController<>(model);
     }
 
     @Override
