@@ -24,8 +24,9 @@ public final class Assassin<C extends Tile, P extends PieceClass, D extends Dire
     @Override
     public Collection<C> attacking(B board, C position, Player player) {
         Set<C> attacked = new HashSet<>();
-        board.getEveryDirections().forEach(direction -> board.firstTwoEncounters(position, direction, StepSize.of(1, 0))
-                .ifPresent(attack -> attacked.add(attack.second())));
+        board.getEveryDirections().forEach(direction ->
+                board.firstTwoEncounters(position, direction, StepSize.of(1, 0))
+                        .ifPresent(attack -> attacked.add(attack.second())));
         return attacked;
     }
 
@@ -34,8 +35,9 @@ public final class Assassin<C extends Tile, P extends PieceClass, D extends Dire
         return Stream.concat(
                 attacking(board, position, player).stream()
                         .filter(c ->  board.isEnemy(c, player)),
-                board.getEveryDirections().stream().flatMap(direction ->
-                        board.travelUntilBlocked(position, direction, StepSize.of(1, 0), false, false).stream()
+                board.getEveryDirections().stream()
+                        .flatMap(direction ->
+                                board.travelUntilBlocked(position, direction, StepSize.of(1, 0), false, false).stream()
                                 .filter(board::isEmpty))
         ).collect(Collectors.toList());
 

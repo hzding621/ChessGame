@@ -34,6 +34,10 @@ public class ChessBoardLayout<P extends PieceClass> {
         populatePieceImages();
     }
 
+    /**
+     * Create a JavaFX layout of certain file length and rank length and a color scheme
+     * @return the created grid pane
+     */
     private static GridPane createGrid(int fileLength, int rankLength, ColorScheme colorScheme) {
 
         GridPane grid = new GridPane();
@@ -68,6 +72,9 @@ public class ChessBoardLayout<P extends PieceClass> {
         return grid;
     }
 
+    /**
+     * Add piece as  Rectangles (JavaFX resource) to the grid pane
+     */
     private void populatePieceImages() {
 
         ChessBoardViewer<P> board = game.getBoard();
@@ -88,14 +95,23 @@ public class ChessBoardLayout<P extends PieceClass> {
         }));
     }
 
+    /**
+     * @return convert rank index to grid pane row index
+     */
     private static int toRowIndex(int rank, int rankLength) {
         return rankLength - 1 - rank;
     }
 
+    /**
+     * @return generate id for a piece for use in JavaFX indexing
+     */
     private static <P extends PieceClass> String idOfPiece(Piece<P> piece) {
         return "Piece[" + piece.toString() + "]";
     }
 
+    /**
+     * @return generate id for a piece for use in JavaFX indexing
+     */
     private static String idOfTile(int file, int rank) {
         return "TILE[" + file + "," + rank + "]";
     }
@@ -104,6 +120,9 @@ public class ChessBoardLayout<P extends PieceClass> {
         return layout.lookup("#" + idOfPiece(piece));
     }
 
+    /**
+     * Getter for GridPane
+     */
     public GridPane getLayout() {
         return layout;
     }

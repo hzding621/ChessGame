@@ -2,13 +2,19 @@ package gui;
 
 import core.game.ChessGame;
 import core.game.ExtensionSetting;
+import core.game.StandardSetting;
+import core.piece.StandardPieces;
 import core.piece.extension.ExtensionPieces;
 import core.rule.ExtensionRuleBindings;
+import core.rule.StandardRuleBindings;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+/**
+ * Main Application for chess
+ */
 public class ChessApplication extends Application {
 
     private final ChessGame<ExtensionPieces> game;
