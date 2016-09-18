@@ -1,8 +1,8 @@
 package gui;
 
 import core.board.Square;
-import core.piece.Piece;
 import core.piece.PieceClass;
+import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,6 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import java.net.URL;
@@ -27,12 +28,12 @@ import java.util.ResourceBundle;
 public class ChessController<P extends PieceClass> implements Initializable {
 
     private static final int SQUARE_SIZE = 60;
+    private final ColorScheme colorScheme = ColorScheme.STANDARD;
+    private final Group iconBank = new Group();
     private final ChessModel<P> model;
 
-    private final Group iconBank = new Group();
-
     @FXML
-    GridPane layout;
+    private GridPane layout;  // Initialized in FXMLLoader
 
     public ChessController(ChessModel<P> model) {
         this.model = model;
@@ -40,21 +41,56 @@ public class ChessController<P extends PieceClass> implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        initializeGrid(model.getFileLength(), model.getRankLength(), ColorScheme.STANDARD);
+        initializeGrid(model.getFileLength(), model.getRankLength());
 
         // listen to map change
-        model.getObservableMap().addListener((MapChangeListener<Square, Piece<P>>) (change -> {
+        model.getObservableMap().addListener((MapChangeListener<Square, ChessModel.PieceId<P>>) (change -> {
             if (change.wasRemoved()) {
-                GridPane.clearConstraints(iconBank.lookup("#" + idOfPiece(change.getValueRemoved().toString())));
+                GridPane.clearConstraints(iconBank.lookup("#" + idOfPiece(change.getValueRemoved())));
             }
             if (change.wasAdded()) {
                 int fileIndex = change.getKey().getFile().getCoordinate().getIndex();
                 int rankIndex = change.getKey().getRank().getCoordinate().getIndex();
-                String id = idOfPiece(change.getValueAdded().toString());
-                layout.add(iconBank.lookup("#" + id), fileIndex, toRowIndex(rankIndex, model.getRankLength()));
+                layout.add(iconBank.lookup("#" + idOfPiece(change.getValueAdded())), fileIndex,
+                        toRowIndex(rankIndex, model.getRankLength()));
             }
         }));
 
+        // listen to selectedTile changes
+        model.getSelectedTile().addListener((observable, oldValue, newValue) -> {
+
+            if (newValue != null) {
+                int newFile = newValue.getFile().getCoordinate().getIndex();
+                int newRank = newValue.getRank().getCoordinate().getIndex();
+                Rectangle newTile = (Rectangle) layout.lookup("#" + idOfTile(newFile, newRank));
+                newTile.setFill(colorScheme.highlighted());
+            }
+
+            if (oldValue != null) {
+                int oldFile = oldValue.getFile().getCoordinate().getIndex();
+                int oldRank = oldValue.getRank().getCoordinate().getIndex();
+                Rectangle oldTile = (Rectangle) layout.lookup("#" + idOfTile(oldFile, oldRank));
+                oldTile.setFill(getDefaultColor(oldFile, oldRank));
+            }
+        });
+
+        // listen to movableTiles changes
+        model.getMovableTiles().addListener((ListChangeListener<Square>) (c -> {
+            c.next();
+            c.getRemoved().forEach(o ->  {
+                int file = o.getFile().getCoordinate().getIndex();
+                int rank = o.getRank().getCoordinate().getIndex();
+                Rectangle tile = (Rectangle) layout.lookup("#" + idOfTile(file, rank));
+                tile.setFill(getDefaultColor(file, rank));
+            });
+
+            c.getAddedSubList().forEach(o ->  {
+                int file = o.getFile().getCoordinate().getIndex();
+                int rank = o.getRank().getCoordinate().getIndex();
+                Rectangle tile = (Rectangle) layout.lookup("#" + idOfTile(file, rank));
+                tile.setFill(getMovableColor(file, rank));
+            });
+        }));
         // Ask model to populate all pieces
         model.refreshAllPieces();
     }
@@ -62,7 +98,7 @@ public class ChessController<P extends PieceClass> implements Initializable {
     /**
      * Initialize Grid with certain file length and rank length and a color scheme
      */
-    private void initializeGrid(int fileLength, int rankLength, ColorScheme colorScheme) {
+    private void initializeGrid(int fileLength, int rankLength) {
 
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(40, 40, 40, 40));
@@ -84,12 +120,14 @@ public class ChessController<P extends PieceClass> implements Initializable {
         // Create 8x8 tiles
         for (int i = 0; i < fileLength; i++) {
             for (int j = 0; j < rankLength; j ++) {
-                Rectangle rectangle = new Rectangle();
-                rectangle.setWidth(SQUARE_SIZE);
-                rectangle.setHeight(SQUARE_SIZE);
-                rectangle.setFill((i + j) % 2 == 0 ? colorScheme.dark() : colorScheme.light());
-                rectangle.setId(idOfTile(i, j));
-                layout.add(rectangle, i, toRowIndex(j, rankLength));
+                Rectangle tile = new Rectangle();
+                tile.setWidth(SQUARE_SIZE);
+                tile.setHeight(SQUARE_SIZE);
+                tile.setFill(getDefaultColor(i, j));
+                tile.setId(idOfTile(i, j));
+                layout.add(tile, i, toRowIndex(j, rankLength));
+                final int rank = i, file = j;
+                tile.setOnMouseClicked(event -> model.setSelectedSquare(rank, file));
             }
         }
 
@@ -98,7 +136,8 @@ public class ChessController<P extends PieceClass> implements Initializable {
             icon.setImage(new Image(pieceId.getShortId()+".png"));
             icon.setFitHeight(SQUARE_SIZE);
             icon.setFitWidth(SQUARE_SIZE);
-            icon.setId(idOfPiece(pieceId.toString()));
+            icon.setId(idOfPiece(pieceId));
+            icon.setOnMouseClicked(event -> model.setSelectedTile(pieceId));
             iconBank.getChildren().add(icon);
         });
     }
@@ -127,7 +166,15 @@ public class ChessController<P extends PieceClass> implements Initializable {
     /**
      * @return generate id for a piece for use in JavaFX indexing
      */
-    private static String idOfPiece(String pieceId) {
+    private static <P extends PieceClass> String idOfPiece(ChessModel.PieceId<P> pieceId) {
         return "Piece[" + pieceId + "]";
+    }
+
+    private Color getDefaultColor(int file, int rank) {
+        return (file + rank) % 2 == 1 ? colorScheme.dark() : colorScheme.light();
+    }
+
+    private Color getMovableColor(int file, int rank) {
+        return (file + rank) % 2 == 1 ? colorScheme.movableDark() : colorScheme.movableLight();
     }
 }

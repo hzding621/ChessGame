@@ -14,9 +14,9 @@ public class Test {
 
     public static void main(String[] args) {
 
-        Map<String, String> map = new HashMap<>();
-        ObservableMap<String, String> observableMap = FXCollections.observableMap(map);
-        observableMap.addListener((MapChangeListener<String, String>) (change -> {
+        Map<String, StringWrapper> map = new HashMap<>();
+        ObservableMap<String, StringWrapper> observableMap = FXCollections.observableMap(map);
+        observableMap.addListener((MapChangeListener<String, StringWrapper>) (change -> {
             if (change.wasRemoved()) {
                 System.out.println("map[" + change.getKey() + "]->X");
             }
@@ -24,12 +24,39 @@ public class Test {
                 System.out.println("map[" + change.getKey() + "]=" + change.getValueAdded());
             }
         }));
-        observableMap.put("A", "C");
-        observableMap.put("A", "B");
-        observableMap.put("A", "C");
-        observableMap.put("A", "C");
-        observableMap.put("A", "C");
+        observableMap.put("A", new StringWrapper("C"));
+        observableMap.put("A", new StringWrapper("C"));
+        observableMap.put("A", new StringWrapper("C"));
+        observableMap.put("A", new StringWrapper("C"));
         observableMap.remove("A");
+    }
+
+    public static class StringWrapper {
+        private final String s;
+
+        public StringWrapper(String s) {
+            this.s = s;
+        }
+
+        public String getS() {
+            return s;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            StringWrapper that = (StringWrapper) o;
+
+            return s != null ? s.equals(that.s) : that.s == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            return s != null ? s.hashCode() : 0;
+        }
     }
 
 }

@@ -28,6 +28,11 @@ final class ReverseMove<C extends Tile, P extends PieceClass> implements Move<C,
     }
 
     @Override
+    public C getDestination() {
+        throw new UnsupportedOperationException("Reverse move does not have a destination!");
+    }
+
+    @Override
     public Player getPlayer() {
         return originalMove.getPlayer();
     }

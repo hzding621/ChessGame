@@ -16,6 +16,12 @@ public interface Move<C extends Tile, P extends PieceClass>  {
     C getInitiator();
 
     /**
+     * The destination of the move is used in GUI to highlight the move
+     * @return the destination of the move
+     */
+    C getDestination();
+
+    /**
      * @return the initiating player of this move
      */
     Player getPlayer();

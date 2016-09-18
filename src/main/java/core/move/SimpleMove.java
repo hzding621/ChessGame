@@ -35,6 +35,11 @@ public class SimpleMove<C extends Tile, P extends PieceClass> implements Move<C,
     }
 
     @Override
+    public C getDestination() {
+        return target;
+    }
+
+    @Override
     public Player getPlayer() {
         return player;
     }

@@ -7,14 +7,23 @@ import javafx.scene.paint.Color;
  */
 public enum ColorScheme {
 
-    STANDARD(Color.rgb(0xFF, 0xCE, 0x9E), Color.rgb(0xD1, 0x8B, 0x47));
+    STANDARD(Color.rgb(0xFF, 0xCE, 0x9E), Color.rgb(0xD1, 0x8B, 0x47), Color.YELLOW,
+            Color.rgb(0xAD, 0xCC, 0x85), Color.rgb(0x9F, 0xB4, 0x62));
 
     private final Color light;
     private final Color dark;
+    private final Color highlighted;
 
-    ColorScheme(Color dark, Color light) {
+    private final Color movableLight;
+
+    private final Color movableDark;
+
+    ColorScheme(Color dark, Color light, Color highlighted, Color movableLight, Color movableDark) {
         this.dark = dark;
         this.light = light;
+        this.highlighted = highlighted;
+        this.movableLight = movableLight;
+        this.movableDark = movableDark;
     }
 
     public Color light() {
@@ -23,6 +32,19 @@ public enum ColorScheme {
 
     public Color dark() {
         return dark;
+    }
+
+
+    public Color highlighted() {
+        return highlighted;
+    }
+
+    public Color movableLight() {
+        return movableLight;
+    }
+
+    public Color movableDark() {
+        return movableDark;
     }
 
 }

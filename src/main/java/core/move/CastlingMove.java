@@ -31,6 +31,12 @@ public final class CastlingMove<C extends Tile, P extends PieceClass> implements
     }
 
     @Override
+    public C getDestination() {
+        // Castling move highlights the rook as the destination
+        return rookMove.getInitiator();
+    }
+
+    @Override
     public Player getPlayer() {
         return kingMove.getPlayer();
     }
