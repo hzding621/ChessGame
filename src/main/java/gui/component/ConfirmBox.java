@@ -1,17 +1,21 @@
 package gui.component;
 
-import javafx.stage.*;
-import javafx.scene.*;
-import javafx.scene.layout.*;
-import javafx.scene.control.*;
-import javafx.geometry.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
-public class ConfirmBox {
-
-    //Create variable
-    private static boolean answer;
+public final class ConfirmBox {
 
     public static boolean display(String title, String message) {
+
         Stage window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
@@ -24,13 +28,15 @@ public class ConfirmBox {
         Button yesButton = new Button("Yes");
         Button noButton = new Button("No");
 
+        BooleanProperty answer = new SimpleBooleanProperty();
+
         //Clicking will set answer and close window
         yesButton.setOnAction(e -> {
-            answer = true;
+            answer.setValue(true);
             window.close();
         });
         noButton.setOnAction(e -> {
-            answer = false;
+            answer.setValue(false);
             window.close();
         });
         HBox buttons = new HBox(10);
@@ -38,15 +44,16 @@ public class ConfirmBox {
         buttons.getChildren().addAll(confirmMessage, yesButton, noButton);
         buttons.setAlignment(Pos.CENTER);
 
-        VBox layout = new VBox(20);
+        VBox layout = new VBox(10);
         layout.getChildren().addAll(confirmMessage, buttons);
-        layout.setPadding(new Insets(5, 5, 5, 5));
+        layout.setPadding(new Insets(10, 10, 10, 10));
+        layout.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(layout);
         window.setScene(scene);
         window.showAndWait();
 
-        return answer;
+        return answer.get();
     }
 
 }

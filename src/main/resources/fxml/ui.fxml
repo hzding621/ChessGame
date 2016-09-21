@@ -15,16 +15,21 @@
 <BorderPane fx:id="layout" xmlns:fx="http://javafx.com/fxml">
     <top>
         <MenuBar>
-            <Menu fx:id="gameMenu" text="Game">
-                <MenuItem fx:id="undoButton" text="Undo" disable="true">
+            <Menu text="Game">
+                <MenuItem fx:id="nextRoundButton" text="Next Round" disable="true">
                 </MenuItem>
                 <SeparatorMenuItem>
                 </SeparatorMenuItem>
-                <MenuItem fx:id="newGameButton" text="New Game">
+                <MenuItem fx:id="undoButton" text="Undo" disable="true">
+                </MenuItem>
+                <MenuItem fx:id="surrenderButton" text="Surrender">
+                </MenuItem>
+                <MenuItem fx:id="drawGameButton" text="Draw Game">
                 </MenuItem>
             </Menu>
             <Menu text="Scoreboard">
-
+                <MenuItem fx:id="showScoreboardButton" text="Show">
+                </MenuItem>
             </Menu>
         </MenuBar>
     </top>

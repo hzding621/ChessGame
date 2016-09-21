@@ -3,6 +3,8 @@ package gui;
 import core.board.Square;
 import core.piece.PieceClass;
 import gui.component.ConfirmBox;
+import gui.component.Scoreboard;
+import gui.component.TextInputBox;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
@@ -12,9 +14,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Group;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.InnerShadow;
+import javafx.scene.effect.Shadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -44,10 +47,11 @@ public class ChessController<P extends PieceClass> implements Initializable {
     // Initialized in FXMLLoader
     @FXML private BorderPane layout;
     @FXML private GridPane board;
-    @FXML private Menu gameMenu;
     @FXML private MenuItem undoButton;
-    @FXML private MenuItem newGameButton;
-
+    @FXML private MenuItem surrenderButton;
+    @FXML private MenuItem drawGameButton;
+    @FXML private MenuItem nextRoundButton;
+    @FXML private MenuItem showScoreboardButton;
 
     public ChessController(ChessModel<P> model) {
         this.model = model;
@@ -57,33 +61,88 @@ public class ChessController<P extends PieceClass> implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         initializeGrid(model.getFileLength(), model.getRankLength());
         initializePieceIcons();
-        listenToBoardChanges();
-        listenToSelectedTileChanges();
-        listenToMovableTilesChanges();
-        listenToAttackedKingChange();
+        listenToTileMappingsPropertyChange();
+        listenToSelectedTilePropertyChange();
+        listenToMovableTilesPropertyChange();
+        listenToAttackedKingPropertyChange();
 
         // Undo Button
-        attachEventHandlerForUndoButton();
-        listenToTotalMovesCount();
+        attachEventHandlerToUndoButton();
+        listenToTotalMovesCountPropertyChange();
 
-        // New Game Button
-        attachEventHandlerForNewGameButton();
+        // Next Round, Draw Game, Surrender
+        attachEventHandlerToSurrenderButton();
+        attachEventHandlerToDrawGameButton();
+        attachEventHandlerToNextRoundButton();
+
+        // When Game is Closed, Undo/Draw will be disabled, Next Round will be enabled
+        listenToOpenGamePropertyChange();
+
+        // ShowScoreboard Button
+        attachEventHandlerToShowScoreboardButton();
 
         // Ask model to populate all pieces
         model.pullPiecesLocationsUpdate();
+
+        // Request player names
+        getPlayersNames();
     }
 
-    private void attachEventHandlerForNewGameButton() {
-        newGameButton.setOnAction(event -> {
-            if (ConfirmBox.display("New Game", "Please confirm that both players agree to restart!")) {
-                model.newGame();
+    public void getPlayersNames() {
+        String whitePlayer = TextInputBox.display("New Game", "Please enter name for White player.", "Name", "White");
+        String blackPlayer = TextInputBox.display("New Game", "Please enter name for Black player.", "Name", "Black");
+        model.whitePlayerNameProperty().setValue(whitePlayer);
+        model.blackPlayerNameProperty().setValue(blackPlayer);
+    }
+
+    private void attachEventHandlerToShowScoreboardButton() {
+        showScoreboardButton.setOnAction(event -> {
+            Scoreboard.display(model.whitePlayerNameProperty().getValue(), model.blackPlayerNameProperty().getValue(),
+                    model.getWhiteScore(), model.getBlackScore());
+        });
+    }
+
+    private void attachEventHandlerToSurrenderButton() {
+        surrenderButton.setOnAction(event -> {
+            if (ConfirmBox.display("Surrender", model.getCurrentPlayerName() + ": Are you sure you want to surrender?")) {
+                model.surrender();
             }
         });
     }
 
-    private void listenToTotalMovesCount() {
+    private void attachEventHandlerToDrawGameButton() {
+        drawGameButton.setOnAction(event ->  {
+            if (ConfirmBox.display("Draw Game", "Please confirm that both players agree to draw!")) {
+                model.drawGame();
+            }
+        });
+    }
+
+    private void listenToOpenGamePropertyChange() {
+        model.openGameProperty().addListener((observable, oldValue, newValue) -> {
+            nextRoundButton.disableProperty().setValue(newValue);
+            drawGameButton.disableProperty().setValue(!newValue);
+            surrenderButton.disableProperty().setValue(!newValue);
+            if (model.totalMovesProperty().get() >= 2) {
+                undoButton.disableProperty().setValue(!newValue);
+            }
+            if (newValue) {
+                board.setEffect(null);
+            } else {
+                board.setEffect(new ColorAdjust(0, -1, 0, 0));
+            }
+        });
+    }
+
+    private void attachEventHandlerToNextRoundButton() {
+        nextRoundButton.setOnAction(event -> {
+                model.newGame();
+        });
+    }
+
+    private void listenToTotalMovesCountPropertyChange() {
         model.totalMovesProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.intValue() >= 2) {
+            if (newValue.intValue() >= 2 && model.openGameProperty().getValue()) {
                 undoButton.disableProperty().setValue(false);
             } else {
                 undoButton.disableProperty().setValue(true);
@@ -91,7 +150,7 @@ public class ChessController<P extends PieceClass> implements Initializable {
         });
     }
 
-    private void attachEventHandlerForUndoButton() {
+    private void attachEventHandlerToUndoButton() {
         undoButton.setOnAction(event -> {
             if (ConfirmBox.display("Undo", "Please confirm that both players agree to undo last round!")) {
                 model.undoLastRound();
@@ -99,7 +158,7 @@ public class ChessController<P extends PieceClass> implements Initializable {
         });
     }
 
-    private void listenToAttackedKingChange() {
+    private void listenToAttackedKingPropertyChange() {
         model.attackedKingProperty().addListener((observable, oldValue, newValue) -> {
             InnerShadow shade = new InnerShadow(30, Color.RED);
             if (oldValue != null) {
@@ -138,7 +197,7 @@ public class ChessController<P extends PieceClass> implements Initializable {
     /**
      * Subscribe to the changes to highlighted movable tiles in Model and update View
      */
-    private void listenToMovableTilesChanges() {
+    private void listenToMovableTilesPropertyChange() {
         model.movableTilesProperty().addListener((ListChangeListener<Square>) (c -> {
             c.next();
             c.getRemoved().forEach(this::resetColor);
@@ -154,7 +213,7 @@ public class ChessController<P extends PieceClass> implements Initializable {
     /**
      * Subscribe to the changes of selected tile in Model and update View
      */
-    private void listenToSelectedTileChanges() {
+    private void listenToSelectedTilePropertyChange() {
         model.selectedTileProperty().addListener((observable, oldValue, newValue) -> {
             setColor(newValue, colorScheme.highlighted());
             resetColor(oldValue);
@@ -164,7 +223,7 @@ public class ChessController<P extends PieceClass> implements Initializable {
     /**
      * Subscribe to Board (Tile-Piece) mapping changes in Model and update View
      */
-    private void listenToBoardChanges() {
+    private void listenToTileMappingsPropertyChange() {
         // listen to map change
         model.observableMap().addListener((MapChangeListener<Square, ChessModel.PieceId<P>>) (change -> {
             if (change.wasRemoved()) {
@@ -214,6 +273,9 @@ public class ChessController<P extends PieceClass> implements Initializable {
                 final int rank = i, file = j;
                 tile.setOnMouseClicked(event -> {
                     log.info("Clicked tile at + " + rank + ", " + file);
+                    if (!model.openGameProperty().get()) {
+                        return;
+                    }
                     model.selectSquare(rank, file);
                 });
             }
@@ -232,6 +294,9 @@ public class ChessController<P extends PieceClass> implements Initializable {
             icon.setId(idOfPiece(pieceId));
             icon.setOnMouseClicked(event -> {
                 log.info("Clicked piece " + pieceId);
+                if (!model.openGameProperty().get()) {
+                    return;
+                }
                 model.selectSquareByPiece(pieceId);
             });
             inactivePieces.getChildren().add(icon);
