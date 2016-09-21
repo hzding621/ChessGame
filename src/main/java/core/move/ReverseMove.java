@@ -41,18 +41,18 @@ final class ReverseMove<C extends Tile, P extends PieceClass> implements Move<C,
     public <M extends Board<C, P>> BoardTransition<C, P, M> getTransition() {
         return board -> {
             movedPieces.forEach(movedPiece -> {
-                if (movedPiece.getSource().isPresent() && movedPiece.getTarget().isPresent()) {
-                    board.movePiece(movedPiece.getTarget().get(), movedPiece.getSource().get());
+                if (movedPiece.getSource().isPresent() && movedPiece.getDestination().isPresent()) {
+                    board.movePiece(movedPiece.getDestination().get(), movedPiece.getSource().get());
                 } else if (movedPiece.getSource().isPresent()) {
                     board.addPiece(movedPiece.getSource().get(), movedPiece.getPiece());
                 } else {
-                    board.clearPiece(movedPiece.getTarget().get());
+                    board.clearPiece(movedPiece.getDestination().get());
                 }
             });
 
             return TransitionResult.create(() -> movedPieces.stream()
                     .map(movedPiece -> TransitionResult.MovedPiece.of(movedPiece.getPiece(),
-                            movedPiece.getTarget().orElseGet(null), movedPiece.getSource().orElseGet(null)))
+                            movedPiece.getDestination().orElse(null), movedPiece.getSource().orElse(null)))
                     .collect(Collectors.toList()), () -> originalMove);
         };
     }

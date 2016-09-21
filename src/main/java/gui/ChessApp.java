@@ -1,11 +1,9 @@
 package gui;
 
+import com.google.common.base.Supplier;
 import core.game.ChessGame;
-import core.game.ExtensionSetting;
 import core.game.StandardSetting;
 import core.piece.StandardPieces;
-import core.piece.extension.ExtensionPieces;
-import core.rule.ExtensionRuleBindings;
 import core.rule.StandardRuleBindings;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -19,13 +17,12 @@ import javafx.stage.Stage;
  */
 public class ChessApp extends Application {
 
-    private final ChessGame<StandardPieces> game;
+    private final Supplier<ChessGame<StandardPieces>> gameSupplier = () -> ChessGame.create(StandardSetting.VALUE, StandardRuleBindings::new);
     private final ChessModel<StandardPieces> model;
     private final ChessController<StandardPieces> controller;
 
     public ChessApp() {
-        this.game = ChessGame.create(StandardSetting.VALUE, StandardRuleBindings::new);
-        this.model = new ChessModel<>(game);
+        this.model = new ChessModel<>(gameSupplier);
         this.controller = new ChessController<>(model);
     }
 

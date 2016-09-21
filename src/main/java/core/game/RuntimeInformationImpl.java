@@ -25,9 +25,9 @@ public final class RuntimeInformationImpl<C extends Tile, P extends PieceClass, 
         attackInformation.update(rules);
     }
 
-    public void updateInformationForThisRound(Rules<C, P, B> rules, TransitionResult<C, P> history) {
+    public void updateInformationForThisRound(Rules<C, P, B> rules, TransitionResult<C, P> history, boolean isUndo) {
         playerInformation.nextRound();
-        pieceInformation.update(history);
+        pieceInformation.update(history, isUndo);
         attackInformation.update(rules);
     }
 

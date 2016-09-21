@@ -123,4 +123,53 @@ public class ChessGameTest {
         Assert.assertTrue(game.getBoard().isOccupied(tile.at("G", "1")));
         Assert.assertTrue(game.getBoard().isOccupied(tile.at("F", "1")));
     }
+
+    @Test
+    public void testUndoLastRound() {
+        for (String[] move: new String[][] {
+                {"D", "2", "D", "4"},
+                {"D", "7", "D", "5"},
+                {"E", "2", "E", "4"},
+                {"G", "8", "F", "6"},
+
+        }) {
+            game.move(SimpleMove.of(tile.at(move[0], move[1]), tile.at(move[2], move[3]), game.getActor()));
+        }
+
+        game.undoLastRound();
+
+        Assert.assertTrue(game.getBoard().isOccupied(tile.at("E", "2")));
+        Assert.assertTrue(game.getBoard().isOccupied(tile.at("G", "8")));
+        Assert.assertEquals(0, game.getRuntimeInformation().getPieceInformation().getPieceMoveCount(game.getBoard().getPiece(tile.at("E", "2")).get()));
+        Assert.assertEquals(0, game.getRuntimeInformation().getPieceInformation().getPieceMoveCount(game.getBoard().getPiece(tile.at("G", "8")).get()));
+    }
+
+    @Test
+    public void testUndoCastling() {
+        for (String[] move: new String[][] {
+                {"E", "2", "E", "4"},
+                {"E", "7", "E", "5"},
+                {"G", "1", "F", "3"},
+                {"G", "8", "F", "6"},
+                {"F", "1", "C", "4"},
+                {"B", "8", "C", "6"},
+        }) {
+            game.move(SimpleMove.of(tile.at(move[0], move[1]), tile.at(move[2], move[3]), game.getActor()));
+        }
+
+        Collection<Move<Square, StandardPieces>> moves = game.availableMovesFrom(tile.at("E", "1"));
+        Optional<Move<Square, StandardPieces>> castling = Iterables.tryFind(moves, m -> m instanceof CastlingMove);
+        game.move(castling.get());
+
+        Assert.assertTrue(game.getBoard().isOccupied(tile.at("G", "1")));
+        Assert.assertTrue(game.getBoard().isOccupied(tile.at("F", "1")));
+
+        game.undoLastRound();
+
+        Assert.assertFalse(game.getBoard().isOccupied(tile.at("G", "1")));
+        Assert.assertFalse(game.getBoard().isOccupied(tile.at("F", "1")));
+        Assert.assertTrue(game.getBoard().isOccupied(tile.at("E", "1")));
+        Assert.assertTrue(game.getBoard().isOccupied(tile.at("H", "1")));
+
+    }
 }

@@ -43,20 +43,20 @@ public interface TransitionResult<C extends Tile, P extends PieceClass> {
     Move<C, P> getReverseMove();
 
     /**
-     * Annotated piece that includes its source position and its optional target position
-     * If the piece is taken out of the board, target is empty
+     * Annotated piece that includes its source position and its optional destination position
+     * If the piece is taken out of the board, destination is empty
      * If the piece appears from nowhere (for example in case of Pawn promotion), source is empty
      */
     class MovedPiece<C extends Tile, P extends PieceClass> {
 
         private final Piece<P> movedPiece;
         private final C source;
-        private final C target;
+        private final C destination;
 
-        private MovedPiece(Piece<P> movedPiece, C source, C target) {
+        private MovedPiece(Piece<P> movedPiece, C source, C destination) {
             this.movedPiece = movedPiece;
             this.source = source;
-            this.target = target;
+            this.destination = destination;
         }
 
         public static <C extends Tile, P extends PieceClass> MovedPiece<C, P> of(
@@ -68,8 +68,8 @@ public interface TransitionResult<C extends Tile, P extends PieceClass> {
             return Optional.ofNullable(source);
         }
 
-        public Optional<C> getTarget() {
-            return Optional.ofNullable(target);
+        public Optional<C> getDestination() {
+            return Optional.ofNullable(destination);
         }
 
         public Piece<P> getPiece() {

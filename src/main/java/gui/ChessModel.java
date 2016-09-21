@@ -1,18 +1,22 @@
 package gui;
 
+import com.google.common.base.Supplier;
+import com.google.common.collect.Iterables;
 import core.board.Square;
 import core.game.ChessGame;
 import core.move.Move;
 import core.piece.Piece;
 import core.piece.PieceClass;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -22,34 +26,47 @@ import java.util.stream.Stream;
  */
 public class ChessModel<P extends PieceClass> {
 
-    private final ChessGame<P> game;
+    private final Supplier<ChessGame<P>> gameSupplier;
     private final ObservableMap<Square, PieceId<P>> observableMap = FXCollections.observableHashMap();
     private final ObjectProperty<Square> selectedTile = new SimpleObjectProperty<>();
-
     private final ObservableList<Square> movableTiles = FXCollections.observableArrayList();
+    private final ObjectProperty<Square> attackedKing = new SimpleObjectProperty<>();
+    private final IntegerProperty totalMoves = new SimpleIntegerProperty(0);
 
-    public ObservableMap<Square, PieceId<P>> getObservableMap() {
+    private ChessGame<P> game;
+
+    public void newGame() {
+        game = gameSupplier.get();
+        selectedTile.setValue(null);
+        attackedKing.setValue(null);
+        movableTiles.clear();
+        totalMoves.setValue(0);
+        pullPiecesLocationsUpdate();
+    }
+
+    public IntegerProperty totalMovesProperty() {
+        return totalMoves;
+    }
+
+    public ChessModel(Supplier<ChessGame<P>> gameSupplier) {
+        this.gameSupplier = gameSupplier;
+        this.game = gameSupplier.get();
+    }
+
+    public ObservableMap<Square, PieceId<P>> observableMap() {
         return observableMap;
     }
 
-    public ObjectProperty<Square> getSelectedTile() {
+    public ObjectProperty<Square> attackedKingProperty() {
+        return attackedKing;
+    }
+
+    public ObjectProperty<Square> selectedTileProperty() {
         return selectedTile;
     }
 
-    public ObservableList<Square> getMovableTiles() {
+    public ObservableList<Square> movableTilesProperty() {
         return movableTiles;
-    }
-
-    public ChessModel(ChessGame<P> game) {
-        this.game = game;
-    }
-
-    public Stream<PieceId<P>> piecesConfiguration() {
-        return game.getSetting().constructPiecesByStartingPosition().values().stream().map(PieceId::new);
-    }
-
-    public void refreshAllPieces() {
-        game.getBoard().getMap().forEach((square, piece) -> observableMap.put(square, PieceId.of(piece)));
     }
 
     private void updateMovableTiles() {
@@ -61,9 +78,29 @@ public class ChessModel<P extends PieceClass> {
         }
     }
 
-    public void setSelectedSquare(int file, int rank) {
+    private void startMove(Square source, Square target) {
+        Move<Square, P> move = Iterables.tryFind(game.availableMovesFrom(source),
+                m -> m.getDestination().equals(target)).get();
+        game.move(move);
+        pullPiecesLocationsUpdate();
+        updateKingCheckHighlight();
+        totalMoves.setValue(totalMoves.get() + 1);
+    }
+
+    public void undoLastRound() {
+        game.undoLastRound();
+        pullPiecesLocationsUpdate();
+        updateKingCheckHighlight();
+        totalMoves.setValue(totalMoves.get() - 2);
+    }
+
+    public void selectSquare(int file, int rank) {
         Square square = game.getBoard().getGridTileBuilder().at(file, rank);
-        if (game.getBoard().isOccupied(square) && !game.getBoard().isEnemy(square, game.getActor())) {
+        if (movableTiles.contains(square)) {
+            startMove(selectedTile.get(), square);
+            selectedTile.setValue(null);
+        }
+        else if (game.getBoard().isOccupied(square) && !game.getBoard().isEnemy(square, game.getActor())) {
             selectedTile.setValue(square);
         } else {
             selectedTile.setValue(null);
@@ -71,11 +108,31 @@ public class ChessModel<P extends PieceClass> {
         updateMovableTiles();
     }
 
-    public void setSelectedTile(PieceId<P> pieceId) {
-        observableMap.entrySet().stream().filter(entry -> entry.getValue().equals(pieceId)).forEach(entry -> {
-            setSelectedSquare(entry.getKey().getFile().getCoordinate().getIndex(),
-                    entry.getKey().getRank().getCoordinate().getIndex());
-        });
+    public void selectSquareByPiece(PieceId<P> pieceId) {
+        Square square = Iterables.tryFind(observableMap.entrySet(), e -> e.getValue().equals(pieceId)).get().getKey();
+        selectSquare(square.getFile().getCoordinate().getIndex(), square.getRank().getCoordinate().getIndex());
+    }
+
+    private void updateKingCheckHighlight() {
+        if (!game.getRuntimeInformation().getAttackInformation().getCheckers().isEmpty()) {
+            Square kingPosition = game.getRuntimeInformation().getPieceInformation()
+                    .locateKing(game.getRuntimeInformation().getPlayerInformation().getActor());
+            attackedKing.setValue(kingPosition);
+        } else {
+            attackedKing.setValue(null);
+        }
+    }
+
+    public void pullPiecesLocationsUpdate() {
+        Map<Square, Piece<P>> updatedMap = game.getBoard().getMap();
+        List<Square> removedPieces = observableMap.keySet()
+                .stream().filter(square -> !updatedMap.containsKey(square)).collect(Collectors.toList());
+        removedPieces.forEach(observableMap::remove);
+        updatedMap.forEach((square, piece) -> observableMap.put(square, PieceId.of(piece)));
+    }
+
+    public Stream<PieceId<P>> piecesConfiguration() {
+        return game.getSetting().constructPiecesByStartingPosition().values().stream().map(PieceId::new);
     }
 
     public int getFileLength() {

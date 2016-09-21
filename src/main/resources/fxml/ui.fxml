@@ -12,5 +12,24 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.paint.Color?>
 
-<GridPane fx:id="layout" xmlns:fx="http://javafx.com/fxml">
-</GridPane>
+<BorderPane fx:id="layout" xmlns:fx="http://javafx.com/fxml">
+    <top>
+        <MenuBar>
+            <Menu fx:id="gameMenu" text="Game">
+                <MenuItem fx:id="undoButton" text="Undo" disable="true">
+                </MenuItem>
+                <SeparatorMenuItem>
+                </SeparatorMenuItem>
+                <MenuItem fx:id="newGameButton" text="New Game">
+                </MenuItem>
+            </Menu>
+            <Menu text="Scoreboard">
+
+            </Menu>
+        </MenuBar>
+    </top>
+    <center>
+        <GridPane fx:id="board" xmlns:fx="http://javafx.com/fxml">
+        </GridPane>
+    </center>
+</BorderPane>

@@ -21,14 +21,18 @@ public final class PieceInformationImpl<C extends Tile, P extends PieceClass> im
         kingPosition.putAll(kingStartingPosition);
     }
 
-    public void update(TransitionResult<C, P> history) {
+    public void update(TransitionResult<C, P> history, boolean isUndo) {
         history.getMovedPieces().forEach(movedPiece -> {
-            moveCounts.put(movedPiece.getPiece(), moveCounts.getOrDefault(movedPiece.getPiece(), 0) + 1);
+            if (!isUndo) {
+                moveCounts.put(movedPiece.getPiece(), moveCounts.getOrDefault(movedPiece.getPiece(), 0) + 1);
+            } else {
+                moveCounts.put(movedPiece.getPiece(), moveCounts.get(movedPiece.getPiece()) - 1);
+            }
             if (movedPiece.getPiece().getPieceClass().isKing()) {
-                if (!movedPiece.getTarget().isPresent()) {
-                    throw new IllegalStateException("King should never have been captured!");
+                if (!movedPiece.getDestination().isPresent()) {
+                    throw new IllegalStateException("King should never be captured or spawned!");
                 }
-                kingPosition.put(movedPiece.getPiece().getPlayer(), movedPiece.getTarget().get());
+                kingPosition.put(movedPiece.getPiece().getPlayer(), movedPiece.getDestination().get());
             }
         });
     }

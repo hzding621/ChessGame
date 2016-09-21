@@ -25,7 +25,11 @@ interface Game<C extends Tile, P extends PieceClass, B extends BoardViewer<C, P>
 
     void move(Move<C, P> move);
 
+    void undoLastRound();
+
     GameStatus getGameStatus();
+
+    RuntimeInformation<C, P> getRuntimeInformation();
 
     S getSetting();
 }

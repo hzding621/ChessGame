@@ -5,7 +5,9 @@ import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 
 /**
  * Created by haozhending on 9/18/16.
@@ -25,10 +27,8 @@ public class Test {
             }
         }));
         observableMap.put("A", new StringWrapper("C"));
-        observableMap.put("A", new StringWrapper("C"));
-        observableMap.put("A", new StringWrapper("C"));
-        observableMap.put("A", new StringWrapper("C"));
         observableMap.remove("A");
+        observableMap.put("A", new StringWrapper("B"));
     }
 
     public static class StringWrapper {

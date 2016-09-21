@@ -21,6 +21,7 @@ public class ChessGame<P extends PieceClass> implements Game<Square, P, ChessBoa
     private final Rules<Square, P, ChessBoardViewer<P>> chessRules;
     private final RuntimeInformationImpl<Square, P, ChessBoardViewer<P>> runtimeInformation;
     private final MoveFinder<Square, P> moveFinder;
+    private final History<Square, P> history = new History<>();
     private GameStatus gameStatus = GameStatus.OPEN;
 
 
@@ -74,10 +75,13 @@ public class ChessGame<P extends PieceClass> implements Game<Square, P, ChessBoa
         return moveFinder.getAvailableMoves().get(square);
     }
 
-    private void updateInformationForThisRound(TransitionResult<Square, P> history) {
+    private void updateInformationForThisRound(TransitionResult<Square, P> transitionResult, boolean isUndo) {
         // Update everything in runtime information
-        runtimeInformation.updateInformationForThisRound(chessRules, history);
+        runtimeInformation.updateInformationForThisRound(chessRules, transitionResult, isUndo);
         moveFinder.recompute();
+        if (!isUndo) {
+            history.pushNewResult(transitionResult);
+        }
 
         // Update Checkmate/Stalemate situation
         if (moveFinder.getAvailableMoves().isEmpty()) {
@@ -86,8 +90,9 @@ public class ChessGame<P extends PieceClass> implements Game<Square, P, ChessBoa
             } else {
                 gameStatus =  GameStatus.CHECKMATE;
             }
+        } else {
+            gameStatus = GameStatus.OPEN;
         }
-        gameStatus = GameStatus.OPEN;
     }
 
     @Override
@@ -99,13 +104,31 @@ public class ChessGame<P extends PieceClass> implements Game<Square, P, ChessBoa
         if (!moveFinder.getAvailableMoves().get(source).contains(attemptedMove)) {
             throw new IllegalStateException("Attempted move " + attemptedMove + " is invalid!");
         }
-        updateInformationForThisRound(attemptedMove.<ChessBoard<P>>getTransition().transition(chessBoard));
-        moveFinder.recompute();
+        updateInformationForThisRound(attemptedMove.<ChessBoard<P>>getTransition().transition(chessBoard), false);
+    }
+
+    @Override
+    public void undoLastRound() {
+        if (gameStatus == GameStatus.CHECKMATE || gameStatus == GameStatus.STALEMATE) {
+            throw new IllegalStateException("Game has ended in " + gameStatus);
+        }
+        if (history.getHistorySize() < 2) {
+            throw new IllegalStateException("Player has not made move yet!");
+        }
+        TransitionResult<Square, P> lastOpponentMove = history.popLastResult();
+        updateInformationForThisRound(lastOpponentMove.getReverseMove().getTransition().transition(chessBoard), true);
+        TransitionResult<Square, P> lastMyMove = history.popLastResult();
+        updateInformationForThisRound(lastMyMove.getReverseMove().getTransition().transition(chessBoard), true);
     }
 
     @Override
     public GameStatus getGameStatus() {
         return gameStatus;
+    }
+
+    @Override
+    public RuntimeInformation<Square, P> getRuntimeInformation() {
+        return runtimeInformation;
     }
 
     @Override
