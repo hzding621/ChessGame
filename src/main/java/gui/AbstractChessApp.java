@@ -1,8 +1,5 @@
 package gui;
 
-import core.game.StandardSetting;
-import core.piece.StandardPieces;
-import core.rule.StandardRuleBindings;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
