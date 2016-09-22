@@ -10,4 +10,9 @@ public interface PlayerInformation {
     Player getActor();
 
     Player getDefender();
+
+    /**
+     * Go to next round, and switch actor and defender
+     */
+    void nextRound();
 }

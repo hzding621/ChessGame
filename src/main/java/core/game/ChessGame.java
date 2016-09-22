@@ -122,6 +122,12 @@ public class ChessGame<P extends PieceClass> implements Game<Square, P, ChessBoa
     }
 
     @Override
+    public void nextRound() {
+        runtimeInformation.getPlayerInformation().nextRound();
+        moveFinder.recompute();
+    }
+
+    @Override
     public GameStatus getGameStatus() {
         return gameStatus;
     }

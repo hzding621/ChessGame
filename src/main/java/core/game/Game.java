@@ -32,4 +32,6 @@ interface Game<C extends Tile, P extends PieceClass, B extends BoardViewer<C, P>
     RuntimeInformation<C, P> getRuntimeInformation();
 
     S getSetting();
+
+    void nextRound();
 }

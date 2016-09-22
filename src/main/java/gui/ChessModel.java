@@ -2,13 +2,20 @@ package gui;
 
 import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
+import core.board.BoardViewer;
+import core.board.ChessBoardViewer;
 import core.board.Square;
+import core.board.Tile;
 import core.game.ChessGame;
+import core.game.ChessRuleBindings;
+import core.game.GameSetting;
 import core.game.GameStatus;
 import core.move.Move;
 import core.piece.Piece;
 import core.piece.PieceClass;
+import core.piece.StandardPieces;
 import core.player.Player;
+import core.rule.RuleBindings;
 import gui.component.MessageBox;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -35,6 +42,8 @@ import java.util.stream.Stream;
  */
 public class ChessModel<P extends PieceClass> {
 
+    private final GameSetting.GridGame<Square, P> setting;
+
     private final Supplier<ChessGame<P>> gameSupplier;
     private final ObservableMap<Square, PieceId<P>> observableMap = FXCollections.observableHashMap();
     private final ObjectProperty<Square> selectedTile = new SimpleObjectProperty<>();
@@ -46,13 +55,17 @@ public class ChessModel<P extends PieceClass> {
     private final StringProperty blackPlayerName = new SimpleStringProperty("Black");
     private final DoubleProperty whiteScore = new SimpleDoubleProperty(0);
     private final DoubleProperty blackScore = new SimpleDoubleProperty(0);
-
     private ChessGame<P> game;
 
-    public ChessModel(Supplier<ChessGame<P>> gameSupplier) {
-        this.gameSupplier = gameSupplier;
-        this.game = gameSupplier.get();
+    public ChessModel(GameSetting.GridGame<Square, P> setting, ChessRuleBindings.Provider<P> ruleBindingProvider) {
+        this.setting = setting;
+        this.gameSupplier = () -> ChessGame.create(setting, ruleBindingProvider);
     }
+
+    public GameSetting.GridGame<Square, P> getSetting() {
+        return setting;
+    }
+
     public double getWhiteScore() {
         return whiteScore.get();
     }
@@ -101,8 +114,11 @@ public class ChessModel<P extends PieceClass> {
         return movableTiles;
     }
 
-    public void newGame() {
+    public void newRound(boolean whiteMovesFirst) {
         game = gameSupplier.get();
+        if (!whiteMovesFirst) {
+            game.nextRound();
+        }
         selectedTile.setValue(null);
         attackedKing.setValue(null);
         movableTiles.clear();
@@ -203,15 +219,15 @@ public class ChessModel<P extends PieceClass> {
     }
 
     public Stream<PieceId<P>> piecesConfiguration() {
-        return game.getSetting().constructPiecesByStartingPosition().values().stream().map(PieceId::new);
+        return setting.constructPiecesByStartingPosition().values().stream().map(PieceId::new);
     }
 
     public int getFileLength() {
-        return game.getSetting().getFileLength();
+        return setting.getFileLength();
     }
 
     public int getRankLength() {
-        return game.getSetting().getRankLength();
+        return setting.getRankLength();
     }
 
     public static class PieceId<P extends PieceClass> {

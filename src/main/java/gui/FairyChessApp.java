@@ -1,9 +1,10 @@
 package gui;
 
-import com.google.common.base.Supplier;
-import core.game.ChessGame;
+import core.game.ExtensionSetting;
 import core.game.StandardSetting;
 import core.piece.StandardPieces;
+import core.piece.extension.ExtensionPieces;
+import core.rule.ExtensionRuleBindings;
 import core.rule.StandardRuleBindings;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -14,15 +15,15 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
- * Main Application for chess
+ * Chess Game with customized chess pieces: Assassin, and Ghost
  */
-public class ChessApp extends AbstractChessApp {
+public class FairyChessApp extends AbstractChessApp {
 
-    private final ChessModel<StandardPieces> model;
-    private final ChessController<StandardPieces> controller;
+    private final ChessModel<ExtensionPieces> model;
+    private final ChessController<ExtensionPieces> controller;
 
-    public ChessApp() {
-        this.model = new ChessModel<>(StandardSetting.VALUE, StandardRuleBindings::new);
+    public FairyChessApp() {
+        this.model = new ChessModel<>(ExtensionSetting.VALUE, ExtensionRuleBindings::new);
         this.controller = new ChessController<>(model);
     }
 

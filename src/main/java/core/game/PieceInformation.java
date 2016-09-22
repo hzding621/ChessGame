@@ -10,7 +10,13 @@ import core.player.Player;
  */
 public interface PieceInformation<C extends Tile, P extends PieceClass> {
 
+    /**
+     * @return the number of moves the given piece has made in the game
+     */
     int getPieceMoveCount(Piece<P> piece);
 
+    /**
+     * @return the position of king of player
+     */
     C locateKing(Player player);
 }

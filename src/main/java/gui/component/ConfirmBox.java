@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 
 public final class ConfirmBox {
 
-    public static boolean display(String title, String message) {
+    public static boolean display(String title, String message, String yesButtonText, String noButtonText) {
 
         Stage window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
@@ -25,8 +25,8 @@ public final class ConfirmBox {
         confirmMessage.setText(message);
 
         //Create two buttons
-        Button yesButton = new Button("Yes");
-        Button noButton = new Button("No");
+        Button yesButton = new Button(yesButtonText);
+        Button noButton = new Button(noButtonText);
 
         BooleanProperty answer = new SimpleBooleanProperty();
 
@@ -55,5 +55,4 @@ public final class ConfirmBox {
 
         return answer.get();
     }
-
 }

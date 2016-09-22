@@ -17,7 +17,6 @@ import javafx.scene.Group;
 import javafx.scene.control.MenuItem;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.InnerShadow;
-import javafx.scene.effect.Shadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -59,6 +58,11 @@ public class ChessController<P extends PieceClass> implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        // Request player names
+        initializePlayerNames();
+
+        // Initialize grid and pieces
         initializeGrid(model.getFileLength(), model.getRankLength());
         initializePieceIcons();
         listenToTileMappingsPropertyChange();
@@ -81,18 +85,24 @@ public class ChessController<P extends PieceClass> implements Initializable {
         // ShowScoreboard Button
         attachEventHandlerToShowScoreboardButton();
 
-        // Ask model to populate all pieces
-        model.pullPiecesLocationsUpdate();
-
-        // Request player names
-        getPlayersNames();
+        // Ask model to initialize game, this will update all the properties
+        model.newRound(shouldWhiteMovesFirst());
     }
 
-    public void getPlayersNames() {
+    public boolean shouldWhiteMovesFirst () {
+        return ConfirmBox.display("Starting Player", "Choose which player to move first",
+                model.whitePlayerNameProperty().getValue(), model.blackPlayerNameProperty().getValue());
+    }
+
+    public void initializePlayerNames() {
         String whitePlayer = TextInputBox.display("New Game", "Please enter name for White player.", "Name", "White");
         String blackPlayer = TextInputBox.display("New Game", "Please enter name for Black player.", "Name", "Black");
-        model.whitePlayerNameProperty().setValue(whitePlayer);
-        model.blackPlayerNameProperty().setValue(blackPlayer);
+        if (whitePlayer != null && !whitePlayer.isEmpty()) {
+            model.whitePlayerNameProperty().setValue(whitePlayer);
+        }
+        if (blackPlayer != null && !blackPlayer.isEmpty()) {
+            model.blackPlayerNameProperty().setValue(blackPlayer);
+        }
     }
 
     private void attachEventHandlerToShowScoreboardButton() {
@@ -104,7 +114,7 @@ public class ChessController<P extends PieceClass> implements Initializable {
 
     private void attachEventHandlerToSurrenderButton() {
         surrenderButton.setOnAction(event -> {
-            if (ConfirmBox.display("Surrender", model.getCurrentPlayerName() + ": Are you sure you want to surrender?")) {
+            if (ConfirmBox.display("Surrender", model.getCurrentPlayerName() + ": are you sure you want to surrender?", "Yes", "No")) {
                 model.surrender();
             }
         });
@@ -112,7 +122,7 @@ public class ChessController<P extends PieceClass> implements Initializable {
 
     private void attachEventHandlerToDrawGameButton() {
         drawGameButton.setOnAction(event ->  {
-            if (ConfirmBox.display("Draw Game", "Please confirm that both players agree to draw!")) {
+            if (ConfirmBox.display("Draw Game", "Please confirm that both players agree to draw!", "Yes", "No")) {
                 model.drawGame();
             }
         });
@@ -136,7 +146,7 @@ public class ChessController<P extends PieceClass> implements Initializable {
 
     private void attachEventHandlerToNextRoundButton() {
         nextRoundButton.setOnAction(event -> {
-                model.newGame();
+                model.newRound(shouldWhiteMovesFirst());
         });
     }
 
@@ -152,7 +162,7 @@ public class ChessController<P extends PieceClass> implements Initializable {
 
     private void attachEventHandlerToUndoButton() {
         undoButton.setOnAction(event -> {
-            if (ConfirmBox.display("Undo", "Please confirm that both players agree to undo last round!")) {
+            if (ConfirmBox.display("Undo", "Please confirm that both players agree to undo last round!", "Yes", "No")) {
                 model.undoLastRound();
             }
         });
@@ -228,13 +238,28 @@ public class ChessController<P extends PieceClass> implements Initializable {
         model.observableMap().addListener((MapChangeListener<Square, ChessModel.PieceId<P>>) (change -> {
             if (change.wasRemoved()) {
                 ImageView icon = (ImageView) board.lookup("#" + idOfPiece(change.getValueRemoved()));
-                inactivePieces.getChildren().add(icon); // This will also remove icon from grid
+                int rowIndex = convertRowIndex(GridPane.getRowIndex(icon), model.getRankLength());
+                int columnIndex = GridPane.getColumnIndex(icon);
+                if (change.getKey().getFile().getCoordinate().getIndex() == columnIndex &&
+                        change.getKey().getRank().getCoordinate().getIndex() == rowIndex ) {
+                    // unless the icon has already been moved, in case of undo
+                    inactivePieces.getChildren().add(icon); // This will also remove icon from grid
+                }
             }
             if (change.wasAdded()) {
                 int fileIndex = change.getKey().getFile().getCoordinate().getIndex();
                 int rankIndex = change.getKey().getRank().getCoordinate().getIndex();
-                board.add(inactivePieces.lookup("#" + idOfPiece(change.getValueAdded())), fileIndex,
-                        toRowIndex(rankIndex, model.getRankLength()));  // This will also remove icon from inactive group
+                // first try to find it in inactivePieces
+                ImageView icon = (ImageView) inactivePieces.lookup("#" + idOfPiece(change.getValueAdded()));
+                if (icon == null) {
+                    // In case the icon is moving from another position on the board
+                    icon = (ImageView) board.lookup("#" + idOfPiece(change.getValueAdded()));
+                    // This will move icon from inactivePieces group to grid
+                    GridPane.setConstraints(icon, fileIndex, convertRowIndex(rankIndex, model.getRankLength()));
+                } else {
+                    // This will also remove previous constraints
+                    board.add(icon, fileIndex, convertRowIndex(rankIndex, model.getRankLength()));
+                }
             }
         }));
     }
@@ -269,7 +294,7 @@ public class ChessController<P extends PieceClass> implements Initializable {
                 tile.setHeight(SQUARE_SIZE);
                 tile.setFill(getDefaultColor(i, j));
                 tile.setId(idOfTile(i, j));
-                board.add(tile, i, toRowIndex(j, rankLength));
+                board.add(tile, i, convertRowIndex(j, rankLength));
                 final int rank = i, file = j;
                 tile.setOnMouseClicked(event -> {
                     log.info("Clicked tile at + " + rank + ", " + file);
@@ -306,7 +331,7 @@ public class ChessController<P extends PieceClass> implements Initializable {
     /**
      * @return convert rank index to grid pane row index
      */
-    private static int toRowIndex(int rank, int rankLength) {
+    private static int convertRowIndex(int rank, int rankLength) {
         return rankLength - 1 - rank;
     }
 
